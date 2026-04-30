@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  hermes-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8787:8787"
+    volumes:
+      - hermes-data:/root/.hermes
+      - workspace:/root/workspace
+    environment:
+      - HERMES_WEBUI_HOST=0.0.0.0
+      - HERMES_WEBUI_PORT=8787
+      - HERMES_HOME=/root/.hermes
+      - HERMES_WEBUI_STATE_DIR=/root/.hermes/webui
+      - HERMES_WEBUI_DEFAULT_WORKSPACE=/root/workspace
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8787/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  hermes-data:
+  workspace:
