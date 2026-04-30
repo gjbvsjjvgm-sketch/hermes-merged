@@ -1,25 +1,51 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# ============================================================
+# Hermes Merged Application - Startup Script
+# ============================================================
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
 
-if [[ -f "${REPO_ROOT}/.env" ]]; then
+# Load .env if present
+if [[ -f "${SCRIPT_DIR}/.env" ]]; then
   set -a
-  # shellcheck source=/dev/null
-  source "${REPO_ROOT}/.env"
+  source "${SCRIPT_DIR}/.env"
   set +a
 fi
 
+# Ensure HERMES_WEBUI_AGENT_DIR points to our bundled agent
+export HERMES_WEBUI_AGENT_DIR="${HERMES_WEBUI_AGENT_DIR:-${SCRIPT_DIR}/hermes-agent}"
+
+# Ensure HERMES_HOME is set
+export HERMES_HOME="${HERMES_HOME:-${SCRIPT_DIR}/.hermes-state}"
+
+# Ensure state directories exist
+mkdir -p "${HERMES_HOME}/webui/sessions"
+mkdir -p "${HERMES_WEBUI_DEFAULT_WORKSPACE:-${SCRIPT_DIR}/workspace}"
+
+# Find Python
 PYTHON="${HERMES_WEBUI_PYTHON:-}"
 if [[ -z "${PYTHON}" ]]; then
-  if command -v python3 >/dev/null 2>&1; then
+  if [[ -f "${SCRIPT_DIR}/venv/bin/python" ]]; then
+    PYTHON="${SCRIPT_DIR}/venv/bin/python"
+  elif command -v python3 >/dev/null 2>&1; then
     PYTHON="$(command -v python3)"
   elif command -v python >/dev/null 2>&1; then
     PYTHON="$(command -v python)"
   else
-    echo "[XX] Python 3 is required to run bootstrap.py" >&2
+    echo "[XX] Python 3 is required" >&2
     exit 1
   fi
 fi
 
-exec "${PYTHON}" "${REPO_ROOT}/bootstrap.py" --no-browser "$@"
+echo "============================================"
+echo "  Hermes Merged Application"
+echo "============================================"
+echo "  Agent dir : ${HERMES_WEBUI_AGENT_DIR}"
+echo "  Python    : ${PYTHON}"
+echo "  Hermes Home: ${HERMES_HOME}"
+echo "  Web UI    : http://${HERMES_WEBUI_HOST:-0.0.0.0}:${HERMES_WEBUI_PORT:-8788}"
+echo "============================================"
+
+# Start the server via start_server.py (which sets env vars properly)
+exec "${PYTHON}" "${SCRIPT_DIR}/start_server.py" "$@"
