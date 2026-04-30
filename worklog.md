@@ -25,3 +25,22 @@ Stage Summary:
 - All 2829 files from hermes-agent preserved exactly
 - Integration glue: .env, start_server.py, start.sh, run.sh
 - To run: cd /home/z/my-project/hermes-merged && bash start.sh
+
+---
+Task ID: 2
+Agent: main
+Task: Publish/deploy the Hermes merged application
+
+Work Log:
+- Checked existing infrastructure: Caddy running on port 81, Next.js on 3000
+- Found Caddy already configured to proxy /api/* and /static/* to port 8787
+- Started Hermes Python server on port 8787 (matching Caddy config)
+- Created Next.js catch-all route at /src/app/hermes/[[...path]]/route.ts
+- This route proxies all /hermes/* requests to localhost:8787
+- Tested full chain: External → Caddy:81 → Next.js:3000 → Hermes:8787
+- All endpoints working: /hermes, /hermes/api/sessions, /hermes/static/style.css
+
+Stage Summary:
+- Hermes Web UI is accessible at /hermes path
+- Server running on port 8787 with PID
+- Preview URL: https://preview-<bot-id>.space.chatglm.site/hermes
