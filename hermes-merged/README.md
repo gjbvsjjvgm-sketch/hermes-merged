@@ -1,734 +1,456 @@
-# Yusuf Mussa Web UI
+# Yusuf Mussa — Advanced AI Agent
 
-[Yusuf Mussa Agent](https://hermes-agent.nousresearch.com/) is a sophisticated autonomous agent that lives on your server, accessed via a terminal or messaging apps, that remembers what it learns and gets more capable the longer it runs.
+<div align="center">
 
-Yusuf Mussa WebUI is a lightweight, dark-themed web app interface in your browser for [Yusuf Mussa Agent](https://hermes-agent.nousresearch.com/).
-Full parity with the CLI experience - everything you can do from a terminal,
-you can do from this UI. No build step, no framework, no bundler. Just Python
-and vanilla JS.
+![Yusuf Mussa](https://img.shields.io/badge/Yusuf%20Mussa-v2.0-gold?style=for-the-badge&labelColor=1a1a2e&color=F5C542)
+![Python](https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Termux-orange?style=flat-square)
 
-## v2.0 — Modern UI & Enhanced Features (2026)
+**وكيل ذكاء اصطناعي متقدم لبناء التطبيقات والتصاميم وحل الأخطاء وإنشاء مشاريع SaaS**
 
-This version includes significant modern enhancements:
+[English](#features) | [العربية](#المميزات) | [تثبيت Termux](#التثبيت-على-termux)
 
-- **Modern Glassmorphism UI** — Backdrop blur, saturate effects on sidebar, titlebar, composer, menus, toasts, and dialogs
-- **Micro-animations** — Smooth hover/active transitions, slide-up cards, pulse glow for streaming, floating empty state logo
-- **Enhanced Arabic (RTL) Support** — Full right-to-left layout, Arabic fonts (IBM Plex Arabic, Noto Sans Arabic, Cairo), complete Arabic translations
-- **8 Languages** — English, Arabic, Russian, Spanish, German, Chinese (Simplified & Traditional), Portuguese, Korean
-- **Modern PWA** — Segregated caches (precache/runtime/api/images), background sync, push notifications, rich offline page, client messaging API
-- **Accessibility Improvements** — Focus-visible indicators, reduced motion support, high contrast mode, print styles
-- **Security Enhancements** — Cross-Origin-Opener-Policy, Cross-Origin-Resource-Policy, worker-src CSP, WebSocket connect-src
-- **Modern Scrollbars** — Thin 6px scrollbars with smooth hover transitions
-- **8 Color Skins** — Default (Gold), Ares (Red), Mono (Gray), Slate (Blue-Gray), Poseidon (Ocean), Sisyphus (Purple), Charizard (Orange), Sienna (Warm Clay)
-- **Context Ring Animation** — Smooth SVG stroke transitions for token usage visualization
-- **Dark Mode Enhancement** — Deeper semi-transparent backgrounds, refined tool-card borders
-- **Light Mode Enhancement** — Warmer glassmorphism with rgba backgrounds
-- **Code Block Accent Bar** — Gradient accent line appears on hover over code blocks
-- **Responsive Improvements** — Better mobile breakpoints, touch-friendly controls
-
-Layout: three-panel. Left sidebar for sessions and navigation, center for chat,
-right for workspace file browsing. Model, profile, and workspace controls live in
-the **composer footer** — always visible while composing. A circular context ring
-shows token usage at a glance. All settings and session tools are in the
-**Yusuf Mussa Control Center** (launcher at the sidebar bottom).
-
-<img width="2448" height="1748" alt="Yusuf Mussa Web UI — three-panel layout" src="https://github.com/user-attachments/assets/6bf8af4c-209d-441e-8b92-6515d7a0c369" />
-
-<table>
-  <tr>
-    <td width="50%" align="center">
-      <img width="2940" height="1848" alt="Light mode with full profile support" src="https://github.com/user-attachments/assets/4ef3a59c-7a66-4705-b4e7-cb9148fe4c47" />
-      <br /><sub>Light mode with full profile support</sub>
-    </td>
-    <td width="50%" align="center">
-      <img alt="Customize your settings, configure a password" src="https://github.com/user-attachments/assets/941f3156-21e3-41fd-bcc8-f975d5000cb8" />
-      <br /><sub>Customize your settings, configure a password</sub>
-    </td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <td width="50%" align="center">
-      <img alt="Workspace file browser with inline preview" src="docs/images/ui-workspace.png" />
-      <br /><sub>Workspace file browser with inline preview</sub>
-    </td>
-    <td width="50%" align="center">
-      <img alt="Session projects, tags, and tool call cards" src="docs/images/ui-sessions.png" />
-      <br /><sub>Session projects, tags, and tool call cards</sub>
-    </td>
-  </tr>
-</table>
-
-This gives you nearly **1:1 parity with Yusuf Mussa CLI from a convenient web UI** which you can access securely through an SSH tunnel from your Yusuf Mussa setup. Single command to start this up, and a single command to SSH tunnel for access on your computer. Every single part of the web UI uses your existing Yusuf Mussa agent and existing models, without requiring any additional setup.
+</div>
 
 ---
 
-## Why Yusuf Mussa
+## ما هو Yusuf Mussa؟
 
-Most AI tools reset every session. They don't know who you are, what you worked on, or what
-conventions your project follows. You re-explain yourself every time.
+Yusuf Mussa هو وكيل ذكاء اصطناعي متقدم ومتكامل يعمل محلياً على جهازك، قادر على:
 
-Yusuf Mussa retains context across sessions, runs scheduled jobs while you're offline, and gets
-smarter about your environment the longer it runs. It uses your existing Yusuf Mussa agent setup,
-your existing models, and requires no additional configuration to start.
+- **البرمجة والتطوير** — كتابة كود بأي لغة (Python, JavaScript, TypeScript, Rust, Go, إلخ)، بناء تطبيقات كاملة من الصفر
+- **بناء تطبيقات SaaS** — إنشاء مشاريع SaaS كاملة مع المصادقة، الدفع، المتعدد المستخدمين
+- **التصميم** — إنشاء تصاميم UI/UX حديثة، واجهات متجاوبة، وتوليد صور
+- **حل الأخطاء** — تحليل وإصلاح الباجات، مراجعة الكود، تحسين الأداء
+- **إدارة البنية التحتية** — DevOps، Docker، CI/CD، النشر والتشغيل
+- **قاعدة بيانات** — تصميم وإدارة قواعد البيانات، SQL و NoSQL
+- **أتمتة المتصفح** — تصفح الويب، استخراج البيانات، أتمتة المهام
+- **البحث** — بحث ويب، تحليل أوراق علمية، استخراج المعلومات
+- **الذاكرة المستمرة** — يتذكر ما يتعلمه عبر الجلسات، يتحسن مع الوقت
 
-What makes it different from other agentic tools:
+## المميزات
 
-- **Persistent memory** — user profile, agent notes, and a skills system that saves reusable
-  procedures; Yusuf Mussa learns your environment and does not have to relearn it
-- **Self-hosted scheduling** — cron jobs that fire while you're offline and deliver results to
-  Telegram, Discord, Slack, Signal, email, and more
-- **10+ messaging platforms** — the same agent available in the terminal is reachable from your phone
-- **Self-improving skills** — Yusuf Mussa writes and saves its own skills automatically from experience;
-  no marketplace to browse, no plugins to install
-- **Provider-agnostic** — OpenAI, Anthropic, Google, DeepSeek, OpenRouter, and more
-- **Orchestrates other agents** — can spawn Claude Code or Codex for heavy coding tasks and bring
-  the results back into its own memory
-- **Self-hosted** — your conversations, your memory, your hardware
-- **Mythos Security** — AI-powered code security scanning with hypothesis-driven vulnerability detection, variant analysis, and automated patching (329+ rules, 43 scanner categories)
-- **A2A Protocol** — Agent-to-Agent communication enabling cross-framework collaboration (CrewAI, AutoGen, LangGraph, and more)
-- **RAG Knowledge Base** — Retrieval-Augmented Generation with vector search (ChromaDB, Pinecone, Qdrant)
-- **Browser Automation** — AI-powered web browsing with Playwright and Browser Use
-- **Voice Assistant** — Full voice interaction with Whisper STT, ElevenLabs/Edge TTS
-- **Multi-Provider Image Generation** — DALL-E 3, Flux, Stable Diffusion, ComfyUI workflows
-- **DevOps Automation** — Docker, GitHub Actions, CI/CD pipelines, IaC
-- **Observability** — Langfuse tracing, OpenTelemetry, cost tracking
-- **60+ Tools, 55+ Skills, 17+ Plugins** — the most complete open-source AI agent toolkit
+### قدرات الوكيل المتقدم
 
-**vs. the field** *(landscape is actively shifting — see [HERMES.md](HERMES.md) for the full breakdown)*:
+| القدرة | الوصف |
+|--------|-------|
+| برمجة كاملة | Python, JS, TS, Rust, Go, Java, C++, Ruby, PHP وأكثر |
+| بناء تطبيقات ويب | Next.js, React, Vue, Django, Flask, FastAPI |
+| بناء SaaS | مصادقة، دفع Stripe/PayPal، multi-tenancy، APIs |
+| تطبيقات موبايل | React Native, Flutter, PWA |
+| قواعد بيانات | PostgreSQL, MySQL, MongoDB, SQLite, Redis |
+| DevOps | Docker, K8s, GitHub Actions, CI/CD |
+| تصميم UI/UX | CSS حديث، Tailwind، أنظمة تصميم، responsive |
+| حل الأخطاء | تحليل، تصحيح، مراجعة كود، تحسين أداء |
+| أتمتة | Shell scripts، cron jobs، web scraping |
+| أمان | فحص ثغرات، تصحيح أمني، أفضل الممارسات |
 
-| | OpenClaw | Claude Code | Codex CLI | OpenCode | Yusuf Mussa |
-|---|---|---|---|---|---|
-| Persistent memory (auto) | Yes | Partial† | Partial | Partial | Yes |
-| Scheduled jobs (self-hosted) | Yes | No‡ | No | No | Yes |
-| Messaging app access | Yes (15+ platforms) | Partial (Telegram/Discord preview) | No | No | Yes (10+) |
-| Web UI (self-hosted) | Dashboard only | No | No | Yes | Yes |
-| Self-improving skills | Partial | No | No | No | Yes |
-| Python / ML ecosystem | No (Node.js) | No | No | No | Yes |
-| Provider-agnostic | Yes | No (Claude only) | Yes | Yes | Yes |
-| Open source | Yes (MIT) | No | Yes | Yes | Yes |
+### واجهة الويب
 
-† Claude Code has CLAUDE.md / MEMORY.md project context and rolling auto-memory, but not full automatic cross-session recall  
-‡ Claude Code has cloud-managed scheduling (Anthropic infrastructure) and session-scoped `/loop`; no self-hosted cron
+- **بث مباشر** — تظهر الاستجابة حرفاً بحرف فور توليدها
+- **20+ مزود ذكاء اصطناعي** — OpenAI, Anthropic, Google, DeepSeek, Qwen, Z.AI وأكثر
+- **10 ثيمات** — Default, Ares, Mono, Slate, Poseidon, Sisyphus, Charizard, Sienna, **Aurora**, **Neon**
+- **8 لغات** — English, العربية, Русский, Español, Deutsch, 中文, Português, 한국어
+- **دعم RTL كامل** — واجهة عربية من اليمين لليسار
+- **متصفح ملفات** — تصفح، تعديل، إنشاء ملفات مباشرة
+- **طرفية مدمجة** — تنفيذ أوامر shell مباشرة من المتصفح
+- **إدخال صوتي** — تحدث بدلاً من الكتابة
+- **مهام مجدولة** — cron jobs تعمل حتى وأنت غير متصل
+- **مهارات ذاتية التحسين** — يكتب ويحفظ مهاراته تلقائياً
+- **PWA** — يعمل كتطبيق على الهاتف
 
-**The closest competitor is OpenClaw** — both are always-on, self-hosted, open-source agents
-with memory, cron, and messaging. The key differences: Yusuf Mussa writes and saves its own skills
-automatically as a core behavior (OpenClaw's skill system centers on a community marketplace);
-Yusuf Mussa is more stable across updates (OpenClaw has documented release regressions and ClawHub
-has had security incidents involving malicious skills); and Yusuf Mussa runs natively in the Python
-ecosystem. See [HERMES.md](HERMES.md) for the full side-by-side.
+### الأدوات المتاحة (60+ أداة)
+
+```
+browser         — أتمتة المتصفح (13 أداة فرعية)
+code_execution  — تنفيذ Python/JS/أي لغة
+file            — قراءة، كتابة، تعديل، بحث في الملفات
+terminal        — تنفيذ أوامر shell
+web             — بحث ويب واستخراج محتوى
+image_gen       — توليد صور بالذكاء الاصطناعي
+delegation      — تفويض مهام لوكيل فرعي
+memory          — ذاكرة مستمرة عبر الجلسات
+todo            — إدارة قائمة المهام
+cronjob         — جدولة مهام دورية
+skills          — نظام مهارات قابل للتوسيع
+```
 
 ---
 
-## Quick start
+## التثبيت السريع
 
-Run the repo bootstrap:
+### Linux / macOS
 
 ```bash
-git clone https://github.com/nesquena/hermes-webui.git hermes-webui
-cd hermes-webui
+git clone https://github.com/gjbvsjjvgm-sketch/hermes-merged.git
+cd hermes-merged
 python3 bootstrap.py
 ```
 
-Or keep using the shell launcher:
+أو:
 
 ```bash
 ./start.sh
 ```
 
-The bootstrap will:
-
-1. Detect Yusuf Mussa Agent and, if missing, attempt the official installer (`curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash`).
-2. Find or create a Python environment with the WebUI dependencies.
-3. Start the web server and wait for `/health`.
-4. Open the browser unless you pass `--no-browser`.
-5. Drop you into a first-run onboarding wizard inside the WebUI.
-
-> Native Windows is not supported for this bootstrap yet. Use Linux, macOS, or WSL2.
-
-If provider setup is still incomplete after install, the onboarding wizard will point you to finish it with `hermes model` instead of trying to replicate the full CLI setup in-browser.
-
----
-
-## Docker
-
-**Pre-built images** (amd64 + arm64) are published to GHCR on every release:
-
-Make sure the `HERMES_WEBUI_STATE_DIR` (by default `~/.hermes/webui-mvp`, as detailed in the `.env.example` file) folder exist with the UID/GID of the owner of the `.hermes` folder. 
-The container will also mount your configured "workspace" (also from the example .env.example) as `/workspace`. adapt the location as needed.
-
+### Docker
 
 ```bash
 docker pull ghcr.io/nesquena/hermes-webui:latest
 docker run -d \
--e WANTED_UID=`id -u` -e WANTED_GID=`id -g` \
--v ~/.hermes:/home/hermeswebui/.hermes -e HERMES_WEBUI_STATE_DIR=/home/hermeswebui/.hermes/webui-mvp \
--v ~/workspace:/workspace \
--p 8787:8787 ghcr.io/nesquena/hermes-webui:latest
+  -e WANTED_UID=$(id -u) -e WANTED_GID=$(id -g) \
+  -v ~/.hermes:/home/hermeswebui/.hermes \
+  -v ~/workspace:/workspace \
+  -p 8787:8787 ghcr.io/nesquena/hermes-webui:latest
 ```
 
-Or run with Docker Compose (recommended):
-
-```bash
-# Check the docker-compose.yml and make sure to adapt as needed, at minimum WANTED_UID/WANTED_GID
-docker compose up -d
-```
-
-Or build locally:
-
-```bash
-docker build -t hermes-webui .
-docker run -d \
--e WANTED_UID=`id -u` -e WANTED_GID=`id -g` \
--v ~/.hermes:/home/hermeswebui/.hermes -e HERMES_WEBUI_STATE_DIR=/home/hermeswebui/.hermes/webui-mvp \
--v ~/workspace:/workspace \
--p 8787:8787 hermes-webui
-```
-
-Open http://localhost:8787 in your browser.
-
-To enable password protection:
-
-```bash
-docker run -d \
--e WANTED_UID=`id -u` -e WANTED_GID=`id -g` \
--v ~/.hermes:/home/hermeswebui/.hermes -e HERMES_WEBUI_STATE_DIR=/home/hermeswebui/.hermes/webui-mvp \
--v ~/workspace:/workspace \
--p 8787:8787 -e HERMES_WEBUI_PASSWORD=your-secret ghcr.io/nesquena/hermes-webui:latest
-```
-
-> **Note:** By default, Docker Compose binds to `127.0.0.1` (localhost only).
-> To expose on a network, change the port to `"8787:8787"` in `docker-compose.yml`
-> and set `HERMES_WEBUI_PASSWORD` to enable authentication.
-
-### Two-container setup (Agent + WebUI)
-
-If you run the Yusuf Mussa Agent in its own Docker container and want the WebUI
-in a separate container:
-
-```bash
-docker compose -f docker-compose.two-container.yml up -d
-```
-
-This starts both containers with shared volumes:
-
-- **`hermes-home`** — shared `~/.hermes` for config, sessions, skills, memory
-- **`hermes-agent-src`** — the agent's source code, mounted into the WebUI
-  container so it can install the agent's Python dependencies at startup
-
-> **Volume type:** The compose files use named Docker volumes by default.
-> If you prefer bind mounts to an existing directory (e.g. for sharing state
-> with an agent container you already run), both containers must mount the
-> same host path — the agent writes to `/root/.hermes`, the WebUI reads from
-> `/home/hermeswebui/.hermes`. See `docker-compose.two-container.yml` for
-> a bind-mount example.
-
-The WebUI's init script automatically installs hermes-agent and all its
-dependencies (openai, anthropic, etc.) into its own Python environment on
-first boot. Subsequent restarts reuse the installed packages.
-
-> **How it works:** The WebUI imports hermes-agent's Python modules directly
-> (not via HTTP). The shared volume makes the agent source available, and
-> the init script runs `uv pip install` to set up the dependencies. Both
-> containers share the same `~/.hermes` directory for config and state.
-
-See `docker-compose.two-container.yml` for the full configuration.
-
-### Running alongside hermes-dashboard (three-container setup)
-
-To run the Yusuf Mussa Agent, Yusuf Mussa Dashboard, and the WebUI together on a
-shared volume, use the three-container Compose file:
-
-```bash
-docker compose -f docker-compose.three-container.yml up -d
-```
-
-This brings up:
-- **`hermes-agent`** — gateway API on port 8642
-- **`hermes-dashboard`** — monitoring UI on port 9119
-- **`hermes-webui`** — browser chat interface on port 8787
-
-All three services share the same `hermes-home` named volume so config,
-sessions, skills, and memory are consistent across all surfaces.
-
-#### Why UIDs must match
-
-The `hermes-home` volume is a bind-mount in practice — all three containers
-write to the same filesystem tree under `~/.hermes`. If the containers run
-as different UIDs, whichever container creates a file first becomes its
-owner, and the others hit `PermissionError` on subsequent writes.
-
-The fix is to make all containers run as **your host user's UID and GID**.
-
-#### Variable name asymmetry
-
-> ⚠️ **The two image families use different environment variable names** for
-> the UID/GID setting:
->
-> | Image | Variable |
-> |---|---|
-> | `nousresearch/hermes-agent` (agent + dashboard) | `HERMES_UID` / `HERMES_GID` |
-> | `ghcr.io/nesquena/hermes-webui` | `WANTED_UID` / `WANTED_GID` |
->
-> You must set **both pairs** when using a `.env` file.
-
-#### Recommended setup
-
-For a standard Linux user (UID ≥ 1000):
-
-```bash
-# Create a .env file with your host UID/GID
-echo "UID=$(id -u)" >> .env
-echo "GID=$(id -g)" >> .env
-# hermes-agent / hermes-dashboard
-echo "HERMES_UID=$(id -u)" >> .env
-echo "HERMES_GID=$(id -g)" >> .env
-```
-
-For NAS/Unraid deployments where a fixed service account is preferred, use
-`10000:10000` (or your NAS service UID) instead of `$(id -u)`.
-
-If you get `PermissionError` on an **existing** `~/.hermes` directory, run
-the one-time ownership fix:
-
-```bash
-chown -R $(id -u):$(id -g) ~/.hermes
-```
-
-#### Volume mount mode
-
-The dashboard container needs **read-write** access to the shared volume
-(it writes session logs and dashboard state). Do **not** add `:ro` to the
-`hermes-home` volume in `hermes-dashboard`'s `volumes:` entry.
-
-See `docker-compose.three-container.yml` for the full reference configuration.
+افتح http://localhost:8787 في المتصفح.
 
 ---
 
-## What start.sh discovers automatically
+## التثبيت على Termux
 
-| Thing | How it finds it |
-|---|---|
-| Yusuf Mussa agent dir | `HERMES_WEBUI_AGENT_DIR` env, then `~/.hermes/hermes-agent`, then sibling `../hermes-agent` |
-| Python executable | Agent venv first, then `.venv` in this repo, then system `python3` |
-| State directory | `HERMES_WEBUI_STATE_DIR` env, then `~/.hermes/webui-mvp` |
-| Default workspace | `HERMES_WEBUI_DEFAULT_WORKSPACE` env, then `~/workspace`, then state dir |
-| Port | `HERMES_WEBUI_PORT` env or first argument, default `8787` |
+> **Termux** هو محاكي طرفية أندرويد يتيح تشغيل بيئة Linux كاملة على هاتفك. يمكنك تشغيل Yusuf Mussa بالكامل على هاتفك الأندرويد!
 
-If discovery finds everything, nothing else is required.
+### المتطلبات
 
----
+- هاتف أندرويد 7.0+
+- 2GB RAM كحد أدنى (4GB+ مستحسن)
+- 1GB مساحة تخزين حرة
+- اتصال إنترنت
 
-## Overrides (only needed if auto-detection misses)
+### الخطوة 1: تثبيت Termux
+
+قم بتحميل Termux من **F-Droid** (النسخة الموصى بها):
 
 ```bash
-export HERMES_WEBUI_AGENT_DIR=/path/to/hermes-agent
-export HERMES_WEBUI_PYTHON=/path/to/python
-export HERMES_WEBUI_PORT=9000
-export HERMES_WEBUI_AUTO_INSTALL=1  # enable auto-install of agent deps (disabled by default)
+# لا تستخدم نسخة Google Play — قديمة ولا تعمل
+# حمّل من F-Droid:
+# https://f-droid.org/packages/com.termux/
+```
+
+أو من سطر الأوامر:
+
+```bash
+# افتح المتصفح على هاتفك وادخل:
+# https://f-droid.org/packages/com.termux/
+```
+
+### الخطوة 2: تحديث Termux وتثبيت الحزم الأساسية
+
+```bash
+# تحديث الحزم
+pkg update && pkg upgrade -y
+
+# تثبيت الأدوات الأساسية
+pkg install -y git python python-pip nodejs-lts build-essential binutils openssl
+
+# تثبيت أدوات إضافية مفيدة
+pkg install -y curl wget nano vim
+```
+
+### الخطوة 3: إعداد بيئة Python
+
+```bash
+# تحديث pip
+pip install --upgrade pip
+
+# تثبيت الحزم الأساسية
+pip install pyyaml
+```
+
+### الخطوة 4: تحميل Yusuf Mussa
+
+```bash
+# استنساخ المشروع
+cd ~
+git clone https://github.com/gjbvsjjvgm-sketch/hermes-merged.git
+cd hermes-merged
+```
+
+### الخطوة 5: تشغيل Yusuf Mussa
+
+```bash
+# الطريقة الأولى: استخدام سكريبت البدء
+chmod +x start.sh
 ./start.sh
+
+# الطريقة الثانية: تشغيل مباشر بـ Python
+python3 start_server.py
 ```
 
-Or inline:
+### الخطوة 6: الوصول من المتصفح
+
+بعد التشغيل، سترى رسالة مثل:
+
+```
+Yusuf Mussa Web UI listening on http://0.0.0.0:8787
+```
+
+افتح متصفح هاتفك وادخل:
+
+```
+http://localhost:8787
+```
+
+### إعداد مفتاح API
+
+عند أول تشغيل، سيظهر معالج الإعداد. ستحتاج إلى:
+
+1. **اختيار مزود AI** — مثلاً OpenAI, Anthropic, أو OpenRouter
+2. **إدخال مفتاح API** — احصل عليه من موقع المزود
+3. **اختيار نموذج** — مثل `gpt-4o-mini` أو `claude-sonnet-4-20250514`
+4. **اختيار مساحة عمل** — المجلد الذي سيعمل فيه الوكيل
+
+أو يدوياً:
 
 ```bash
-HERMES_WEBUI_AGENT_DIR=/custom/path ./start.sh 9000
+# إنشاء ملف الإعدادات
+mkdir -p ~/.hermes
+cat > ~/.hermes/.env << 'EOF'
+OPENAI_API_KEY=sk-your-key-here
+# أو أي مزود آخر:
+# ANTHROPIC_API_KEY=sk-ant-your-key
+# DEEPSEEK_API_KEY=your-key
+# OPENROUTER_API_KEY=your-key
+EOF
+
+# إنشاء ملف config.yaml
+cat > ~/.hermes/config.yaml << 'EOF'
+provider: openai
+model: gpt-4o-mini
+EOF
 ```
 
-Full list of environment variables:
+### تثبيت سريع بأمر واحد (Termux)
+
+```bash
+pkg update -y && pkg upgrade -y && \
+pkg install -y git python python-pip build-essential && \
+pip install pyyaml && \
+cd ~ && \
+git clone https://github.com/gjbvsjjvgm-sketch/hermes-merged.git && \
+cd hermes-merged && \
+python3 start_server.py
+```
+
+### نصائح Termux
+
+```bash
+# تشغيل في الخلفية (حتى لا يتوقف عند إغلاق التermux)
+nohup python3 start_server.py &
+
+# أو استخدام tmux
+pkg install tmux
+tmux new -s yusuf
+python3 start_server.py
+# اضغط Ctrl+B ثم D للفصل
+# tmux attach -t yusuf  للعودة
+
+# تشغيل تلقائي عند فتح Termux
+echo 'cd ~/hermes-merged && python3 start_server.py' >> ~/.bashrc
+
+# تغيير المنفذ
+HERMES_WEBUI_PORT=9000 python3 start_server.py
+
+# تفعيل كلمة المرور
+HERMES_WEBUI_PASSWORD=your-secret python3 start_server.py
+```
+
+### الوصول من كمبيوتر آخر على نفس الشبكة
+
+```bash
+# اعرف عنوان IP لهاتفك
+ifconfig | grep inet
+
+# على الكمبيوتر، افتح:
+# http://PHONE-IP:8787
+```
+
+### حل مشاكل Termux الشائعة
+
+| المشكلة | الحل |
+|---------|------|
+| `python: command not found` | `pkg install python` |
+| `pip: command not found` | `pkg install python-pip` |
+| `git: command not found` | `pkg install git` |
+| `ModuleNotFoundError` | `pip install pyyaml` |
+| `Permission denied` | `chmod +x start.sh` |
+| `Address already in use` | غيّر المنفذ: `HERMES_WEBUI_PORT=9000` |
+| `No space left` | `pkg clean && pip cache purge` |
+| بناء حزم يفشل | `pkg install build-essential binutils` |
+| مشاكل OpenSSL | `pkg install openssl && pip install --upgrade certifi` |
+
+---
+
+## Configuration
+
+### Environment Variables
 
 | Variable | Default | Description |
-|---|---|---|
-| `HERMES_WEBUI_AGENT_DIR` | auto-discovered | Path to the hermes-agent checkout |
-| `HERMES_WEBUI_PYTHON` | auto-discovered | Python executable |
-| `HERMES_WEBUI_HOST` | `127.0.0.1` | Bind address |
-| `HERMES_WEBUI_PORT` | `8787` | Port |
-| `HERMES_WEBUI_STATE_DIR` | `~/.hermes/webui-mvp` | Where sessions and state are stored |
-| `HERMES_WEBUI_DEFAULT_WORKSPACE` | `~/workspace` | Default workspace |
+|----------|---------|-------------|
+| `HERMES_WEBUI_HOST` | `0.0.0.0` | Bind address |
+| `HERMES_WEBUI_PORT` | `8787` | Port number |
+| `HERMES_WEBUI_PASSWORD` | *(unset)* | Set to enable password auth |
+| `HERMES_WEBUI_AGENT_DIR` | `./hermes-agent` | Path to agent |
+| `HERMES_WEBUI_STATE_DIR` | `./.hermes-state/webui` | State directory |
+| `HERMES_WEBUI_DEFAULT_WORKSPACE` | `./workspace` | Default workspace |
 | `HERMES_WEBUI_DEFAULT_MODEL` | `openai/gpt-5.4-mini` | Default model |
-| `HERMES_WEBUI_PASSWORD` | *(unset)* | Set to enable password authentication |
-| `HERMES_HOME` | `~/.hermes` | Base directory for Yusuf Mussa state (affects all paths) |
-| `HERMES_CONFIG_PATH` | `~/.hermes/config.yaml` | Path to Yusuf Mussa config file |
+| `HERMES_HOME` | `~/.hermes` | Base config directory |
+
+### Supported AI Providers (20+)
+
+| Provider | Models | API Key Env |
+|----------|--------|-------------|
+| OpenAI | GPT-4o, GPT-5, o3 | `OPENAI_API_KEY` |
+| Anthropic | Claude Sonnet, Opus, Haiku | `ANTHROPIC_API_KEY` |
+| Google | Gemini 2.5 Pro/Flash | `GOOGLE_API_KEY` |
+| DeepSeek | V3, R1 | `DEEPSEEK_API_KEY` |
+| Qwen | Qwen3, Qwen2.5 | `DASHSCOPE_API_KEY` |
+| xAI | Grok 3 | `XAI_API_KEY` |
+| Mistral | Mistral Large, Codestral | `MISTRAL_API_KEY` |
+| OpenRouter | 200+ models | `OPENROUTER_API_KEY` |
+| Z.AI | GLM-4 | `ZAI_API_KEY` |
+| Ollama | Local models | *(no key needed)* |
+| GitHub Copilot | Copilot models | `GITHUB_TOKEN` |
+| NVIDIA | NIM models | `NVIDIA_API_KEY` |
 
 ---
 
-## Accessing from a remote machine
+## Themes & Skins (10 skins)
 
-The server binds to `127.0.0.1` by default (loopback only). If you are running
-Yusuf Mussa on a VPS or remote server, use an SSH tunnel from your local machine:
+| Skin | Style |
+|------|-------|
+| **Default** | Gold accents, warm tones |
+| **Ares** | Red, aggressive, powerful |
+| **Mono** | Monochrome, minimalist |
+| **Slate** | Blue-gray, professional |
+| **Poseidon** | Ocean blue, calming |
+| **Sisyphus** | Purple, deep |
+| **Charizard** | Orange, fiery |
+| **Sienna** | Warm clay, earthy |
+| **Aurora** ✨ | Gradient glassmorphism, aurora borealis |
+| **Neon** ✨ | Cyberpunk, neon glow, dark |
 
-```bash
-ssh -N -L <local-port>:127.0.0.1:<remote-port> <user>@<server-host>
-```
-
-Example:
-
-```bash
-ssh -N -L 8787:127.0.0.1:8787 user@your.server.com
-```
-
-Then open `http://localhost:8787` in your local browser.
-
-`start.sh` will print this command for you automatically when it detects you
-are running over SSH.
+Switch with `/theme` command or Settings → Appearance.
 
 ---
 
-## Accessing on your phone with Tailscale
+## Skills System
 
-[Tailscale](https://tailscale.com) is a zero-config mesh VPN built on
-WireGuard. Install it on your server and your phone, and they join the same
-private network -- no port forwarding, no SSH tunnels, no public exposure.
+Yusuf Mussa automatically creates and saves skills as it works. Built-in skills include:
 
-The Yusuf Mussa Web UI is fully responsive with a mobile-optimized layout
-(hamburger sidebar, sidebar top tabs in the drawer, touch-friendly controls),
-so it works well as a daily-driver agent interface from your phone.
-
-**Setup:**
-
-1. Install [Tailscale](https://tailscale.com/download) on your server and
-   your iPhone/Android.
-2. Start the WebUI listening on all interfaces with password auth enabled:
-
-```bash
-HERMES_WEBUI_HOST=0.0.0.0 HERMES_WEBUI_PASSWORD=your-secret ./start.sh
-```
-
-3. Open `http://<server-tailscale-ip>:8787` in your phone's browser
-   (find your server's Tailscale IP in the Tailscale app or with
-   `tailscale ip -4` on the server).
-
-That's it. Traffic is encrypted end-to-end by WireGuard, and password auth
-protects the UI at the application level. You can add it to your home screen
-for an app-like experience.
-
-> **Tip:** If using Docker, set `HERMES_WEBUI_HOST=0.0.0.0` in your
-> `docker-compose.yml` environment (already the default) and set
-> `HERMES_WEBUI_PASSWORD`.
-
----
-
-## Manual launch (without start.sh)
-
-If you prefer to launch the server directly:
-
-```bash
-cd /path/to/hermes-agent          # or wherever sys.path can find Yusuf Mussa modules
-HERMES_WEBUI_PORT=8787 venv/bin/python /path/to/hermes-webui/server.py
-```
-
-Note: use the agent venv Python (or any Python environment that has the Yusuf Mussa agent dependencies installed). System Python will be missing `openai`, `httpx`, and other required packages.
-
-Health check:
-
-```bash
-curl http://127.0.0.1:8787/health
-```
-
----
-
-## Running tests
-
-Tests discover the repo and the Yusuf Mussa agent dynamically -- no hardcoded paths.
-
-```bash
-cd hermes-webui
-pytest tests/ -v --timeout=60
-```
-
-Or using the agent venv explicitly:
-
-```bash
-/path/to/hermes-agent/venv/bin/python -m pytest tests/ -v
-```
-
-Tests run against an isolated server on port 8788 with a separate state directory.
-Production data and real cron jobs are never touched. Current count: **1898 tests**
-across 53 test files.
-
----
-
-## Features
-
-### Chat and agent
-- Streaming responses via SSE (tokens appear as they are generated)
-- Multi-provider model support -- any Yusuf Mussa API provider (OpenAI, Anthropic, Google, DeepSeek, Nous Portal, OpenRouter, MiniMax, Z.AI); dynamic model dropdown populated from configured keys
-- Send a message while one is processing -- it queues automatically
-- Edit any past user message inline and regenerate from that point
-- Retry the last assistant response with one click
-- Cancel a running task directly from the composer footer (Stop button next to Send)
-- Tool call cards inline -- each shows the tool name, args, and result snippet; expand/collapse all toggle for multi-tool turns
-- Subagent delegation cards -- child agent activity shown with distinct icon and indented border
-- Mermaid diagram rendering inline (flowcharts, sequence diagrams, gantt charts)
-- Thinking/reasoning display -- collapsible gold-themed cards for Claude extended thinking and o3 reasoning blocks
-- Approval card for dangerous shell commands (allow once / session / always / deny)
-- SSE auto-reconnect on network blips (SSH tunnel resilience)
-- File attachments persist across page reloads
-- Message timestamps (HH:MM next to each message, full date on hover)
-- Code block copy button with "Copied!" feedback
-- Syntax highlighting via Prism.js (Python, JS, bash, JSON, SQL, and more)
-- Safe HTML rendering in AI responses (bold, italic, code converted to markdown)
-- rAF-throttled token streaming for smoother rendering during long responses
-- Context usage indicator in composer footer -- token count, cost, and fill bar (model-aware)
-
-### Sessions
-- Create, rename, duplicate, delete, search by title and message content
-- Session actions via `⋯` dropdown per session — pin, move to project, archive, duplicate, delete
-- Pin/star sessions to the top of the sidebar (gold indicator)
-- Archive sessions (hide without deleting, toggle to show)
-- Session projects -- named groups with colors for organizing sessions
-- Session tags -- add #tag to titles for colored chips and click-to-filter
-- Grouped by Today / Yesterday / Earlier in the sidebar (collapsible date groups)
-- Download as Markdown transcript, full JSON export, or import from JSON
-- Sessions persist across page reloads and SSH tunnel reconnects
-- Browser tab title reflects the active session name
-- CLI session bridge -- CLI sessions from hermes-agent's SQLite store appear in the sidebar with a gold "cli" badge; click to import with full history and reply normally
-- Token/cost display -- input tokens, output tokens, estimated cost shown per conversation (toggle in Settings or `/usage` command)
-
-### Workspace file browser
-- Directory tree with expand/collapse (single-click toggles, double-click navigates)
-- Breadcrumb navigation with clickable path segments
-- Preview text, code, Markdown (rendered), and images inline
-- Edit, create, delete, and rename files; create folders
-- Binary file download (auto-detected from server)
-- File preview auto-closes on directory navigation (with unsaved-edit guard)
-- Git detection -- branch name and dirty file count badge in workspace header
-- Right panel is drag-resizable
-- Syntax highlighted code preview (Prism.js)
-
-### Voice input
-- Microphone button in the composer (Web Speech API)
-- Tap to record, tap again or send to stop
-- Live interim transcription appears in the textarea
-- Auto-stops after ~2s of silence
-- Appends to existing textarea content (doesn't replace)
-- Hidden when browser doesn't support Web Speech API (Chrome, Edge, Safari)
-
-### Profiles
-- Profile chip in the **composer footer** -- dropdown showing all profiles with gateway status and model info
-- Gateway status dots (green = running), model info, skill count per profile
-- Profiles management panel -- create, switch, and delete profiles from the sidebar
-- Clone config from active profile on create
-- Optional custom endpoint fields on create -- Base URL and API key written into the profile's `config.yaml` at creation time, so Ollama, LMStudio, and other local endpoints can be configured without editing files manually
-- Seamless switching -- no server restart; reloads config, skills, memory, cron, models
-- Per-session profile tracking (records which profile was active at creation)
-
-### Authentication and security
-- Optional password auth -- off by default, zero friction for localhost
-- Enable via `HERMES_WEBUI_PASSWORD` env var or Settings panel
-- Signed HMAC HTTP-only cookie with 24h TTL
-- Minimal dark-themed login page at `/login`
-- Security headers on all responses (X-Content-Type-Options, X-Frame-Options, Referrer-Policy)
-- 20MB POST body size limit
-- CDN resources pinned with SRI integrity hashes
-
-### Themes
-- 7 built-in themes: Dark (default), Light, Slate, Solarized Dark, Monokai, Nord, OLED
-- Switch via Settings panel dropdown (instant live preview) or `/theme` command
-- Persists across reloads (server-side in settings.json + localStorage for flicker-free loading)
-- Custom themes: define a `:root[data-theme="name"]` CSS block and it works — see [THEMES.md](THEMES.md)
-
-### Settings and configuration
-- **Yusuf Mussa Control Center** (sidebar launcher button) -- Conversation tab (export/import/clear), Preferences tab (model, send key, theme, language, all toggles), System tab (version, password)
-- Send key: Enter (default) or Ctrl/Cmd+Enter
-- Show/hide CLI sessions toggle (enabled by default)
-- Token usage display toggle (off by default, also via `/usage` command)
-- Control Center always opens on the Conversation tab; resets on close
-- Unsaved changes guard -- discard/save prompt when closing with unpersisted changes
-- Cron completion alerts -- toast notifications and unread badge on Tasks tab
-- Background agent error alerts -- banner when a non-active session encounters an error
-
-### Slash commands
-- Type `/` in the composer for autocomplete dropdown
-- Built-in: `/help`, `/clear`, `/compress [focus topic]`, `/compact` (alias), `/model <name>`, `/workspace <name>`, `/new`, `/usage`, `/theme`
-- Arrow keys navigate, Tab/Enter select, Escape closes
-- Unrecognized commands pass through to the agent
-
-### Panels
-- **Chat** -- session list, search, pin, archive, projects, new conversation
-- **Tasks** -- view, create, edit, run, pause/resume, delete cron jobs; run history; completion alerts
-- **Skills** -- list all skills by category, search, preview, create/edit/delete; linked files viewer
-- **Memory** -- view and edit MEMORY.md and USER.md inline
-- **Profiles** -- create, switch, delete agent profiles; clone config
-- **Todos** -- live task list from the current session
-- **Spaces** -- add, rename, remove workspaces; quick-switch from topbar
-
-### Mobile responsive
-- Hamburger sidebar -- slide-in overlay on mobile (<640px)
-- Sidebar top tabs stay available on mobile; no fixed bottom nav stealing chat height
-- Files slide-over panel from right edge
-- Touch targets minimum 44px on all interactive elements
-- Full-height chat/composer on phones without bottom-nav spacing
-- Desktop layout completely unchanged
+- **Full-Stack Development** — Complete web application building
+- **Software Development** — General programming and debugging
+- **Research** — Web research, paper analysis
+- **Email** — Email drafting and management
+- **Social Media** — Content creation
+- **Smart Home** — IoT automation
+- **MLOps** — Machine learning operations
+- **Red Teaming** — Security testing
 
 ---
 
 ## Architecture
 
 ```
-server.py               HTTP routing shell + auth middleware (~154 lines)
-api/
-  auth.py               Optional password authentication, signed cookies (~201 lines)
-  config.py             Discovery, globals, model detection, reloadable config (~1110 lines)
-  helpers.py            HTTP helpers, security headers (~175 lines)
-  models.py             Session model + CRUD + CLI bridge (~377 lines)
-  onboarding.py         First-run onboarding wizard, OAuth provider support (~507 lines)
-  profiles.py           Profile state management, hermes_cli wrapper (~411 lines)
-  routes.py             All GET + POST route handlers (~2250 lines)
-  state_sync.py         /insights sync — message_count to state.db (~113 lines)
-  streaming.py          SSE engine, run_agent, cancel support (~660 lines)
-  updates.py            Self-update check and release notes (~257 lines)
-  upload.py             Multipart parser, file upload handler (~82 lines)
-  workspace.py          File ops, workspace helpers, git detection (~288 lines)
-static/
-  index.html            HTML template (~600 lines)
-  style.css             All CSS incl. mobile responsive, themes (~1050 lines)
-  ui.js                 DOM helpers, renderMd, tool cards, context indicator (~1740 lines)
-  workspace.js          File preview, file ops, git badge (~286 lines)
-  sessions.js           Session CRUD, collapsible groups, search, reload recovery (~800 lines)
-  messages.js           send(), SSE handlers, live streaming, session recovery (~655 lines)
-  panels.js             Cron, skills, memory, profiles, settings (~1438 lines)
-  commands.js           Slash command autocomplete (~267 lines)
-  boot.js               Mobile nav, voice input, boot IIFE (~524 lines)
-tests/
-  conftest.py           Isolated test server (port 8788)
-  61 test files          961 test functions
-Dockerfile              python:3.12-slim container image
-docker-compose.yml      Compose with named volume and optional auth
-.github/workflows/      CI: multi-arch Docker build + GitHub Release on tag
+Yusuf Mussa Merged Application
+├── server.py               — HTTP server (Python stdlib)
+├── start_server.py         — Environment setup + launcher
+├── start.sh                — Shell startup script
+├── api/                    — Backend Python modules
+│   ├── config.py           — Discovery, model catalog
+│   ├── routes.py           — All API routes
+│   ├── streaming.py        — SSE engine, agent runner
+│   ├── auth.py             — Password authentication
+│   ├── workspace.py        — File operations
+│   ├── terminal.py         — Terminal support
+│   └── ...                 — 20+ more modules
+├── static/                 — Frontend (vanilla JS, no build step)
+│   ├── index.html          — Full HTML app
+│   ├── style.css           — CSS with 10 skins + RTL
+│   ├── ui.js               — DOM helpers, markdown
+│   ├── messages.js         — Chat + SSE streaming
+│   ├── i18n.js             — 8 languages
+│   ├── terminal.js         — xterm.js terminal
+│   └── ...                 — 10+ more modules
+├── hermes-agent/           — AI Agent engine
+│   ├── run_agent.py        — Core agent loop
+│   ├── model_tools.py      — 60+ tool definitions
+│   ├── toolsets.py         — Toolset organization
+│   ├── agent/              — Agent internals
+│   │   ├── prompt_builder.py — System prompt assembly
+│   │   ├── memory_manager.py — Persistent memory
+│   │   └── ...             — More internals
+│   ├── plugins/            — Plugin system
+│   ├── skills/             — Skill definitions
+│   └── environments/       — Execution environments
+└── tests/                  — 130+ test files
 ```
-
-State lives outside the repo at `~/.hermes/webui-mvp/` by default
-(sessions, workspaces, settings, projects, last_workspace). Override with `HERMES_WEBUI_STATE_DIR`.
 
 ---
 
-## Docs
+## Accessing Remotely
 
-- `HERMES.md` -- why Yusuf Mussa, mental model, and detailed comparison to Claude Code / Codex / OpenCode / Cursor
-- `ROADMAP.md` -- feature roadmap and sprint history
-- `ARCHITECTURE.md` -- system design, all API endpoints, implementation notes
-- `TESTING.md` -- manual browser test plan and automated coverage reference
-- `CHANGELOG.md` -- release notes per sprint
-- `SPRINTS.md` -- forward sprint plan with CLI + Claude parity targets
-- `THEMES.md` -- theme system documentation, custom theme guide
+### SSH Tunnel
 
-## Contributors
+```bash
+ssh -N -L 8787:127.0.0.1:8787 user@your.server.com
+```
 
-Yusuf Mussa WebUI is built with help from the open-source community. Every PR — whether merged directly or incorporated via rebase — shapes the project, and we're grateful to everyone who has taken the time to contribute.
+Then open `http://localhost:8787` on your local machine.
 
-### Major contributions
+### Tailscale (Phone Access)
 
-**[@aronprins](https://github.com/aronprins)** — v0.50.0 UI overhaul (PR #242)
-The biggest single contribution to the project: a complete UI redesign that moved model/profile/workspace controls into the composer footer, replaced the gear-icon settings panel with the Yusuf Mussa Control Center (tabbed modal), removed the activity bar in favor of inline composer status, redesigned the session list with a `⋯` action dropdown, and added the workspace panel state machine. 26 commits, thoroughly designed and iterated through multiple review rounds.
+```bash
+HERMES_WEBUI_HOST=0.0.0.0 HERMES_WEBUI_PASSWORD=your-secret ./start.sh
+```
 
-**[@iRonin](https://github.com/iRonin)** — Security hardening sprint (PRs #196–#204)
-Six consecutive security and reliability PRs: session memory leak fix (expired token pruning), Content-Security-Policy + Permissions-Policy headers, 30-second slow-client connection timeout, optional HTTPS/TLS support via environment variables, upstream branch tracking fix for self-update, and CLI session support in the file browser API. This is the kind of focused, high-quality security work that makes a self-hosted tool trustworthy.
-
-**[@DavidSchuchert](https://github.com/DavidSchuchert)** — German translation (PR #190)
-Complete German locale (`de`) covering all UI strings, settings labels, commands, and system messages — and in doing so, stress-tested the i18n system and exposed several elements that weren't yet translatable, which got fixed as part of the same PR.
-
-**[@Jordan-SkyLF](https://github.com/Jordan-SkyLF)** — Live streaming, session recovery, workspace fallback (PRs #366, #367)
-Three interlocking improvements: workspace fallback resolution so the server recovers gracefully when the configured workspace is deleted or unavailable; live reasoning cards that upgrade the generic thinking spinner to a real-time reasoning display as the model thinks; and durable session state recovery via `localStorage` so in-flight tool cards, partial assistant output, and the live SSE stream all survive a full page reload or session switch.
-
-### Feature contributions
-
-**[@gabogabucho](https://github.com/gabogabucho)** — Spanish locale + onboarding wizard (PRs #275, #285)
-Full Spanish (`es`) locale covering all 175 UI strings, plus the one-shot bootstrap onboarding wizard that guides new users through provider setup on first launch — the feature most responsible for new users actually getting started.
-
-**[@bergeouss](https://github.com/bergeouss)** — Real-time gateway session sync (PR #274)
-Bridged the gateway session database (Telegram, Discord, Slack, etc.) into the WebUI sidebar with live SSE polling. Gateway sessions now appear alongside WebUI sessions in real time, without any changes to hermes-agent.
-
-**[@ccqqlo](https://github.com/ccqqlo)** — Terminal approval UX + custom model discovery + mobile close button (PRs #224, #225, #238, #333)
-A run of focused quality-of-life improvements: terminal tool approval prompts that stay visible long enough to actually be read, restored custom model API key discovery, and the redundant mobile close button fix that had been confusing users on narrow screens.
-
-**[@kevin-ho](https://github.com/kevin-ho)** — OLED theme (PR #168)
-Added the 7th built-in theme: pure black backgrounds with warm accents tuned to reduce burn-in risk. Small diff, big impact for anyone on an OLED display.
-
-**[@Bobby9228](https://github.com/Bobby9228)** — Mobile Profiles button + Android Chrome fixes (PRs #253, #263, #265)
-Added the Profiles entry to the mobile navigation flow, making profile switching reachable on phones, plus a set of Android Chrome-specific fixes for the profile dropdown.
-
-**[@franksong2702](https://github.com/franksong2702)** — Session title guard + breadcrumb nav (PRs #301, #302)
-Two clean bug fixes / features: the session title guard that stops `title_from()` from overwriting user-renamed sessions after every turn, and clickable breadcrumb navigation in the workspace file preview panel.
-
-**[@betamod](https://github.com/betamod)** — Security hardening (PR #171)
-A comprehensive security audit PR covering CSRF protection, SSRF guards, XSS escaping improvements, and the env race condition between concurrent agent sessions — foundational security work that shipped in v0.39.0.
-
-**[@TaraTheStar](https://github.com/TaraTheStar)** — Bot name + thinking blocks + login refactor (PRs #132, #176, #181)
-Made the assistant display name configurable throughout the UI, added thinking/reasoning block display in chat, and refactored the login page to use template variables instead of inline string replacement.
-
-**[@thadreber-web](https://github.com/thadreber-web)** — CLI session bridge (PR #56)
-The original CLI session bridge: reads CLI sessions from the agent's SQLite state store and surfaces them in the WebUI sidebar. This was the first bridge between the CLI and WebUI session worlds.
-
-**[@deboste](https://github.com/deboste)** — Reverse proxy auth + mobile responsive layout + model routing (PRs #3, #4, #5)
-Three of the very first community PRs: fixed EventSource/fetch to use the URL origin for reverse proxy setups, corrected model provider routing from config, and added mobile responsive layout with dvh viewport fix. Early foundation work.
-
-### Bug fix and security contributions
-
-**[@Hinotoi-agent](https://github.com/Hinotoi-agent)** — Profile .env secret isolation (PR #351)
-Fixed API key leakage between profiles on switch — switching from a profile with `OPENAI_API_KEY` to one without it left the key in the process environment for the duration of the session, effectively leaking credentials. A subtle and important security fix.
-
-**[@lawrencel1ng](https://github.com/lawrencel1ng)** — Bandit security fixes B310/B324/B110 + QuietHTTPServer (PR #354)
-Systematic bandit security scan fixes: URL scheme validation before `urlopen`, MD5 `usedforsecurity=False`, and 40+ bare `except: pass` blocks replaced with proper logging — plus `QuietHTTPServer` to stop client-disconnect log spam from SSE streams.
-
-**[@lx3133584](https://github.com/lx3133584)** — CSRF fix for reverse proxy on non-standard ports (PR #360)
-Fixed CSRF rejection for deployments behind Nginx Proxy Manager or similar on non-standard ports — a real-world blocker for anyone hosting on a port other than 80/443.
-
-**[@DelightRun](https://github.com/DelightRun)** — session_search fix for WebUI sessions (PR #356)
-The `session_search` tool silently returned "Session database not available" in every WebUI session. Tracked down the missing `SessionDB` injection in the streaming path and fixed it.
-
-**[@shaoxianbilly](https://github.com/shaoxianbilly)** — Unicode filename downloads (PR #378)
-Fixed `UnicodeEncodeError` crashes when downloading workspace files with Chinese, Japanese, or other non-ASCII names. Implemented proper `Content-Disposition` header with RFC 5987 `filename*=UTF-8''...` encoding.
-
-**[@huangzt](https://github.com/huangzt)** — Cancel interrupts agent (PR #244)
-Made the Cancel button actually interrupt the running agent and clean up UI state, rather than just hiding the button while the agent kept running.
-
-**[@tgaalman](https://github.com/tgaalman)** — Thinking card fix (PR #169)
-Fixed top-level reasoning fields being missed in the thinking card display — an edge case in how Claude's extended thinking blocks surface in the API response.
-
-**[@smurmann](https://github.com/smurmann)** — Custom provider routing fix (PR #189)
-Fixed model routing for slash-prefixed custom provider models, which were being misrouted in the model selector. A precise fix for a real edge case in multi-provider setups.
-
-**[@jeffscottward](https://github.com/jeffscottward)** — Claude Haiku model ID fix (PR #145)
-Caught and corrected the Claude Haiku model ID (`3-5` → `4-5`) immediately after the Anthropic release — the kind of quick community catch that keeps the model dropdown accurate.
-
-**[@kcclaw001](https://github.com/kcclaw001)** — Credential redaction in API responses (PR #243)
-Added credential redaction to all API response paths so API keys, tokens, and other secrets in session data or error messages are masked before reaching the browser.
-
-**[@mbac](https://github.com/mbac)** — Phantom "Custom" provider group fix (PR #191)
-Removed the phantom "Custom" optgroup that appeared in the model dropdown even when no custom provider was configured — a small but consistently confusing UI noise issue.
-
-**[@andrewy-wizard](https://github.com/andrewy-wizard)** — Chinese localization (PR #177)
-Added Simplified Chinese (`zh`) locale to the WebUI. One of the first non-English locales and the most-used non-English locale in the codebase.
-
-**[@mmartial](https://github.com/mmartial)** — Docker UID/GID matching (PR #237)
-Added Docker support for running as an arbitrary UID/GID matching the host user, eliminating permission issues with bind-mounted volumes — essential for Docker deployments where the host user isn't UID 1000.
-
-**[@vCillusion](https://github.com/vCillusion)** — pip package resolution fix (PR #76)
-Fixed agent dependency resolution to prefer packages from the venv's site-packages over the agent directory itself, preventing shadowing bugs when developing locally.
-
-**[@carlytwozero](https://github.com/carlytwozero)** — API key pass-through for non-Anthropic providers (PR #78)
-Fixed `api_key` not being passed to `AIAgent` for non-Anthropic `/anthropic` providers — a quiet regression that silently broke any non-default provider.
-
-**[@mangodxd](https://github.com/mangodxd)** — Type hints cleanup (PR #115)
-Added missing type hints across 10 files and corrected 9 inaccurate existing ones — the kind of maintenance work that makes the codebase easier to reason about.
-
-**[@Argonaut790](https://github.com/Argonaut790)** — HTML entity decode + Traditional Chinese locale (PR #239)
-Fixed double-escaping of HTML entities in `renderMd()` — LLM output containing `&lt;code&gt;` was being escaped a second time, rendering as literal text instead of the intended markdown. The same PR also completed the Simplified Chinese translation (40+ missing keys) and added a full Traditional Chinese (`zh-Hant`) locale.
-
-**[@indigokarasu](https://github.com/indigokarasu)** — Visual redesign proposal: icon rail + design token system + 7 themes (PR #213)
-A CSS-only redesign of the full UI — proper design tokens (`--bg-primary`, `--text-info`, spacing scale), an icon rail sidebar replacing the emoji tab strip, consistent form cards, breadcrumb nav, and 7 built-in themes as custom properties. The PR didn't merge as-is but directly shaped the design language and theme architecture that shipped in v0.50.0.
-
-**[@zenc-cp](https://github.com/zenc-cp)** — Anti-hallucination guard for ReAct loop (PR #133)
-Added a streaming token buffer and post-run message scrub to `streaming.py` to detect and strip fake tool execution JSON that weaker models write inline instead of calling tools properly. A three-layer approach: ephemeral anti-hallucination prompt, live token filtering, and session history cleanup. The pattern influenced later streaming.py improvements.
+Open `http://<tailscale-ip>:8787` from your phone.
 
 ---
 
-Want to contribute? See [ARCHITECTURE.md](ARCHITECTURE.md) for the codebase layout and [TESTING.md](TESTING.md) for how to run the test suite. The best contributions are focused, well-tested, and solve a real problem — exactly what every person on this list did.
+## Docker Compose
 
-## Repo
+### Single Container
 
+```bash
+docker compose up -d
 ```
-git@github.com:nesquena/hermes-webui.git
+
+### Two Containers (Agent + WebUI)
+
+```bash
+docker compose -f docker-compose.two-container.yml up -d
 ```
+
+### Three Containers (Agent + Dashboard + WebUI)
+
+```bash
+docker compose -f docker-compose.three-container.yml up -d
+```
+
+---
+
+## Running Tests
+
+```bash
+pytest tests/ -v --timeout=60
+```
+
+---
+
+## License
+
+MIT License — Free to use, modify, and distribute.
+
+---
+
+<div align="center">
+
+**Yusuf Mussa** — وكيل الذكاء الاصطناعي المتقدم
+
+*البرمجة • التصميم • حل الأخطاء • بناء SaaS • DevOps*
+
+</div>

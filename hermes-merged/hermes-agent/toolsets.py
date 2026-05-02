@@ -208,6 +208,12 @@ TOOLSETS = {
         "includes": [],
     },
 
+    "full_stack": {
+        "description": "Full-stack development toolset — code execution, file ops, terminal, web, browser, image generation, delegation, memory, todo, and cronjob for building complete applications and SaaS products",
+        "tools": [],
+        "includes": ["code_execution", "file", "terminal", "web", "browser", "image_gen", "delegation", "memory", "todo", "cronjob", "skills"]
+    },
+
     "discord_admin": {
         "description": "Discord server management (list channels/roles, pin messages, assign roles)",
         "tools": ["discord_admin"],

@@ -120,7 +120,7 @@ const LOCALES = {
     cmd_terminal: 'Open the workspace terminal',
     cmd_new: 'Start a new chat session',
     cmd_usage: 'Toggle token usage display on/off',
-    cmd_theme: 'Switch appearance (theme: system/dark/light, skin: default/ares/mono/slate/poseidon/sisyphus/charizard)',
+    cmd_theme: 'Switch appearance (theme: system/dark/light, skin: default/ares/mono/slate/poseidon/sisyphus/charizard/sienna/aurora/neon)',
     cmd_personality: 'Switch agent personality',
     cmd_skills: 'List available Yusuf Mussa skills',
     available_commands: 'Available commands:',
@@ -5324,7 +5324,7 @@ const LOCALES = {
     cmd_terminal: '워크스페이스 터미널 열기',
     cmd_new: '새 채팅 세션 시작',
     cmd_usage: '토큰 사용량 표시 켜기/끄기',
-    cmd_theme: 'Switch appearance (theme: system/dark/light, skin: default/ares/mono/slate/poseidon/sisyphus/charizard)',
+    cmd_theme: 'Switch appearance (theme: system/dark/light, skin: default/ares/mono/slate/poseidon/sisyphus/charizard/sienna/aurora/neon)',
     cmd_personality: 'Switch agent personality',
     cmd_skills: 'List available Yusuf Mussa skills',
     available_commands: '사용 가능한 명령:',
@@ -6823,6 +6823,11 @@ function resolveLocale(lang) {
     return LOCALES['zh-Hant'] ? 'zh-Hant' : null;
   }
 
+  // Common Arabic variants → ar
+  if (lower.startsWith('ar')) {
+    return LOCALES.ar ? 'ar' : null;
+  }
+
   // Fallback to base language subtag (e.g. en-US -> en).
   const base = lower.split('-')[0];
   const baseMatch = Object.keys(LOCALES).find((k) => k.toLowerCase() === base);
@@ -6864,8 +6869,18 @@ function setLocale(lang) {
   const resolved = resolveLocale(lang) || 'en';
   _locale = LOCALES[resolved];
   localStorage.setItem('hermes-lang', resolved);
+  const isRTL = !!_locale._rtl;
   document.documentElement.lang = _locale._lang || resolved;
-  document.documentElement.dir = _locale._rtl ? 'rtl' : 'ltr';
+  document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+  // Toggle RTL class on <html> for CSS targeting (e.g. html.dir-rtl .sidebar)
+  document.documentElement.classList.toggle('dir-rtl', isRTL);
+  document.documentElement.classList.toggle('dir-ltr', !isRTL);
+  // Ensure the body also reflects direction for child-specific CSS
+  if (document.body) {
+    document.body.dir = isRTL ? 'rtl' : 'ltr';
+    document.body.classList.toggle('dir-rtl', isRTL);
+    document.body.classList.toggle('dir-ltr', !isRTL);
+  }
 }
 
 /**
@@ -6882,6 +6897,18 @@ function loadLocale() {
  * Call after setLocale() to make static HTML text update without a reload.
  */
 function applyLocaleToDOM() {
+  // Re-apply RTL direction to ensure layout consistency after locale switch
+  const isRTL = !!_locale._rtl;
+  document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+  document.documentElement.lang = _locale._lang || 'en';
+  document.documentElement.classList.toggle('dir-rtl', isRTL);
+  document.documentElement.classList.toggle('dir-ltr', !isRTL);
+  if (document.body) {
+    document.body.dir = isRTL ? 'rtl' : 'ltr';
+    document.body.classList.toggle('dir-rtl', isRTL);
+    document.body.classList.toggle('dir-ltr', !isRTL);
+  }
+
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     const val = t(key);
@@ -6896,6 +6923,12 @@ function applyLocaleToDOM() {
     const key = el.getAttribute('data-i18n-placeholder');
     const val = t(key);
     if (val && val !== key) el.placeholder = val;
+  });
+  // Update aria-label translations
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+    const key = el.getAttribute('data-i18n-aria');
+    const val = t(key);
+    if (val && val !== key) el.setAttribute('aria-label', val);
   });
   if (typeof syncAppTitlebar === 'function') syncAppTitlebar();
 }
