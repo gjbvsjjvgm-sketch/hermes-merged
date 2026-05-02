@@ -1,4 +1,4 @@
-# Hermes Web UI: Full Parity Roadmap
+# Yusuf Mussa Web UI: Full Parity Roadmap
 
 > Goal: Full 1:1 parity with the Hermes CLI experience via a clean dark web UI.
 > Everything you can do from the CLI terminal, you can do from this UI.

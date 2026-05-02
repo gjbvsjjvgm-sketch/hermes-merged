@@ -1,4 +1,4 @@
-# Hermes Web UI -- Forward Sprint Plan
+# Yusuf Mussa Web UI -- Forward Sprint Plan
 
 > Current state: v0.50.156 | 1903 tests | Full daily driver — CLI parity achieved
 >

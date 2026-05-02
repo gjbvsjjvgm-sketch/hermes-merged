@@ -638,6 +638,15 @@ _LOGIN_LOCALE = {
         "invalid_pw": "\u5bc6\u78bc\u932f\u8aa4",
         "conn_failed": "\u9023\u63a5\u5931\u6557",
     },
+    "ar": {
+        "lang": "ar-SA",
+        "title": "\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644",
+        "subtitle": "\u0623\u062f\u062e\u0644 \u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631 \u0644\u0644\u0645\u062a\u0627\u0628\u0639\u0629",
+        "placeholder": "\u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631",
+        "btn": "\u062f\u062e\u0648\u0644",
+        "invalid_pw": "\u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631 \u063a\u064a\u0631 \u0635\u062d\u064a\u062d\u0629",
+        "conn_failed": "\u0641\u0634\u0644 \u0627\u0644\u0627\u062a\u0635\u0627\u0644",
+    },
 }
 
 
@@ -665,6 +674,10 @@ def _resolve_login_locale_key(raw_lang: str | None) -> str:
     if lower.startswith("zh-tw") or lower.startswith("zh-hk") or lower.startswith("zh-mo") or lower.startswith("zh-hant"):
         return "zh-Hant" if "zh-Hant" in _LOGIN_LOCALE else "zh"
 
+    # Arabic aliases
+    if lower.startswith("ar"):
+        return "ar"
+
     # Fallback to base language subtag (e.g. en-US -> en).
     base = lower.split("-", 1)[0]
     for key in _LOGIN_LOCALE:
@@ -674,7 +687,7 @@ def _resolve_login_locale_key(raw_lang: str | None) -> str:
 
 # ── Login page (self-contained, no external deps) ────────────────────────────
 _LOGIN_PAGE_HTML = """<!doctype html>
-<html lang="{{LANG}}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="{{LANG}}" {{DIR_ATTR}}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{{BOT_NAME}} — {{LOGIN_TITLE}}</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -696,6 +709,8 @@ button{width:100%;padding:10px;border-radius:10px;border:none;background:rgba(12
   transition:all .15s}
 button:hover{background:rgba(124,185,255,.25)}
 .err{color:#e94560;font-size:12px;margin-top:10px;display:none}
+[dir="rtl"] .card{text-align:right}
+[dir="rtl"] input{text-align:right;direction:rtl}
 </style></head><body>
 <div class="card">
   <div class="logo">{{BOT_NAME_INITIAL}}</div>
@@ -715,6 +730,14 @@ button:hover{background:rgba(124,185,255,.25)}
 
 def handle_get(handler, parsed) -> bool:
     """Handle all GET routes. Returns True if handled, False for 404."""
+    if parsed.path == "/api/tools/status":
+        try:
+            from api.advanced_tools import get_system_info
+            return j(handler, get_system_info())
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return j(handler, {"error": str(e)}, status=500)
 
     if parsed.path in ("/", "/index.html"):
         return t(
@@ -730,10 +753,12 @@ def handle_get(handler, parsed) -> bool:
         _login_strings = _LOGIN_LOCALE[
             _resolve_login_locale_key(_lang)
         ]
+        _dir_attr = 'dir="rtl"' if _login_strings.get("lang", "").startswith("ar") else ""
         _page = (
             _LOGIN_PAGE_HTML.replace("{{BOT_NAME}}", _bn)
             .replace("{{BOT_NAME_INITIAL}}", _bn[0].upper())
             .replace("{{LANG}}", _html.escape(_login_strings["lang"]))
+            .replace("{{DIR_ATTR}}", _dir_attr)
             .replace("{{LOGIN_TITLE}}", _html.escape(_login_strings["title"]))
             .replace("{{LOGIN_SUBTITLE}}", _html.escape(_login_strings["subtitle"]))
             .replace(
@@ -1281,6 +1306,31 @@ def handle_get(handler, parsed) -> bool:
     # ── MCP Servers (GET) ──
     if parsed.path == "/api/mcp/servers":
         return _handle_mcp_servers_list(handler)
+
+    # ── Advanced Tools API ──
+    if parsed.path == "/api/tools/status":
+        try:
+            from api.advanced_tools import get_system_info
+            result = get_system_info()
+            return j(handler, result)
+        except Exception as e:
+            return j(handler, {"error": str(e), "tools": {"web_search": False, "image_generation": False, "code_execution": True, "memory": True, "mcp": True}, "version": "2.0.0"}, status=500)
+
+    if parsed.path == "/api/memory/search":
+        from api.advanced_tools import search_memory
+        _qs = parse_qs(parsed.query)
+        user_id = _qs.get("user_id", ["default"])[0]
+        query = _qs.get("q", [""])[0]
+        if not query:
+            return j(handler, {"error": "Query parameter 'q' is required"}, status=400)
+        limit = int(_qs.get("limit", ["10"])[0])
+        return j(handler, search_memory(user_id, query, limit))
+
+    if parsed.path == "/api/memory/all":
+        from api.advanced_tools import get_all_memories
+        _qs = parse_qs(parsed.query)
+        user_id = _qs.get("user_id", ["default"])[0]
+        return j(handler, get_all_memories(user_id))
 
     return False  # 404
 
@@ -2067,6 +2117,44 @@ def handle_post(handler, parsed) -> bool:
         handler.end_headers()
         handler.wfile.write(json.dumps({"ok": True}).encode())
         return True
+
+    # ── Advanced Tools API ──
+    if parsed.path == "/api/tools/search":
+        from api.advanced_tools import web_search
+        query = body.get("query", "")
+        if not query:
+            return j(handler, {"error": "Query is required"}, status=400)
+        max_results = body.get("max_results", 5)
+        provider = body.get("provider", "auto")
+        return j(handler, web_search(query, max_results, provider))
+
+    if parsed.path == "/api/tools/execute":
+        from api.advanced_tools import execute_code
+        code = body.get("code", "")
+        if not code:
+            return j(handler, {"error": "Code is required"}, status=400)
+        language = body.get("language", "python")
+        timeout = body.get("timeout", 30)
+        return j(handler, execute_code(code, language, timeout))
+
+    if parsed.path == "/api/tools/image":
+        from api.advanced_tools import generate_image
+        prompt = body.get("prompt", "")
+        if not prompt:
+            return j(handler, {"error": "Prompt is required"}, status=400)
+        size = body.get("size", "1024x1024")
+        n = body.get("n", 1)
+        return j(handler, generate_image(prompt, size, n))
+
+    if parsed.path == "/api/memory/save":
+        from api.advanced_tools import save_memory
+        user_id = body.get("user_id", "default")
+        key = body.get("key", "")
+        value = body.get("value", "")
+        category = body.get("category", "general")
+        if not key:
+            return j(handler, {"error": "Key is required"}, status=400)
+        return j(handler, save_memory(user_id, key, value, category))
 
     return False  # 404
 

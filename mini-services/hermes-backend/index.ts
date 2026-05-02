@@ -1,8 +1,8 @@
 import { serve } from "bun";
 
 const BACKEND_PORT = 8787;
-const WEBUI_DIR = "/home/z/my-project/repos/hermes-webui";
-const AGENT_DIR = "/home/z/my-project/repos/hermes-agent";
+const WEBUI_DIR = "/home/z/my-project/hermes-merged";
+const AGENT_DIR = "/home/z/my-project/hermes-merged/hermes-agent";
 const PROXY_PORT = 3030;
 
 const env = {

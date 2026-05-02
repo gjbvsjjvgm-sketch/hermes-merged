@@ -1,6 +1,6 @@
-# Hermes Web UI — Themes
+# Yusuf Mussa Web UI — Themes
 
-Hermes Web UI supports pluggable color themes. Seven themes ship built-in, and
+Yusuf Mussa Web UI supports pluggable color themes. Seven themes ship built-in, and
 you can create your own with pure CSS — no Python changes needed.
 
 ---

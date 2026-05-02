@@ -1,4 +1,4 @@
-# Hermes Web UI -- Changelog
+# Yusuf Mussa Web UI -- Changelog
 
 ## [Unreleased]
 

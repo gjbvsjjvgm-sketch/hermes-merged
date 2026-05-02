@@ -1,6 +1,6 @@
-# Three-container Docker Compose: Hermes Agent + Dashboard + WebUI
+# Three-container Docker Compose: Yusuf Mussa Agent + Dashboard + WebUI
 #
-# This extends the two-container setup with the Hermes Dashboard for
+# This extends the two-container setup with the Yusuf Mussa Dashboard for
 # monitoring agent activity, sessions, and resource usage.
 #
 # Usage:
@@ -9,7 +9,7 @@
 # Services:
 #   hermes-agent   — gateway API on port 8642 (CLI, Telegram, cron, tools)
 #   hermes-dashboard — monitoring dashboard on port 9119
-#   hermes-webui   — browser chat interface on port 8787
+#   hermes-webui   — Yusuf Mussa browser chat interface on port 8787
 #
 # All three share the same hermes-home volume so config, sessions,
 # skills, and memory are consistent across all surfaces.

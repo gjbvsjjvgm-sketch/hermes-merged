@@ -1,5 +1,5 @@
 """
-Hermes Web UI -- HTTP helper functions.
+Yusuf Mussa Web UI -- HTTP helper functions.
 """
 import json as _json
 import re as _re

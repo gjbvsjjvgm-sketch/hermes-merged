@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # ============================================================
-# Hermes Merged Application - Startup Script
+# Yusuf Mussa Merged Application - Startup Script
 # ============================================================
-# This script starts the Hermes Web UI with the integrated
+# This script starts the Yusuf Mussa Web UI with the integrated
 # hermes-agent backend. All files from both repositories are
 # included without modification.
 # ============================================================
@@ -45,7 +45,7 @@ if [[ -z "${PYTHON}" ]]; then
 fi
 
 echo "============================================"
-echo "  Hermes Merged Application"
+echo "  Yusuf Mussa Merged Application"
 echo "============================================"
 echo "  Agent dir : ${HERMES_WEBUI_AGENT_DIR}"
 echo "  Python    : ${PYTHON}"

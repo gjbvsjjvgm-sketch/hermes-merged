@@ -1,5 +1,5 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  /* ── Light mode (default) — warm gold-tinted palette from Hermes brand ── */
+  /* ── Light mode (default) — warm gold-tinted palette ── */
   :root {
     --bg:#FEFCF7;--sidebar:#FAF7F0;--border:#E0D8C8;--border2:rgba(0,0,0,0.15);
     --text:#1A1610;--muted:#5C5344;--accent:#B8860B;--blue:#0288A8;--gold:#8B6508;--code-bg:#F5F0E5;
@@ -65,7 +65,7 @@
   /* App-level base — keeps em/rem values scaling correctly */
   :root[data-font-size="small"] { font-size: 12px; }
   :root[data-font-size="large"] { font-size: 16px; }
-  /* ── Dark mode — navy-black + gold accent matching Hermes terminal ── */
+  /* ── Dark mode — navy-black + gold accent ── */
   :root.dark {
     --bg:#0D0D1A;--sidebar:#141425;--border:#2A2A45;--border2:rgba(255,255,255,0.14);
     --text:#FFF8DC;--muted:#C0C0C0;--accent:#FFD700;--blue:#4DD0E1;--gold:#FFBF00;--code-bg:#1A1A2E;
@@ -141,7 +141,7 @@
   :root.dark[data-skin="sienna"] .new-chat-btn{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;box-shadow:0 1px 2px rgba(20,19,17,0.08);}
   :root[data-skin="sienna"]:not(.dark) .new-chat-btn:hover,
   :root.dark[data-skin="sienna"] .new-chat-btn:hover{background:var(--accent-hover);border-color:var(--accent-hover);color:#fff;}
-  /* Tool / thinking cards: mute the blue-ish Hermes highlights to neutral */
+  /* Tool / thinking cards: mute the blue-ish highlights to neutral */
   :root[data-skin="sienna"] .tool-card{background:rgba(20,19,17,0.025);border-color:var(--border);border-radius:10px;}
   :root[data-skin="sienna"] .tool-card:hover{border-color:var(--border2);}
   :root[data-skin="sienna"] .tool-card-running{background:var(--accent-bg);border-color:var(--accent-bg-strong);}
@@ -2363,7 +2363,7 @@ main.main.showing-profiles > #mainProfiles{display:flex;}
 @media (max-width: 600px) { .msg-row[data-role="user"] { max-width: 90%; } }
 /* Hide the entire "empty tool-anchor" assistant row (content='' with
    tool_calls). renderMessages keeps it in the DOM so tool cards can anchor
-   to it, but visually it adds a ghost "Hermes" header above the tool cards.
+   to it, but visually it adds a ghost header above the tool cards.
    With the row hidden the transition from live → settled on 'done' is
    seamless. */
 .msg-row[data-role="assistant"]:has(.msg-body:empty) { padding: 0; margin: 0; }
@@ -2782,3 +2782,108 @@ main.main > .main-view:not([id="mainChat"]):not([id="mainSettings"]) .main-view-
 .html-preview-iframe{width:100%;height:400px;border:none;display:block;background:#fff;}
 .html-preview-fallback{padding:8px;font-size:13px;}
 .html-preview-spinner{animation:pulse 1.5s ease-in-out infinite;}
+
+/* ── Tools status badges ── */
+.tool-badge {
+  display: inline-block;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--accent-bg);
+  color: var(--accent-text);
+  border: 1px solid var(--accent-bg-strong);
+  cursor: default;
+  transition: opacity .15s;
+  white-space: nowrap;
+}
+.tool-badge:hover {
+  opacity: 0.8;
+}
+/* ── Enhanced suggestion grid ── */
+.suggestion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+  max-width: 600px;
+  margin-top: 16px;
+}
+/* ── New feature badge ── */
+.new-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-inline-start: 4px;
+  letter-spacing: 0.5px;
+}
+/* ── Tool card enhanced styles ── */
+.tool-card-running .tool-card-name {
+  color: var(--accent);
+  font-weight: 600;
+}
+/* ── Arabic calligraphy decoration ── */
+[dir="rtl"] .empty-logo::after {
+  content: 'بسم الله';
+  display: block;
+  font-size: 18px;
+  color: var(--accent);
+  margin-top: 8px;
+  font-family: 'IBM Plex Arabic', 'Noto Sans Arabic', serif;
+  opacity: 0.6;
+}
+
+/* ── RTL (Right-to-Left) Support ─────────────────────────────────────────
+   Activated when <html dir="rtl"> or :root[dir="rtl"] is set.
+   Mirrors layout, flips borders/padding, adjusts text alignment,
+   and loads Arabic-capable fonts for a natural RTL experience.
+────────────────────────────────────────────────────────────────────────── */
+
+/* 6. Arabic font support — override --font-ui for RTL */
+[dir="rtl"] {
+  --font-ui: 'IBM Plex Arabic', 'Noto Sans Arabic', 'Cairo', -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
+}
+
+/* 1. Layout mirroring */
+[dir="rtl"] .sidebar { border-right: none; border-left: 1px solid var(--border); }
+[dir="rtl"] .session-item.active { border-left: none; border-right: 2px solid var(--accent); }
+[dir="rtl"] .session-actions { right: auto; left: 6px; }
+[dir="rtl"] .session-time { margin-left: 0; margin-right: auto; }
+[dir="rtl"] .sidebar-search-icon { left: auto; right: 22px; }
+[dir="rtl"] .sidebar-search input { padding-left: 10px; padding-right: 32px; }
+[dir="rtl"] .session-attention-indicator { right: auto; left: 6px; }
+
+/* 2. Text alignment */
+[dir="rtl"] .msg-body { text-align: right; direction: rtl; }
+[dir="rtl"] .msg-row[data-role="user"] { flex-direction: row-reverse; }
+[dir="rtl"] .session-title { text-align: right; }
+[dir="rtl"] .composer-box textarea { text-align: right; direction: rtl; }
+
+/* 3. Icons and directional elements */
+[dir="rtl"] .rail { border-right: none; border-left: 1px solid var(--border); }
+[dir="rtl"] .icon-btn svg { transform: scaleX(-1); }
+[dir="rtl"] .app-dialog-close { margin-left: 0; margin-right: auto; }
+
+/* 4. Toast notifications */
+[dir="rtl"] .toast { right: auto; left: 24px; }
+
+/* 5. General flipping */
+[dir="rtl"] .panel-head { text-align: right; }
+[dir="rtl"] .side-menu-item { text-align: right; }
+[dir="rtl"] .empty-state { text-align: center; }
+[dir="rtl"] .empty-state .suggestion-grid { direction: rtl; }
+
+/* 7. Composer and input adjustments */
+[dir="rtl"] .composer-footer { direction: rtl; }
+[dir="rtl"] #msg { direction: rtl; text-align: right; }
+[dir="rtl"] input[type="text"], [dir="rtl"] input[type="password"], [dir="rtl"] select { direction: rtl; text-align: right; }
+[dir="rtl"] .clarify-input { direction: rtl; text-align: right; }
+
+/* 8. Workspace panel */
+[dir="rtl"] .resize-handle { left: 0; right: auto; cursor: col-resize; }
+
+/* 9. Session action menu position */
+[dir="rtl"] .session-action-menu { left: auto; right: 0; }

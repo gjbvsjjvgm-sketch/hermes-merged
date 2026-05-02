@@ -1,4 +1,4 @@
-# Two-container Docker Compose: Hermes Agent + Hermes WebUI
+# Two-container Docker Compose: Yusuf Mussa Agent + Yusuf Mussa WebUI
 #
 # This runs the agent and web UI in separate containers connected via
 # shared volumes. The WebUI installs the agent's Python dependencies

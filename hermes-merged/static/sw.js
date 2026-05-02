@@ -7,7 +7,7 @@
 
 // Cache version is injected by the server at request time (routes.py /sw.js handler).
 // Bumps automatically whenever the git commit changes — no manual edits needed.
-const CACHE_NAME = 'hermes-shell-__CACHE_VERSION__';
+const CACHE_NAME = 'ym-shell-__CACHE_VERSION__';
 
 // Static assets that form the app shell
 const SHELL_ASSETS = [
@@ -65,8 +65,8 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
 
   // API and streaming endpoints — always go to network.
-  // The WebUI may be mounted under a subpath such as /hermes/, so API
-  // requests can look like /hermes/api/sessions rather than /api/sessions.
+  // The WebUI may be mounted under a subpath such as /ym/, so API
+  // requests can look like /ym/api/sessions rather than /api/sessions.
   if (
     url.pathname.startsWith('/api/') ||
     url.pathname.includes('/api/') ||

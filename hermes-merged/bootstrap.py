@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""One-shot bootstrap launcher for Hermes Web UI."""
+"""One-shot bootstrap launcher for Yusuf Mussa Web UI."""
 
 from __future__ import annotations
 
@@ -195,7 +195,7 @@ def open_browser(url: str) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Bootstrap Hermes Web UI onboarding.")
+    parser = argparse.ArgumentParser(description="Bootstrap Yusuf Mussa Web UI onboarding.")
     parser.add_argument("port", nargs="?", type=int, default=DEFAULT_PORT)
     parser.add_argument("--host", default=DEFAULT_HOST)
     parser.add_argument(
@@ -238,7 +238,7 @@ def main() -> int:
     if agent_dir:
         env["HERMES_WEBUI_AGENT_DIR"] = str(agent_dir)
 
-    info(f"Starting Hermes Web UI on http://{args.host}:{args.port}")
+    info(f"Starting Yusuf Mussa Web UI on http://{args.host}:{args.port}")
     with log_path.open("ab") as log_file:
         proc = subprocess.Popen(
             [python_exe, str(REPO_ROOT / "server.py")],

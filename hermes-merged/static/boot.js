@@ -414,13 +414,13 @@ $('btnDownload').onclick=()=>{
   if(!S.session)return;
   const blob=new Blob([transcript()],{type:'text/markdown'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download=`hermes-${S.session.session_id}.md`;a.click();URL.revokeObjectURL(a.href);
+  a.download=`ym-${S.session.session_id}.md`;a.click();URL.revokeObjectURL(a.href);
 };
 $('btnExportJSON').onclick=()=>{
   if(!S.session)return;
   const url=`/api/session/export?session_id=${encodeURIComponent(S.session.session_id)}`;
   const a=document.createElement('a');a.href=url;
-  a.download=`hermes-${S.session.session_id}.json`;a.click();
+  a.download=`ym-${S.session.session_id}.json`;a.click();
 };
 $('btnImportJSON').onclick=()=>$('importFileInput').click();
 $('importFileInput').onchange=async(e)=>{
@@ -819,7 +819,7 @@ function _buildSkinPicker(activeSkin){
 function applyBotName(){
   // Prefer profile name over global bot_name for personalised placeholder.
   // If activeProfile is set and not 'default', use it (capitalised).
-  // Falls back to window._botName (global bot_name setting) or 'Hermes'.
+  // Falls back to window._botName (global bot_name setting) or 'Yusuf Mussa'.
   let name;
   if(S.activeProfile && S.activeProfile!=='default'){
     name=S.activeProfile.charAt(0).toUpperCase()+S.activeProfile.slice(1);
@@ -989,7 +989,7 @@ function applyBotName(){
   // Start real-time gateway session sync if setting is enabled
   if(typeof startGatewaySSE==='function') startGatewaySSE();
 })().catch(e=>{
-  console.error('[hermes] boot failed', e);
+  console.error('[ym] boot failed', e);
   try{S._bootReady=true;}catch(_){}
   try{syncTopbar();}catch(_){}
   try{syncWorkspacePanelState();}catch(_){}
@@ -1025,3 +1025,14 @@ window.addEventListener('pageshow', (event) => {
   // Restart the gateway SSE watcher — the persisted connection is dead after bfcache
   if (typeof startGatewaySSE === 'function') try { startGatewaySSE(); } catch (_) {}
 });
+
+// ── Tools status badges ──
+(function checkToolsStatus(){
+  fetch('/api/tools/status').then(r=>r.json()).then(info=>{
+    if(info&&info.tools){
+      if(info.tools.web_search) document.getElementById('badgeSearch')&&(document.getElementById('badgeSearch').style.display='inline-block');
+      if(info.tools.code_execution) document.getElementById('badgeCode')&&(document.getElementById('badgeCode').style.display='inline-block');
+      if(info.tools.image_generation) document.getElementById('badgeImage')&&(document.getElementById('badgeImage').style.display='inline-block');
+    }
+  }).catch(()=>{});
+})();
