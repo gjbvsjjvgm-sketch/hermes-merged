@@ -2471,7 +2471,7 @@ async function checkInflightOnBoot(sid) {
 
 function syncTopbar(){
   if(!S.session){
-    document.title=window._botName||'Hermes';
+    document.title=window._botName||'Yusuf Mussa';
     if(typeof syncWorkspaceDisplays==='function') syncWorkspaceDisplays();
     if(typeof syncModelChip==='function') syncModelChip();
     if(typeof syncTerminalButton==='function') syncTerminalButton();
@@ -2490,7 +2490,7 @@ function syncTopbar(){
   }
   const sessionTitle=S.session.title||t('untitled');
   const _topbarTitle=$('topbarTitle');if(_topbarTitle)_topbarTitle.textContent=sessionTitle;
-  document.title=sessionTitle+' \u2014 '+(window._botName||'Hermes');
+  document.title=sessionTitle+' \u2014 '+(window._botName||'Yusuf Mussa');
   const vis=S.messages.filter(m=>m&&m.role&&m.role!=='tool');
   const _topbarMeta=$('topbarMeta');if(_topbarMeta)_topbarMeta.textContent=t('n_messages',vis.length);
   if(typeof syncAppTitlebar==='function') syncAppTitlebar();
@@ -2576,7 +2576,7 @@ function _messageHasReasoningPayload(m){
   return /<think>[\s\S]*?<\/think>|<\|channel>thought\n[\s\S]*?<channel\|>|<\|turn\|>thinking\n[\s\S]*?<turn\|>/.test(String(m.content||''));
 }
 function _assistantRoleHtml(tsTitle=''){
-  const _bn=window._botName||'Hermes';
+  const _bn=window._botName||'Yusuf Mussa';
   return `<div class="msg-role assistant" ${tsTitle?`title="${esc(tsTitle)}"`:''}><div class="role-icon assistant">${esc(_bn.charAt(0).toUpperCase())}</div><span style="font-size:12px">${esc(_bn)}</span></div>`;
 }
 function _createAssistantTurn(tsTitle=''){

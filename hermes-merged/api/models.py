@@ -1,4 +1,4 @@
-"""Hermes Web UI -- Session model and in-memory session store."""
+"""Yusuf Mussa Web UI -- Session model and in-memory session store."""
 import collections
 import json
 import logging

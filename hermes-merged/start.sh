@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ============================================================
-# Hermes Merged Application - Startup Script
+# Yusuf Mussa Merged Application - Startup Script
 # ============================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -39,7 +39,7 @@ if [[ -z "${PYTHON}" ]]; then
 fi
 
 echo "============================================"
-echo "  Hermes Merged Application"
+echo "  Yusuf Mussa Merged Application"
 echo "============================================"
 echo "  Agent dir : ${HERMES_WEBUI_AGENT_DIR}"
 echo "  Python    : ${PYTHON}"

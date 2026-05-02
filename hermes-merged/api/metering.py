@@ -1,5 +1,5 @@
 """
-Hermes Web UI -- Streaming performance metering.
+Yusuf Mussa Web UI -- Streaming performance metering.
 
 Tracks Tokens Per Second (TPS) across all active WebUI sessions, and the
 HIGH/LOW TPS values observed over the past 60 minutes.  Metering data is

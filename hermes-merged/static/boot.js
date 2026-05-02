@@ -824,7 +824,7 @@ function applyBotName(){
   if(S.activeProfile && S.activeProfile!=='default'){
     name=S.activeProfile.charAt(0).toUpperCase()+S.activeProfile.slice(1);
   }else{
-    name=window._botName||'Hermes';
+    name=window._botName||'Yusuf Mussa';
   }
   document.title=name;
   const sidebarH1=document.querySelector('.sidebar-header h1');
@@ -852,7 +852,7 @@ function applyBotName(){
     window._simplifiedToolCalling=s.simplified_tool_calling!==false;
     window._sidebarDensity=(s.sidebar_density==='detailed'?'detailed':'compact');
     window._busyInputMode=(s.busy_input_mode||'queue');
-    window._botName=s.bot_name||'Hermes';
+    window._botName=s.bot_name||'Yusuf Mussa';
     if(s.default_model) window._defaultModel=s.default_model;
     // Persist default workspace so the blank new-chat page can show it
     // and workspace actions (New file/folder) work before the first session (#804).
@@ -885,7 +885,7 @@ function applyBotName(){
     window._simplifiedToolCalling=true;
     window._sidebarDensity='compact';
     window._busyInputMode='queue';
-    window._botName='Hermes';
+    window._botName='Yusuf Mussa';
     _bootSettings={check_for_updates:false};
     if(typeof setLocale==='function'){
       const _lang=typeof resolvePreferredLocale==='function'

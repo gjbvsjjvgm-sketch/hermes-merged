@@ -1,5 +1,5 @@
 """
-Hermes Web UI -- Shared configuration, constants, and global state.
+Yusuf Mussa Web UI -- Shared configuration, constants, and global state.
 Imported by all other api/* modules and by server.py.
 
 Discovery order for all paths:
@@ -350,7 +350,7 @@ def print_startup_config() -> None:
 
     lines = [
         "",
-        "  Hermes Web UI -- startup config",
+        "  Yusuf Mussa Web UI -- startup config",
         "  --------------------------------",
         f"  repo root   : {REPO_ROOT}",
         f"  agent dir   : {_AGENT_DIR if _AGENT_DIR else 'NOT FOUND'}  {ok if _AGENT_DIR else err}",
@@ -365,7 +365,7 @@ def print_startup_config() -> None:
 
     if not _HERMES_FOUND:
         print(
-            f"{err}  Could not find the Hermes agent directory.\n"
+            f"{err}  Could not find the Yusuf Mussa agent directory.\n"
             "      The server will start but agent features will not work.\n"
             "\n"
             "      To fix, set one of:\n"
@@ -538,7 +538,7 @@ _FALLBACK_MODELS = [
     {"provider": "Z.AI",      "id": "zai/glm-4.5-flash",                "label": "GLM-4.5 Flash"},
 ]
 
-# Provider display names for known Hermes provider IDs
+# Provider display names for known Yusuf Mussa provider IDs
 _PROVIDER_DISPLAY = {
     "nous": "Nous Portal",
     "openrouter": "OpenRouter",
@@ -2192,7 +2192,7 @@ _SETTINGS_DEFAULTS = {
     "font_size": "default",  # small | default | large
     "language": "en",  # UI locale code; must match a key in static/i18n.js LOCALES
     "bot_name": os.getenv(
-        "HERMES_WEBUI_BOT_NAME", "Hermes"
+        "HERMES_WEBUI_BOT_NAME", "Yusuf Mussa"
     ),  # display name for the assistant
     "sound_enabled": False,  # play notification sound when assistant finishes
     "notifications_enabled": False,  # browser notification when tab is in background

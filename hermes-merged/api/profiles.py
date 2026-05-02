@@ -1,5 +1,5 @@
 """
-Hermes Web UI -- Profile state management.
+Yusuf Mussa Web UI -- Profile state management.
 Wraps hermes_cli.profiles to provide profile switching for the web UI.
 
 The web UI maintains a process-level "active profile" that determines which

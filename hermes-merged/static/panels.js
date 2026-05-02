@@ -2851,7 +2851,7 @@ async function loadSettingsPanel(){
     }
     // Bot name
     const botNameField=$('settingsBotName');
-    if(botNameField){botNameField.value=settings.bot_name||'Hermes';botNameField.addEventListener('input',_markSettingsDirty,{once:false});}
+    if(botNameField){botNameField.value=settings.bot_name||'Yusuf Mussa';botNameField.addEventListener('input',_markSettingsDirty,{once:false});}
     // Password field: always blank (we don't send hash back)
     const pwField=$('settingsPassword');
     if(pwField){pwField.value='';pwField.addEventListener('input',_markSettingsDirty,{once:false});}
@@ -3125,7 +3125,7 @@ function _applySavedSettingsUi(saved, body, opts){
   window._simplifiedToolCalling=body.simplified_tool_calling!==false;
   window._sidebarDensity=sidebarDensity==='detailed'?'detailed':'compact';
   window._busyInputMode=body.busy_input_mode||'queue';
-  window._botName=body.bot_name||'Hermes';
+  window._botName=body.bot_name||'Yusuf Mussa';
   if(typeof applyBotName==='function') applyBotName();
   if(typeof setLocale==='function') setLocale(language);
   if(typeof applyLocaleToDOM==='function') applyLocaleToDOM();
@@ -3227,7 +3227,7 @@ async function saveSettings(andClose){
   body.busy_input_mode=busyInputMode;
   body.auto_title_refresh_every=(($('settingsAutoTitleRefresh')||{}).value||'0');
   const botName=(($('settingsBotName')||{}).value||'').trim();
-  body.bot_name=botName||'Hermes';
+  body.bot_name=botName||'Yusuf Mussa';
   // Password: only act if the field has content; blank = leave auth unchanged
   if(pw && pw.trim()){
     try{

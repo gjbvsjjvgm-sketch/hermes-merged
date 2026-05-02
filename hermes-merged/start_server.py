@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Start the Hermes Web UI server with correct Python environment."""
+"""Start the Yusuf Mussa Web UI server with correct Python environment."""
 import os
 import sys
 
