@@ -1238,11 +1238,15 @@ def handle_get(handler, parsed) -> bool:
 
     # ── Skills API (GET) ──
     if parsed.path == "/api/skills":
-        from tools.skills_tool import skills_list as _skills_list
-
-        raw = _skills_list()
-        data = json.loads(raw) if isinstance(raw, str) else raw
-        return j(handler, {"skills": data.get("skills", [])})
+        try:
+            from tools.skills_tool import skills_list as _skills_list
+            raw = _skills_list()
+            data = json.loads(raw) if isinstance(raw, str) else raw
+            return j(handler, {"skills": data.get("skills", [])})
+        except Exception as _e:
+            import traceback as _tb
+            _tb.print_exc()
+            return j(handler, {"skills": [], "error": str(_e)}, status=500)
 
     if parsed.path == "/api/skills/content":
         from tools.skills_tool import skill_view as _skill_view, SKILLS_DIR

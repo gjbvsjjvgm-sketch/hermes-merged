@@ -5,15 +5,19 @@ const WEBUI_DIR = "/home/z/my-project/hermes-merged";
 const AGENT_DIR = "/home/z/my-project/hermes-merged/hermes-agent";
 const PROXY_PORT = 3030;
 
+const HOME_DIR = process.env.HOME || "/root";
+const VENV_PYTHON = HOME_DIR + "/.venv/bin/python3";
+
 const env = {
   ...process.env,
   HERMES_WEBUI_AGENT_DIR: AGENT_DIR,
   HERMES_WEBUI_HOST: "0.0.0.0",
   HERMES_WEBUI_PORT: String(BACKEND_PORT),
-  HERMES_WEBUI_STATE_DIR: (process.env.HOME || "/root") + "/.hermes/webui",
-  HERMES_WEBUI_DEFAULT_WORKSPACE: (process.env.HOME || "/root") + "/workspace",
-  HERMES_HOME: (process.env.HOME || "/root") + "/.hermes",
+  HERMES_WEBUI_STATE_DIR: HOME_DIR + "/.hermes/webui",
+  HERMES_WEBUI_DEFAULT_WORKSPACE: HOME_DIR + "/workspace",
+  HERMES_HOME: HOME_DIR + "/.hermes",
   PYTHONPATH: AGENT_DIR + ":" + (process.env.PYTHONPATH || ""),
+  PATH: HOME_DIR + "/.venv/bin:" + (process.env.PATH || ""),
 };
 
 let pythonProcess: ReturnType<typeof Bun.spawn> | null = null;
@@ -24,7 +28,7 @@ function startPythonServer() {
   console.log(`[hermes-backend] Starting Python server (attempt ${++restartCount})...`);
 
   try {
-    pythonProcess = Bun.spawn(["python3", "-u", "server.py"], {
+    pythonProcess = Bun.spawn([VENV_PYTHON, "-u", "server.py"], {
       cwd: WEBUI_DIR,
       env,
       stdout: "pipe",

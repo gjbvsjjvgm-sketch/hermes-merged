@@ -3,9 +3,16 @@ Yusuf Mussa Web UI -- Main server entry point.
 Thin routing shell: imports Handler, delegates to api/routes.py, runs server.
 All business logic lives in api/*.
 """
+import os
+import sys
+
+# ── Ensure venv site-packages is on sys.path so yaml, etc. are importable ─────
+_VENV_SITE = os.path.expanduser("~/.venv/lib/python3.12/site-packages")
+if os.path.isdir(_VENV_SITE) and _VENV_SITE not in sys.path:
+    sys.path.append(_VENV_SITE)
+
 import logging
 import socket
-import sys
 import time
 import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
