@@ -9,7 +9,7 @@ os.environ['HERMES_WEBUI_AGENT_DIR'] = os.environ.get(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), 'hermes-agent')
 )
 os.environ.setdefault('HERMES_WEBUI_HOST', '0.0.0.0')
-os.environ.setdefault('HERMES_WEBUI_PORT', '8788')
+os.environ.setdefault('HERMES_WEBUI_PORT', '8787')
 os.environ.setdefault('HERMES_WEBUI_STATE_DIR', 
     os.path.join(os.path.dirname(os.path.abspath(__file__)), '.hermes-state', 'webui'))
 os.environ.setdefault('HERMES_WEBUI_DEFAULT_WORKSPACE',

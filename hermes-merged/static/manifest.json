@@ -1,12 +1,15 @@
 {
   "name": "Yusuf Mussa",
   "short_name": "Yusuf Mussa",
-  "description": "Yusuf Mussa AI Agent Web UI",
+  "description": "Yusuf Mussa AI Agent Web UI — Modern Glassmorphism Interface",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#1a1a1a",
-  "orientation": "portrait-primary",
+  "orientation": "any",
+  "lang": "en",
+  "dir": "auto",
+  "categories": ["productivity", "utilities", "developer"],
   "icons": [
     {
       "src": "static/favicon.svg",
@@ -19,5 +22,7 @@
       "sizes": "32x32",
       "type": "image/png"
     }
-  ]
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
 }

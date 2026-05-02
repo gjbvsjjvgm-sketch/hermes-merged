@@ -2887,3 +2887,705 @@ main.main > .main-view:not([id="mainChat"]):not([id="mainSettings"]) .main-view-
 
 /* 9. Session action menu position */
 [dir="rtl"] .session-action-menu { left: auto; right: 0; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Yusuf Mussa v2 — Modern UI Enhancements (2026)
+   Glassmorphism, micro-animations, improved accessibility, modern effects
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Glassmorphism effects ─────────────────────────────────────────────────── */
+.sidebar {
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+}
+
+.app-titlebar {
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+}
+
+.composer-wrap {
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+}
+
+.session-action-menu {
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+}
+
+.toast {
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+}
+
+.app-dialog {
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+}
+
+/* ── Modern card hover effects ─────────────────────────────────────────────── */
+.session-item {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 10px;
+}
+
+.session-item:hover {
+  transform: translateX(2px);
+}
+
+[dir="rtl"] .session-item:hover {
+  transform: translateX(-2px);
+}
+
+.tool-card {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+}
+
+.tool-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Smooth focus indicators (accessibility) ───────────────────────────────── */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--accent-bg);
+  border-radius: 6px;
+}
+
+/* ── Modern button styles ──────────────────────────────────────────────────── */
+.nav-tab,
+.rail-btn,
+.panel-head-btn,
+.icon-btn,
+.composer-terminal-action,
+.approval-btn,
+.cron-btn,
+.sm-btn,
+.side-menu-item {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-tab:hover,
+.rail-btn:hover {
+  transform: scale(1.05);
+}
+
+.nav-tab:active,
+.rail-btn:active {
+  transform: scale(0.97);
+}
+
+/* ── Pulse animation for streaming ─────────────────────────────────────────── */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-bg-strong); }
+  50% { box-shadow: 0 0 12px 4px var(--accent-bg); }
+}
+
+.session-item.streaming {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ── Skeleton loading animation ────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-subtle) 25%,
+    var(--surface-subtle-hover) 50%,
+    var(--surface-subtle) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* ── Modern scrollbar ──────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-muted);
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-muted) transparent;
+}
+
+/* ── Better suggestion cards ───────────────────────────────────────────────── */
+.suggestion {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.suggestion::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--accent-bg) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.suggestion:hover::before {
+  opacity: 1;
+}
+
+.suggestion:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.suggestion:active {
+  transform: translateY(0);
+}
+
+/* ── Modern composer box ───────────────────────────────────────────────────── */
+.composer-box {
+  border-radius: 16px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.composer-box:focus-within {
+  box-shadow: 0 0 0 3px var(--accent-bg), 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Approval card slide animation ─────────────────────────────────────────── */
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.approval-card.visible {
+  animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.clarify-card.visible {
+  animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── New chat button modern style ──────────────────────────────────────────── */
+.new-chat-btn {
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.new-chat-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--accent-bg-strong);
+}
+
+.new-chat-btn:active {
+  transform: translateY(0);
+}
+
+/* ── Sidebar header enhancement ────────────────────────────────────────────── */
+.sidebar-header .logo {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-header .logo:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 16px var(--accent-bg-strong);
+}
+
+/* ── Model chip modern style ───────────────────────────────────────────────── */
+#composerModelChip {
+  border-radius: 10px;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#composerModelChip:hover {
+  box-shadow: 0 2px 8px var(--accent-bg);
+}
+
+/* ── Reasoning chip style ──────────────────────────────────────────────────── */
+#composerReasoningChip {
+  border-radius: 10px;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Modern toast animations ───────────────────────────────────────────────── */
+@keyframes toastIn {
+  from { transform: translateY(-12px) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes toastOut {
+  from { transform: translateY(0) scale(1); opacity: 1; }
+  to { transform: translateY(-12px) scale(0.95); opacity: 0; }
+}
+
+.toast.show {
+  animation: toastIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Context ring glow ─────────────────────────────────────────────────────── */
+.ctx-ring-track {
+  transition: stroke-dashoffset 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Responsive improvements ───────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .suggestion-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  
+  .composer-box {
+    border-radius: 14px;
+  }
+  
+  .toast {
+    left: 12px !important;
+    right: 12px !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-header h1 {
+    font-size: 14px;
+  }
+  
+  .app-titlebar-title {
+    font-size: 11px;
+  }
+}
+
+/* ── Dark mode enhancement: deeper contrast ────────────────────────────────── */
+:root.dark .sidebar {
+  background: rgba(20, 20, 37, 0.92);
+}
+
+:root.dark .app-titlebar {
+  background: rgba(20, 20, 37, 0.95);
+}
+
+:root.dark .composer-wrap {
+  background: rgba(20, 20, 37, 0.92);
+}
+
+:root.dark .tool-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+:root.dark .tool-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+:root.dark .session-action-menu {
+  background: rgba(26, 26, 46, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ── Light mode enhancement: warmer glassmorphism ──────────────────────────── */
+:root:not(.dark) .sidebar {
+  background: rgba(250, 247, 240, 0.92);
+}
+
+:root:not(.dark) .app-titlebar {
+  background: rgba(250, 247, 240, 0.95);
+}
+
+:root:not(.dark) .composer-wrap {
+  background: rgba(250, 247, 240, 0.92);
+}
+
+:root:not(.dark) .session-action-menu {
+  background: rgba(250, 247, 240, 0.96);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+:root:not(.dark) .toast {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+:root:not(.dark) .app-dialog {
+  background: rgba(250, 247, 240, 0.96);
+}
+
+/* ── Print styles ──────────────────────────────────────────────────────────── */
+@media print {
+  .sidebar, .rail, .app-titlebar, .composer-wrap,
+  .approval-card, .clarify-card, .update-banner,
+  .reconnect-banner, .scroll-to-bottom-btn,
+  #composerTerminalPanel { display: none !important; }
+  
+  .main { width: 100% !important; }
+  .messages { overflow: visible !important; height: auto !important; }
+  .msg-body { break-inside: avoid; }
+}
+
+/* ── Reduced motion ────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── High contrast mode ────────────────────────────────────────────────────── */
+@media (prefers-contrast: high) {
+  :root {
+    --border: rgba(0, 0, 0, 0.4);
+    --border2: rgba(0, 0, 0, 0.5);
+  }
+  
+  :root.dark {
+    --border: rgba(255, 255, 255, 0.4);
+    --border2: rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* ── Enhanced RTL support (Arabic) ─────────────────────────────────────────── */
+[dir="rtl"] .suggestion {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .suggestion svg {
+  margin-left: 6px;
+  margin-right: 0;
+}
+
+[dir="rtl"] .tool-card {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .msg-role {
+  text-align: right;
+}
+
+[dir="rtl"] .onboarding-copy {
+  text-align: right;
+  direction: rtl;
+}
+
+[dir="rtl"] .onboarding-step {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .cron-item {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .profile-opt {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .ws-row {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .ws-opt {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .model-opt {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .memory-note {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .composer-footer {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .batch-action-bar {
+  direction: rtl;
+}
+
+[dir="rtl"] .update-banner {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .reconnect-banner {
+  direction: rtl;
+  text-align: right;
+}
+
+/* ── Tool status badges animation ──────────────────────────────────────────── */
+.tool-badge {
+  transition: all 0.2s ease;
+  animation: fadeInBadge 0.3s ease;
+}
+
+@keyframes fadeInBadge {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ── Smooth message appearance ─────────────────────────────────────────────── */
+@keyframes msgAppear {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.msg-row {
+  animation: msgAppear 0.2s ease;
+}
+
+/* ── Empty state animation ─────────────────────────────────────────────────── */
+.empty-logo {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ── Side menu item hover ──────────────────────────────────────────────────── */
+.side-menu-item {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+}
+
+.side-menu-item:hover {
+  background: var(--accent-bg);
+  transform: translateX(3px);
+}
+
+[dir="rtl"] .side-menu-item:hover {
+  transform: translateX(-3px);
+}
+
+/* ── Profile opt hover ─────────────────────────────────────────────────────── */
+.profile-opt {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+}
+
+.profile-opt:hover {
+  transform: translateX(2px);
+}
+
+[dir="rtl"] .profile-opt:hover {
+  transform: translateX(-2px);
+}
+
+/* ── Workspace row hover ───────────────────────────────────────────────────── */
+.ws-row {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ws-row:hover {
+  transform: translateX(2px);
+}
+
+[dir="rtl"] .ws-row:hover {
+  transform: translateX(-2px);
+}
+
+/* ── File item enhancements ────────────────────────────────────────────────── */
+.file-item {
+  transition: all 0.15s ease;
+  border-radius: 6px;
+}
+
+.file-item:hover {
+  transform: translateX(2px);
+}
+
+[dir="rtl"] .file-item:hover {
+  transform: translateX(-2px);
+}
+
+/* ── Cron item enhancements ────────────────────────────────────────────────── */
+.cron-item {
+  transition: all 0.15s ease;
+  border-radius: 10px;
+}
+
+.cron-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Onboarding modern styling ─────────────────────────────────────────────── */
+.onboarding-card {
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+}
+
+.onboarding-step {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+}
+
+.onboarding-step:hover {
+  transform: translateY(-1px);
+}
+
+/* ── Dialog overlay blur ───────────────────────────────────────────────────── */
+.app-dialog-overlay {
+  backdrop-filter: blur(8px) saturate(1.2);
+  -webkit-backdrop-filter: blur(8px) saturate(1.2);
+}
+
+/* ── Better selection colors ───────────────────────────────────────────────── */
+::selection {
+  background: var(--accent-bg-strong);
+  color: var(--text);
+}
+
+/* ── Smooth page transitions ───────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Better placeholder styling ────────────────────────────────────────────── */
+::placeholder {
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+:focus::placeholder {
+  opacity: 0.4;
+}
+
+/* ── Modern code block styling ─────────────────────────────────────────────── */
+.msg-body pre {
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.msg-body pre::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--blue));
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.msg-body pre:hover::before {
+  opacity: 1;
+}
+
+/* ── Modern chip styles ────────────────────────────────────────────────────── */
+.chip {
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Project chip animation ────────────────────────────────────────────────── */
+.project-chip {
+  transition: all 0.15s ease;
+  border-radius: 8px;
+}
+
+.project-chip:hover {
+  transform: scale(1.05);
+}
+
+/* ── Scroll to bottom button enhancement ───────────────────────────────────── */
+.scroll-to-bottom-btn {
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.scroll-to-bottom-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ── Image lightbox improvement ────────────────────────────────────────────── */
+.img-lightbox {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ── Batch action bar enhancement ──────────────────────────────────────────── */
+.batch-action-bar {
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  border-radius: 12px 12px 0 0;
+}
+
+/* ── Media speed controls enhancement ──────────────────────────────────────── */
+.media-speed-btn {
+  transition: all 0.1s ease;
+  border-radius: 4px;
+}
+
+.media-speed-btn:hover {
+  background: var(--accent-bg);
+}
+
+.media-speed-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── New badge styling ─────────────────────────────────────────────────────── */
+.app-titlebar-inner span[style*="NEW"] {
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}

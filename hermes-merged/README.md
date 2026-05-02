@@ -7,6 +7,25 @@ Full parity with the CLI experience - everything you can do from a terminal,
 you can do from this UI. No build step, no framework, no bundler. Just Python
 and vanilla JS.
 
+## v2.0 — Modern UI & Enhanced Features (2026)
+
+This version includes significant modern enhancements:
+
+- **Modern Glassmorphism UI** — Backdrop blur, saturate effects on sidebar, titlebar, composer, menus, toasts, and dialogs
+- **Micro-animations** — Smooth hover/active transitions, slide-up cards, pulse glow for streaming, floating empty state logo
+- **Enhanced Arabic (RTL) Support** — Full right-to-left layout, Arabic fonts (IBM Plex Arabic, Noto Sans Arabic, Cairo), complete Arabic translations
+- **8 Languages** — English, Arabic, Russian, Spanish, German, Chinese (Simplified & Traditional), Portuguese, Korean
+- **Modern PWA** — Segregated caches (precache/runtime/api/images), background sync, push notifications, rich offline page, client messaging API
+- **Accessibility Improvements** — Focus-visible indicators, reduced motion support, high contrast mode, print styles
+- **Security Enhancements** — Cross-Origin-Opener-Policy, Cross-Origin-Resource-Policy, worker-src CSP, WebSocket connect-src
+- **Modern Scrollbars** — Thin 6px scrollbars with smooth hover transitions
+- **8 Color Skins** — Default (Gold), Ares (Red), Mono (Gray), Slate (Blue-Gray), Poseidon (Ocean), Sisyphus (Purple), Charizard (Orange), Sienna (Warm Clay)
+- **Context Ring Animation** — Smooth SVG stroke transitions for token usage visualization
+- **Dark Mode Enhancement** — Deeper semi-transparent backgrounds, refined tool-card borders
+- **Light Mode Enhancement** — Warmer glassmorphism with rgba backgrounds
+- **Code Block Accent Bar** — Gradient accent line appears on hover over code blocks
+- **Responsive Improvements** — Better mobile breakpoints, touch-friendly controls
+
 Layout: three-panel. Left sidebar for sessions and navigation, center for chat,
 right for workspace file browsing. Model, profile, and workspace controls live in
 the **composer footer** — always visible while composing. A circular context ring

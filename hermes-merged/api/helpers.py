@@ -40,13 +40,18 @@ def _security_headers(handler):
     handler.send_header('X-Content-Type-Options', 'nosniff')
     handler.send_header('X-Frame-Options', 'DENY')
     handler.send_header('Referrer-Policy', 'same-origin')
+    handler.send_header('Cross-Origin-Opener-Policy', 'same-origin')
+    handler.send_header('Cross-Origin-Resource-Policy', 'same-origin')
+    handler.send_header('X-Permitted-Cross-Domain-Policies', 'none')
     handler.send_header(
         'Content-Security-Policy',
         "default-src 'self' https://*.cloudflareaccess.com; "
         "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://static.cloudflareinsights.com; "
         "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
-        "img-src 'self' data: https: blob:; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; connect-src 'self'; "
+        "img-src 'self' data: https: blob:; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; connect-src 'self' ws: wss:; "
         "manifest-src 'self' https://*.cloudflareaccess.com; "
+        "media-src 'self' blob: data:; "
+        "worker-src 'self' blob:; "
         "base-uri 'self'; form-action 'self'"
     )
     handler.send_header(

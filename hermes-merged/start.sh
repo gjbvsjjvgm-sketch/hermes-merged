@@ -44,7 +44,7 @@ echo "============================================"
 echo "  Agent dir : ${HERMES_WEBUI_AGENT_DIR}"
 echo "  Python    : ${PYTHON}"
 echo "  Hermes Home: ${HERMES_HOME}"
-echo "  Web UI    : http://${HERMES_WEBUI_HOST:-0.0.0.0}:${HERMES_WEBUI_PORT:-8788}"
+echo "  Web UI    : http://${HERMES_WEBUI_HOST:-0.0.0.0}:${HERMES_WEBUI_PORT:-8787}"
 echo "============================================"
 
 # Start the server via start_server.py (which sets env vars properly)
