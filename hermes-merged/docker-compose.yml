@@ -5,8 +5,8 @@ services:
     build: .
     ports:
     # select only one; use 127.0.0.1 version to expose to localhost only
-      - "127.0.0.1:8787:8787"
-#      - "8787:8787"
+      - "127.0.0.1:8788:8788"
+#      - "8788:8788"
     volumes:
       # Mount your Hermes home directory into the container.
       # The default (${HOME}/.hermes) works on both macOS (/Users/<you>/.hermes)
@@ -26,7 +26,7 @@ services:
       - WANTED_GID=${GID:-1000}
       # Required: bind address and port
       - HERMES_WEBUI_HOST=0.0.0.0
-      - HERMES_WEBUI_PORT=8787
+      - HERMES_WEBUI_PORT=8788
       # Where to store sessions, workspaces, and other state (default: ~/.hermes/webui)
       - HERMES_WEBUI_STATE_DIR=/home/hermeswebui/.hermes/webui
       # Default workspace directory shown on first launch

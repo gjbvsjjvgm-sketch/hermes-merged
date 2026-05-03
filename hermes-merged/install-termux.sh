@@ -98,7 +98,7 @@ if [ ! -f "$INSTALL_DIR/.env" ]; then
 
 # Default provider and model
 HERMES_WEBUI_HOST=0.0.0.0
-HERMES_WEBUI_PORT=8787
+HERMES_WEBUI_PORT=8788
 ENVEOF
     echo -e "${GREEN}[✓] Created .env file — edit it to add your API keys${NC}"
 fi
@@ -125,7 +125,7 @@ echo -e "  ${CYAN}$PYTHON_CMD $INSTALL_DIR/start_server.py${NC}"
 echo ""
 echo -e "${GOLD}Then open in browser:${NC}"
 echo ""
-echo -e "  ${CYAN}http://localhost:8787${NC}"
+echo -e "  ${CYAN}http://localhost:8788${NC}"
 echo ""
 echo -e "${GOLD}To add API keys, edit:${NC}"
 echo ""

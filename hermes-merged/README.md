@@ -102,10 +102,10 @@ docker run -d \
   -e WANTED_UID=$(id -u) -e WANTED_GID=$(id -g) \
   -v ~/.hermes:/home/hermeswebui/.hermes \
   -v ~/workspace:/workspace \
-  -p 8787:8787 ghcr.io/nesquena/hermes-webui:latest
+  -p 8788:8788 ghcr.io/nesquena/hermes-webui:latest
 ```
 
-افتح http://localhost:8787 في المتصفح.
+افتح http://localhost:8788 في المتصفح.
 
 ---
 
@@ -185,13 +185,13 @@ python3 start_server.py
 بعد التشغيل، سترى رسالة مثل:
 
 ```
-Yusuf Mussa Web UI listening on http://0.0.0.0:8787
+Yusuf Mussa Web UI listening on http://0.0.0.0:8788
 ```
 
 افتح متصفح هاتفك وادخل:
 
 ```
-http://localhost:8787
+http://localhost:8788
 ```
 
 ### إعداد مفتاح API
@@ -265,7 +265,7 @@ HERMES_WEBUI_PASSWORD=your-secret python3 start_server.py
 ifconfig | grep inet
 
 # على الكمبيوتر، افتح:
-# http://PHONE-IP:8787
+# http://PHONE-IP:8788
 ```
 
 ### حل مشاكل Termux الشائعة
@@ -291,7 +291,7 @@ ifconfig | grep inet
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `HERMES_WEBUI_HOST` | `0.0.0.0` | Bind address |
-| `HERMES_WEBUI_PORT` | `8787` | Port number |
+| `HERMES_WEBUI_PORT` | `8788` | Port number |
 | `HERMES_WEBUI_PASSWORD` | *(unset)* | Set to enable password auth |
 | `HERMES_WEBUI_AGENT_DIR` | `./hermes-agent` | Path to agent |
 | `HERMES_WEBUI_STATE_DIR` | `./.hermes-state/webui` | State directory |
@@ -396,10 +396,10 @@ Yusuf Mussa Merged Application
 ### SSH Tunnel
 
 ```bash
-ssh -N -L 8787:127.0.0.1:8787 user@your.server.com
+ssh -N -L 8788:127.0.0.1:8788 user@your.server.com
 ```
 
-Then open `http://localhost:8787` on your local machine.
+Then open `http://localhost:8788` on your local machine.
 
 ### Tailscale (Phone Access)
 
@@ -407,7 +407,7 @@ Then open `http://localhost:8787` on your local machine.
 HERMES_WEBUI_HOST=0.0.0.0 HERMES_WEBUI_PASSWORD=your-secret ./start.sh
 ```
 
-Open `http://<tailscale-ip>:8787` from your phone.
+Open `http://<tailscale-ip>:8788` from your phone.
 
 ---
 
