@@ -229,3 +229,27 @@ B) hermes-merged/static/i18n.js:
    - Old: "skin: default/ares/mono/slate/poseidon/sisyphus/charizard"
    - New: "skin: default/ares/mono/slate/poseidon/sisyphus/charizard/sienna/aurora/neon"
    - Other locales (ru, es, de, zh, zh-Hant, pt, ar) kept their existing translations
+---
+Task ID: 1
+Agent: Main Agent
+Task: Integrate Paymob payment gateway, change port to 8788, remove authentication
+
+Work Log:
+- Explored full project structure at /home/z/my-project/hermes-merged/
+- Read server.py, start_server.py, api/auth.py, api/config.py, api/routes.py
+- Created api/paymob.py with full Paymob payment gateway integration
+- Added Paymob API routes to api/routes.py (GET and POST handlers)
+- Changed default port from 8787 to 8788 in config.py, start_server.py, .env.example
+- Disabled authentication by making check_auth() always return True
+- Added /api/paymob/webhook to PUBLIC_PATHS for webhook accessibility
+- Added requests>=2.28.0 to requirements.txt
+- Installed requests module for Python 3.13 (system Python used by server)
+- Restarted server and verified all endpoints work
+- Committed and pushed all changes to GitHub
+
+Stage Summary:
+- Paymob integration complete: authentication, order creation, payment keys, payment intents, webhooks with HMAC verification, capture/refund/void, test/live mode, error handling, retry logic
+- Port changed to 8788 (code-level default), but runtime env var HERMES_WEBUI_PORT=8787 set by platform
+- Authentication fully disabled (check_auth always returns True)
+- All 10 Paymob API endpoints tested and working
+- Changes pushed to https://github.com/gjbvsjjvgm-sketch/hermes-merged
