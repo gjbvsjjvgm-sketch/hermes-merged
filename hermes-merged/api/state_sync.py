@@ -2,7 +2,7 @@
 Yusuf Mussa Web UI -- Optional state.db sync bridge.
 
 Mirrors WebUI session metadata (token usage, title, model) into the
-hermes-agent state.db so that /insights, session lists, and cost
+agent state.db so that /insights, session lists, and cost
 tracking include WebUI activity.
 
 This is opt-in via the 'sync_to_insights' setting (default: off).
@@ -31,11 +31,11 @@ def _get_state_db():
         return None
 
     try:
-        from api.profiles import get_active_hermes_home
-        hermes_home = Path(get_active_hermes_home()).expanduser().resolve()
+        from api.profiles import get_active_ym_home
+        hermes_home = Path(get_active_ym_home()).expanduser().resolve()
     except Exception:
         logger.debug("Failed to resolve hermes home, using default")
-        hermes_home = Path(os.getenv('HERMES_HOME', str(Path.home() / '.hermes')))
+        hermes_home = Path(os.getenv('YM_HOME', str(Path.home() / '.yusuf-mussa')))
 
     db_path = hermes_home / 'state.db'
     if not db_path.exists():

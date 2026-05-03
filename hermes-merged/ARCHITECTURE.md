@@ -65,7 +65,7 @@ actions. The topbar remains focused on conversation context and the workspace/fi
       onboarding.py        First-run onboarding status, real provider config writes, and readiness detection.
       routes.py            All GET + POST route handlers (~1180 lines)
       startup.py           Startup helpers: auto_install_agent_deps() (~50 lines)
-      streaming.py         SSE engine, run_agent, cancel, HERMES_HOME save/restore (~236 lines)
+      streaming.py         SSE engine, run_agent, cancel, YM_HOME save/restore (~236 lines)
       upload.py            Multipart parser, file upload handler (~78 lines)
       workspace.py         File ops: list_dir, read_file_content, workspace helpers (~77 lines)
     static/
@@ -80,7 +80,7 @@ actions. The topbar remains focused on conversation context and the workspace/fi
       onboarding.js        First-run wizard overlay, provider setup flow, and settings/workspace orchestration.
       boot.js              Event wiring, mobile sidebar/workspace nav, voice input, boot IIFE (~338 lines)
     tests/
-      conftest.py          Isolated test server (port 8788, separate HERMES_HOME) (~240 lines)
+      conftest.py          Isolated test server (port 8788, separate YM_HOME) (~240 lines)
       test_sprint{1-20b}.py Feature tests per sprint (21 files, 415 test functions)
       test_regressions.py  Permanent regression gate (23 tests)
     AGENTS.md              Instruction file for agents working in this directory.
@@ -95,7 +95,7 @@ actions. The topbar remains focused on conversation context and the workspace/fi
 
 State directory (runtime data, separate from source):
 
-    ~/.hermes/webui-mvp/
+    ~/.yusuf-mussa/webui-mvp/
     sessions/          One JSON file per session: {session_id}.json
     workspaces.json    Registered workspaces list
     last_workspace.txt Last-used workspace path
@@ -118,20 +118,20 @@ Log file:
 
 Environment variables controlling behavior:
 
-    HERMES_WEBUI_HOST              Bind address (default: 127.0.0.1)
-    HERMES_WEBUI_PORT              Port (default: 8787)
-    HERMES_WEBUI_DEFAULT_WORKSPACE Default workspace path for new sessions
-    HERMES_WEBUI_STATE_DIR         Where sessions/ folder lives
-    HERMES_CONFIG_PATH             Path to ~/.hermes/config.yaml
-    HERMES_WEBUI_DEFAULT_MODEL     Default LLM model string
-    HERMES_WEBUI_PASSWORD          Optional: enable password auth (off by default)
-    HERMES_HOME                    Base directory for Hermes state (~/.hermes by default)
+    YM_WEBUI_HOST              Bind address (default: 127.0.0.1)
+    YM_WEBUI_PORT              Port (default: 8787)
+    YM_WEBUI_DEFAULT_WORKSPACE Default workspace path for new sessions
+    YM_WEBUI_STATE_DIR         Where sessions/ folder lives
+    YM_CONFIG_PATH             Path to ~/.yusuf-mussa/config.yaml
+    YM_WEBUI_DEFAULT_MODEL     Default LLM model string
+    YM_WEBUI_PASSWORD          Optional: enable password auth (off by default)
+    YM_HOME                    Base directory for Hermes state (~/.yusuf-mussa by default)
 
 Test isolation environment variables (set by conftest.py):
 
-    HERMES_WEBUI_PORT=8788                           Isolated test port
-    HERMES_WEBUI_STATE_DIR=~/.hermes/webui-mvp-test  Isolated test state
-    HERMES_WEBUI_DEFAULT_WORKSPACE=.../test-workspace Isolated test workspace
+    YM_WEBUI_PORT=8788                           Isolated test port
+    YM_WEBUI_STATE_DIR=~/.yusuf-mussa/webui-mvp-test  Isolated test state
+    YM_WEBUI_DEFAULT_WORKSPACE=.../test-workspace Isolated test workspace
 
 Tests NEVER talk to the production server (port 8787).
 The test state dir is wiped before each test session and deleted after.
@@ -144,7 +144,7 @@ Per-request environment variables (set by chat handler, restored after):
     HERMES_EXEC_ASK      Set to "1" to enable approval gate for dangerous commands.
     HERMES_SESSION_KEY   Set to session_id. The approval tool keys pending entries
                          by this value, enabling per-session approval state.
-    HERMES_HOME          Set to the active profile's directory before running agent.
+    YM_HOME          Set to the active profile's directory before running agent.
                          Saved and restored around each agent run.
 
 WARNING: These env vars are process-global. Two concurrent chat requests will clobber
@@ -462,7 +462,7 @@ Transcript:
     transcript()          Builds markdown string from S.messages for download
 
 Boot IIFE:
-    localStorage key 'hermes-webui-session' stores last session_id
+    localStorage key 'ym-session' stores last session_id
     On load: try to loadSession(saved), fall back to empty state if missing or fails
     NEVER auto-creates a session on boot
 
@@ -630,7 +630,7 @@ Return value:
 
 ## 8. Configuration Loading
 
-On startup, server.py reads ~/.hermes/config.yaml:
+On startup, server.py reads ~/.yusuf-mussa/config.yaml:
 
     cfg = yaml.safe_load(CONFIG_PATH.read_text())
     CLI_TOOLSETS = cfg.get('platform_toolsets', {}).get('cli', [...default...])
@@ -791,16 +791,16 @@ Replacing with marked.js + DOMPurify is a future improvement (not blocking).
 
 Optional password gate for non-SSH-tunnel deployments.
 
-1. HERMES_WEBUI_PASSWORD env var enables auth
+1. YM_WEBUI_PASSWORD env var enables auth
 2. Login page: minimal dark form, POST /api/auth/login
 3. Server sets HttpOnly + SameSite=Strict cookie on successful login
-4. All API endpoints check cookie if HERMES_WEBUI_PASSWORD is set
+4. All API endpoints check cookie if YM_WEBUI_PASSWORD is set
 5. Cookie validity: 30 days from last activity
 
 ### Phase I: Test Infrastructure -- COMPLETE
 
 289 tests across 14 test files + regression gate. Isolated test server on port 8788
-with separate HERMES_HOME, wiped per run. Production data never touched.
+with separate YM_HOME, wiped per run. Production data never touched.
 
 Test files: `test_sprint1.py` through `test_sprint11.py`, `test_sprint16.py`, `test_regressions.py`.
 Fixtures in `conftest.py`: auto-cleanup, cron isolation, workspace reset.
@@ -910,8 +910,8 @@ The api() helper:
     ps aux | grep "webui-mvp/server.py"
 
     # Inspect session files on disk
-    ls -lt ~/.hermes/webui-mvp/sessions/
-    cat ~/.hermes/webui-mvp/sessions/SESSION_ID.json | python3 -m json.tool
+    ls -lt ~/.yusuf-mussa/webui-mvp/sessions/
+    cat ~/.yusuf-mussa/webui-mvp/sessions/SESSION_ID.json | python3 -m json.tool
 
     # Count messages in a session
     python3 -c "import json; d=json.load(open('sessions/SID.json')); print(len(d['messages']))"
@@ -924,9 +924,9 @@ The api() helper:
     curl -s http://127.0.0.1:8787/health  # streams not exposed yet, add in Phase G
 
     # Find all sessions with messages (not Untitled empty)
-    ls ~/.hermes/webui-mvp/sessions/ | xargs -I{} python3 -c "
+    ls ~/.yusuf-mussa/webui-mvp/sessions/ | xargs -I{} python3 -c "
     import json, sys
-    d = json.load(open('~/.hermes/webui-mvp/sessions/{}'))
+    d = json.load(open('~/.yusuf-mussa/webui-mvp/sessions/{}'))
     if d['messages']: print('{}', d['title'][:50])
     " 2>/dev/null
 
@@ -1046,7 +1046,7 @@ Resolution: Phase B replaces with thread-local or explicit parameter passing.
             Features: background task cancel, cron run history, tool card UX polish
             Post-sprint fixes: SSE cancel event breaks loop, Cancel button always hidden on setBusy(false),
               S.activeStreamId initialized, tool-card show-more uses data attributes, version label v0.12,
-              Session.__init__ **kwargs forward-compat, test cron isolation via HERMES_HOME,
+              Session.__init__ **kwargs forward-compat, test cron isolation via YM_HOME,
               last_workspace reset in conftest between tests, tool cards grouped by assistant turn
             Tests: 18 new, 167/167 total
             Regressions fixed: uuid, AIAgent, has_pending, SSE cancel loop, Session.__init__ tool_calls
@@ -1460,7 +1460,7 @@ fetches GET /api/skills/content and renders in the right panel using `showPrevie
 #### Memory Panel
 
 `loadMemory()` fetches GET /api/memory (reads MEMORY.md + USER.md from
-~/.hermes/memories/), renders both as markdown via renderMd() with timestamps.
+~/.yusuf-mussa/memories/), renders both as markdown via renderMd() with timestamps.
 
 #### New API Endpoints (Section 18 update)
 
@@ -1504,10 +1504,10 @@ B14: `document.addEventListener('keydown', ...)` at global scope catches Cmd/Ctr
 
 Moved <agent-dir>/webui-mvp/ to <repo>/.
 Symlink: <agent-dir>/webui-mvp -> <repo>
-The symlink means all existing import paths (sys.path.insert for hermes-agent modules)
+The symlink means all existing import paths (sys.path.insert for agent modules)
 continue working unchanged. start.sh updated to reference new canonical path.
 
-Safe from: git pull, git reset --hard, git stash on hermes-agent repo.
+Safe from: git pull, git reset --hard, git stash on agent repo.
 NOT safe from: git clean -fd (would delete symlink but not the target).
 Disk failure: still a single-copy risk. Use git init + push when ready.
 
@@ -1574,8 +1574,8 @@ Index files starting with '_' are skipped during full scan to avoid recursion.
 
 #### New Workspace Infrastructure
 
-WORKSPACES_FILE = ~/.hermes/webui-mvp/workspaces.json
-LAST_WORKSPACE_FILE = ~/.hermes/webui-mvp/last_workspace.txt
+WORKSPACES_FILE = ~/.yusuf-mussa/webui-mvp/workspaces.json
+LAST_WORKSPACE_FILE = ~/.yusuf-mussa/webui-mvp/last_workspace.txt
 load_workspaces() / save_workspaces() / get_last_workspace() / set_last_workspace() helpers.
 new_session() now calls get_last_workspace() as default instead of DEFAULT_WORKSPACE.
 set_last_workspace() called in /api/session/update and /api/chat/start.

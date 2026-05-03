@@ -3,10 +3,10 @@ Yusuf Mussa Web UI -- Profile state management.
 Wraps hermes_cli.profiles to provide profile switching for the web UI.
 
 The web UI maintains a process-level "active profile" that determines which
-HERMES_HOME directory is used for config, skills, memory, cron, and API keys.
-Profile switches update os.environ['HERMES_HOME'] and monkey-patch module-level
-cached paths in hermes-agent modules (skills_tool, cron/jobs) that snapshot
-HERMES_HOME at import time.
+YM_HOME directory is used for config, skills, memory, cron, and API keys.
+Profile switches update os.environ['YM_HOME'] and monkey-patch module-level
+cached paths in agent modules (skills_tool, cron/jobs) that snapshot
+YM_HOME at import time.
 """
 import json
 import logging
@@ -33,52 +33,52 @@ _loaded_profile_env_keys: set[str] = set()
 
 # Thread-local profile context: set per-request by server.py, cleared after.
 # Enables per-client profile isolation (issue #798) — each HTTP request thread
-# reads its own profile from the hermes_profile cookie instead of the
+# reads its own profile from the ym_profile cookie instead of the
 # process-global _active_profile.
 _tls = threading.local()
 
-def _resolve_base_hermes_home() -> Path:
-    """Return the BASE ~/.hermes directory — the root that contains profiles/.
+def _resolve_base_ym_home() -> Path:
+    """Return the BASE ~/.yusuf-mussa directory — the root that contains profiles/.
 
-    This is intentionally distinct from HERMES_HOME, which tracks the *active
+    This is intentionally distinct from YM_HOME, which tracks the *active
     profile's* home and changes on every profile switch.  The base dir must
     always point to the top-level .hermes regardless of which profile is active.
 
     Resolution order:
       1. HERMES_BASE_HOME env var (set explicitly, highest priority)
-      2. HERMES_HOME env var — but only if it does NOT look like a profile subdir
+      2. YM_HOME env var — but only if it does NOT look like a profile subdir
          (i.e. its parent is not named 'profiles').  This handles test isolation
-         where HERMES_HOME is set to an isolated test state dir.
-      3. ~/.hermes (always-correct default)
+         where YM_HOME is set to an isolated test state dir.
+      3. ~/.yusuf-mussa (always-correct default)
 
-    The bug this prevents: if HERMES_HOME has already been mutated to
-    /home/user/.hermes/profiles/webui (by init_profile_state at startup),
-    reading it here would make _DEFAULT_HERMES_HOME point to that subdir,
+    The bug this prevents: if YM_HOME has already been mutated to
+    /home/user/.yusuf-mussa/profiles/webui (by init_profile_state at startup),
+    reading it here would make _DEFAULT_YM_HOME point to that subdir,
     causing switch_profile('webui') to look for
-    /home/user/.hermes/profiles/webui/profiles/webui — which doesn't exist.
+    /home/user/.yusuf-mussa/profiles/webui/profiles/webui — which doesn't exist.
     """
     # Explicit override for tests or unusual setups
     base_override = os.getenv('HERMES_BASE_HOME', '').strip()
     if base_override:
         return Path(base_override).expanduser()
 
-    hermes_home = os.getenv('HERMES_HOME', '').strip()
+    hermes_home = os.getenv('YM_HOME', '').strip()
     if hermes_home:
         p = Path(hermes_home).expanduser()
-        # If HERMES_HOME points to a profiles/ subdir, walk up two levels to the base
+        # If YM_HOME points to a profiles/ subdir, walk up two levels to the base
         if p.parent.name == 'profiles':
             return p.parent.parent
-        # Otherwise trust it (e.g. test isolation sets HERMES_HOME to TEST_STATE_DIR)
+        # Otherwise trust it (e.g. test isolation sets YM_HOME to TEST_STATE_DIR)
         return p
 
-    return Path.home() / '.hermes'
+    return Path.home() / '.yusuf-mussa'
 
-_DEFAULT_HERMES_HOME = _resolve_base_hermes_home()
+_DEFAULT_YM_HOME = _resolve_base_ym_home()
 
 
 def _read_active_profile_file() -> str:
-    """Read the sticky active profile from ~/.hermes/active_profile."""
-    ap_file = _DEFAULT_HERMES_HOME / 'active_profile'
+    """Read the sticky active profile from ~/.yusuf-mussa/active_profile."""
+    ap_file = _DEFAULT_YM_HOME / 'active_profile'
     if ap_file.exists():
         try:
             name = ap_file.read_text(encoding="utf-8").strip()
@@ -95,7 +95,7 @@ def get_active_profile_name() -> str:
     """Return the currently active profile name.
 
     Priority:
-      1. Thread-local (set per-request from hermes_profile cookie) — issue #798
+      1. Thread-local (set per-request from ym_profile cookie) — issue #798
       2. Process-level default (_active_profile)
     """
     tls_name = getattr(_tls, 'profile', None)
@@ -107,7 +107,7 @@ def get_active_profile_name() -> str:
 def set_request_profile(name: str) -> None:
     """Set the per-request profile context for this thread.
 
-    Called by server.py at the start of each request when a hermes_profile
+    Called by server.py at the start of each request when a ym_profile
     cookie is present.  Always paired with clear_request_profile() in a
     finally block so the thread-local is released after the request.
     """
@@ -123,39 +123,39 @@ def clear_request_profile() -> None:
     _tls.profile = None
 
 
-def get_active_hermes_home() -> Path:
-    """Return the HERMES_HOME path for the currently active profile.
+def get_active_ym_home() -> Path:
+    """Return the YM_HOME path for the currently active profile.
 
     Uses get_active_profile_name() so per-request TLS context (issue #798)
     is respected, not just the process-level global.
     """
     name = get_active_profile_name()
     if name == 'default':
-        return _DEFAULT_HERMES_HOME
-    profile_dir = _DEFAULT_HERMES_HOME / 'profiles' / name
+        return _DEFAULT_YM_HOME
+    profile_dir = _DEFAULT_YM_HOME / 'profiles' / name
     if profile_dir.is_dir():
         return profile_dir
-    return _DEFAULT_HERMES_HOME
+    return _DEFAULT_YM_HOME
 
 
 
-def get_hermes_home_for_profile(name: str) -> Path:
-    """Return the HERMES_HOME Path for *name* without mutating any process state.
+def get_ym_home_for_profile(name: str) -> Path:
+    """Return the YM_HOME Path for *name* without mutating any process state.
 
     Safe to call from per-request context (streaming, session creation) because
     it reads only the filesystem — it never touches os.environ, module-level
     cached paths, or the process-level _active_profile global.
 
-    Falls back to _DEFAULT_HERMES_HOME (same as 'default') when *name* is None,
+    Falls back to _DEFAULT_YM_HOME (same as 'default') when *name* is None,
     empty, 'default', or does not match the profile-name format (rejects path
     traversal such as '../../etc').
     """
     if not name or name == 'default' or not _PROFILE_ID_RE.match(name):
-        return _DEFAULT_HERMES_HOME
-    profile_dir = _DEFAULT_HERMES_HOME / 'profiles' / name
+        return _DEFAULT_YM_HOME
+    profile_dir = _DEFAULT_YM_HOME / 'profiles' / name
     if profile_dir.is_dir():
         return profile_dir
-    return _DEFAULT_HERMES_HOME
+    return _DEFAULT_YM_HOME
 
 
 _TERMINAL_ENV_MAPPINGS = {
@@ -201,7 +201,7 @@ def get_profile_runtime_env(home: Path) -> dict[str, str]:
     WebUI profile switching is per-client/cookie scoped, so it intentionally
     does not call ``switch_profile(..., process_wide=True)`` for every browser.
     Agent/tool code still consumes terminal backend settings through
-    environment variables (matching ``hermes -p <profile>``), so streaming must
+    environment variables (matching ``ym -p <profile>``), so streaming must
     apply the selected profile's terminal config and ``.env`` for the duration
     of that run.
     """
@@ -241,14 +241,14 @@ def get_profile_runtime_env(home: Path) -> dict[str, str]:
     return env
 
 
-def _set_hermes_home(home: Path):
-    """Set HERMES_HOME env var and monkey-patch cached module-level paths."""
-    os.environ['HERMES_HOME'] = str(home)
+def _set_ym_home(home: Path):
+    """Set YM_HOME env var and monkey-patch cached module-level paths."""
+    os.environ['YM_HOME'] = str(home)
 
-    # Patch skills_tool module-level cache (snapshots HERMES_HOME at import)
+    # Patch skills_tool module-level cache (snapshots YM_HOME at import)
     try:
         import tools.skills_tool as _sk
-        _sk.HERMES_HOME = home
+        _sk.YM_HOME = home
         _sk.SKILLS_DIR = home / 'skills'
     except (ImportError, AttributeError):
         logger.debug("Failed to patch skills_tool module")
@@ -301,13 +301,13 @@ def _reload_dotenv(home: Path):
 def init_profile_state() -> None:
     """Initialize profile state at server startup.
 
-    Reads ~/.hermes/active_profile, sets HERMES_HOME env var, patches
+    Reads ~/.yusuf-mussa/active_profile, sets YM_HOME env var, patches
     module-level cached paths.  Called once from config.py after imports.
     """
     global _active_profile
     _active_profile = _read_active_profile_file()
-    home = get_active_hermes_home()
-    _set_hermes_home(home)
+    home = get_active_ym_home()
+    _set_ym_home(home)
     _reload_dotenv(home)
 
 
@@ -341,7 +341,7 @@ def switch_profile(name: str, *, process_wide: bool = True) -> dict:
 
     # Resolve profile directory
     if name == 'default':
-        home = _DEFAULT_HERMES_HOME
+        home = _DEFAULT_YM_HOME
     else:
         home = _resolve_named_profile_home(name)
         if not home.is_dir():
@@ -351,13 +351,13 @@ def switch_profile(name: str, *, process_wide: bool = True) -> dict:
         if process_wide:
             global _active_profile
             _active_profile = name
-            _set_hermes_home(home)
+            _set_ym_home(home)
             _reload_dotenv(home)
 
     if process_wide:
         # Write sticky default for CLI consistency
         try:
-            ap_file = _DEFAULT_HERMES_HOME / 'active_profile'
+            ap_file = _DEFAULT_YM_HOME / 'active_profile'
             ap_file.write_text(name if name != 'default' else '', encoding='utf-8')
         except Exception:
             logger.debug("Failed to write active profile file")
@@ -473,13 +473,13 @@ def _default_profile_dict() -> dict:
     """Fallback profile dict when hermes_cli is not importable."""
     return {
         'name': 'default',
-        'path': str(_DEFAULT_HERMES_HOME),
+        'path': str(_DEFAULT_YM_HOME),
         'is_default': True,
         'is_active': True,
         'gateway_running': False,
         'model': None,
         'provider': None,
-        'has_env': (_DEFAULT_HERMES_HOME / '.env').exists(),
+        'has_env': (_DEFAULT_YM_HOME / '.env').exists(),
         'skill_count': 0,
     }
 
@@ -498,14 +498,14 @@ def _validate_profile_name(name: str):
 
 def _profiles_root() -> Path:
     """Return the canonical root that contains named profiles."""
-    return (_DEFAULT_HERMES_HOME / 'profiles').resolve()
+    return (_DEFAULT_YM_HOME / 'profiles').resolve()
 
 
 def _resolve_named_profile_home(name: str) -> Path:
     """Resolve a named profile to a directory under the profiles root.
 
     Validates *name* as a logical profile identifier first, then resolves the
-    final filesystem path and enforces containment under ~/.hermes/profiles.
+    final filesystem path and enforces containment under ~/.yusuf-mussa/profiles.
     """
     _validate_profile_name(name)
     profiles_root = _profiles_root()
@@ -517,7 +517,7 @@ def _resolve_named_profile_home(name: str) -> Path:
 def _create_profile_fallback(name: str, clone_from: str = None,
                               clone_config: bool = False) -> Path:
     """Create a profile directory without hermes_cli (Docker/standalone fallback)."""
-    profile_dir = _DEFAULT_HERMES_HOME / 'profiles' / name
+    profile_dir = _DEFAULT_YM_HOME / 'profiles' / name
     if profile_dir.exists():
         raise FileExistsError(f"Profile '{name}' already exists.")
 
@@ -529,9 +529,9 @@ def _create_profile_fallback(name: str, clone_from: str = None,
     # Clone config files from source profile if requested
     if clone_config and clone_from:
         if clone_from == 'default':
-            source_dir = _DEFAULT_HERMES_HOME
+            source_dir = _DEFAULT_YM_HOME
         else:
-            source_dir = _DEFAULT_HERMES_HOME / 'profiles' / clone_from
+            source_dir = _DEFAULT_YM_HOME / 'profiles' / clone_from
         if source_dir.is_dir():
             for filename in _CLONE_CONFIG_FILES:
                 src = source_dir / filename
@@ -596,7 +596,7 @@ def create_profile_api(name: str, clone_from: str = None,
     # hermes_cli and the webui runtime do not always agree on the exact root,
     # so we prefer the path returned by list_profiles_api() and fall back to the
     # standard profile location only if the profile cannot be found there yet.
-    profile_path = _DEFAULT_HERMES_HOME / 'profiles' / name
+    profile_path = _DEFAULT_YM_HOME / 'profiles' / name
     for p in list_profiles_api():
         if p['name'] == name:
             try:

@@ -139,7 +139,7 @@ def test_minimax_cn_provider_models_match_hermes_agent_catalog():
 def test_minimax_api_key_in_env_scan_tuple():
     """MINIMAX_API_KEY must be included in the env var scan performed by
     get_available_models(), so users who export MINIMAX_API_KEY see the
-    MiniMax provider in the dropdown without editing ~/.hermes/.env."""
+    MiniMax provider in the dropdown without editing ~/.yusuf-mussa/.env."""
     import inspect, ast, textwrap
     src = inspect.getsource(config.get_available_models)
     assert 'MINIMAX_API_KEY' in src, (

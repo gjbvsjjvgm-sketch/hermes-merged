@@ -9,14 +9,14 @@
 #
 # The agent container runs the gateway (CLI, Telegram, cron, etc.).
 # The WebUI container serves the browser interface on port 8788.
-# Both share ~/.hermes for config, sessions, and state.
+# Both share ~/.yusuf-mussa for config, sessions, and state.
 #
 # NOTE ON VOLUMES:
-#   This file uses named Docker volumes (hermes-home, hermes-agent-src) which
+#   This file uses named Docker volumes (hermes-home, agent-src) which
 #   work out of the box. If you prefer bind mounts (e.g. to an existing directory),
-#   replace the named volumes at the bottom. Example for hermes-agent-src:
+#   replace the named volumes at the bottom. Example for agent-src:
 #
-#     hermes-agent-src:
+#     agent-src:
 #       driver: local
 #       driver_opts:
 #         type: none
@@ -25,26 +25,26 @@
 #
 #   When using bind mounts, BOTH containers must mount the same host path.
 #   The agent exposes source at /opt/hermes, the WebUI reads it from
-#   /home/hermeswebui/.hermes/hermes-agent — as long as both point to the
+#   /home/yusufmussa/.yusuf-mussa/agent — as long as both point to the
 #   same host directory, the paths align correctly.
 
 services:
-  hermes-agent:
-    image: nousresearch/hermes-agent:latest
+  agent:
+    image: nousresearch/agent:latest
     container_name: hermes-agent
     command: gateway run
     ports:
       # Gateway API — exposed on localhost only.
-      # Other containers on hermes-net reach it via http://hermes-agent:8642.
+      # Other containers on hermes-net reach it via http://agent:8642.
       # Remove 127.0.0.1: to expose on the host network (e.g. for remote clients).
       - "127.0.0.1:8642:8642"
     volumes:
       # Persist config, state, sessions, skills, memory across restarts
       - hermes-home:/home/hermes/.hermes
       # Expose agent source so the WebUI can install dependencies from it
-      - hermes-agent-src:/opt/hermes
+      - agent-src:/opt/hermes
     environment:
-      - HERMES_HOME=/home/hermes/.hermes
+      - YM_HOME=/home/hermes/.hermes
     restart: unless-stopped
     networks:
       - hermes-net
@@ -53,25 +53,25 @@ services:
     image: ghcr.io/nesquena/hermes-webui:latest
     container_name: hermes-webui
     depends_on:
-      - hermes-agent
+      - agent
     ports:
       - "127.0.0.1:8788:8788"
     volumes:
       # Same hermes home as the agent — shares config, sessions, state
-      - hermes-home:/home/hermeswebui/.hermes
+      - hermes-home:/home/yusufmussa/.hermes
       # Agent source mounted where docker_init.bash expects it.
       # At startup the init script runs:
-      #   uv pip install /home/hermeswebui/.hermes/hermes-agent
+      #   uv pip install /home/yusufmussa/.yusuf-mussa/agent
       # which installs the agent and all its Python dependencies.
-      - hermes-agent-src:/home/hermeswebui/.hermes/hermes-agent
+      - agent-src:/home/yusufmussa/.yusuf-mussa/agent
       # Workspace directory — browse and edit files from the WebUI.
       # Adapt the host path to your project directory.
       # Override with: HERMES_WORKSPACE=/your/path docker compose up
       - ${HERMES_WORKSPACE:-~/workspace}:/workspace
     environment:
-      - HERMES_WEBUI_HOST=0.0.0.0
-      - HERMES_WEBUI_PORT=8788
-      - HERMES_WEBUI_STATE_DIR=/home/hermeswebui/.hermes/webui
+      - YM_WEBUI_HOST=0.0.0.0
+      - YM_WEBUI_PORT=8788
+      - YM_WEBUI_STATE_DIR=/home/yusufmussa/.yusuf-mussa/webui
       # Match your host user's UID/GID for correct file permissions.
       # In two-container setups the WebUI auto-detects UID/GID from the shared
       # hermes-home volume, but you can override explicitly if needed (#668):
@@ -81,7 +81,7 @@ services:
       - WANTED_UID=${UID:-1000}
       - WANTED_GID=${GID:-1000}
       # Optional: set a password for remote access
-      # - HERMES_WEBUI_PASSWORD=***
+      # - YM_WEBUI_PASSWORD=***
     restart: unless-stopped
     networks:
       - hermes-net
@@ -92,4 +92,4 @@ networks:
 
 volumes:
   hermes-home:
-  hermes-agent-src:
+  agent-src:

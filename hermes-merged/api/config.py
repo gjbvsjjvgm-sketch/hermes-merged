@@ -28,17 +28,17 @@ HOME = Path.home()
 REPO_ROOT = Path(__file__).parent.parent.resolve()
 
 # ── Network config (env-overridable) ─────────────────────────────────────────
-HOST = os.getenv("HERMES_WEBUI_HOST", "127.0.0.1")
-PORT = int(os.getenv("HERMES_WEBUI_PORT", "8788"))
+HOST = os.getenv("YM_WEBUI_HOST", "127.0.0.1")
+PORT = int(os.getenv("YM_WEBUI_PORT", "8788"))
 
 # ── TLS/HTTPS config (optional, env-overridable) ────────────────────────────
-TLS_CERT = os.getenv("HERMES_WEBUI_TLS_CERT", "").strip() or None
-TLS_KEY = os.getenv("HERMES_WEBUI_TLS_KEY", "").strip() or None
+TLS_CERT = os.getenv("YM_WEBUI_TLS_CERT", "").strip() or None
+TLS_KEY = os.getenv("YM_WEBUI_TLS_KEY", "").strip() or None
 TLS_ENABLED = TLS_CERT is not None and TLS_KEY is not None
 
 # ── State directory (env-overridable, never inside repo) ──────────────────────
 STATE_DIR = (
-    Path(os.getenv("HERMES_WEBUI_STATE_DIR", str(HOME / ".hermes" / "webui")))
+    Path(os.getenv("YM_WEBUI_STATE_DIR", str(HOME / ".yusuf-mussa" / "webui")))
     .expanduser()
     .resolve()
 )
@@ -53,49 +53,52 @@ PROJECTS_FILE = STATE_DIR / "projects.json"
 logger = logging.getLogger(__name__)
 
 
-# ── Hermes agent directory discovery ─────────────────────────────────────────
+# ── Yusuf Mussa agent directory discovery ─────────────────────────────────────────
 def _discover_agent_dir() -> Path:
     """
-    Locate the hermes-agent checkout using a multi-strategy search.
+    Locate the agent checkout using a multi-strategy search.
 
     Priority:
-      1. HERMES_WEBUI_AGENT_DIR env var  -- explicit override always wins
-      2. HERMES_HOME / hermes-agent      -- e.g. ~/.hermes/hermes-agent
+      1. YM_WEBUI_AGENT_DIR env var  -- explicit override always wins
+      2. YM_HOME / hermes-agent  -- e.g. ~/.yusuf-mussa/hermes-agent
       3. Sibling of this repo            -- ../hermes-agent
       4. Parent of this repo             -- ../../hermes-agent (nested layout)
-      5. Common install paths            -- ~/.hermes/hermes-agent (again as fallback)
-      6. HOME / hermes-agent             -- ~/hermes-agent (simple flat layout)
+      5. Common install paths            -- ~/.yusuf-mussa/hermes-agent (again as fallback)
+      6. HOME / agent             -- ~/hermes-agent (simple flat layout)
     """
     candidates = []
 
     # 1. Explicit env var
-    if os.getenv("HERMES_WEBUI_AGENT_DIR"):
+    if os.getenv("YM_WEBUI_AGENT_DIR"):
         candidates.append(
-            Path(os.getenv("HERMES_WEBUI_AGENT_DIR")).expanduser().resolve()
+            Path(os.getenv("YM_WEBUI_AGENT_DIR")).expanduser().resolve()
         )
 
-    # 2. HERMES_HOME / hermes-agent
-    hermes_home = os.getenv("HERMES_HOME", str(HOME / ".hermes"))
-    candidates.append(Path(hermes_home).expanduser() / "hermes-agent")
+    # 2. Inside repo root (merged layout: hermes-agent/ is a subdirectory)
+    candidates.append(REPO_ROOT / "hermes-agent")
 
-    # 3. Sibling: <repo-root>/../hermes-agent
+    # 3. YM_HOME / hermes-agent
+    ym_home = os.getenv("YM_HOME", str(HOME / ".yusuf-mussa"))
+    candidates.append(Path(ym_home).expanduser() / "hermes-agent")
+
+    # 4. Sibling: <repo-root>/../hermes-agent
     candidates.append(REPO_ROOT.parent / "hermes-agent")
 
-    # 4. Parent is the agent repo itself (repo cloned inside hermes-agent/)
+    # 5. Parent is the agent repo itself (repo cloned inside hermes-agent/)
     if (REPO_ROOT.parent / "run_agent.py").exists():
         candidates.append(REPO_ROOT.parent)
 
-    # 5. ~/.hermes/hermes-agent (explicit common path)
-    candidates.append(HOME / ".hermes" / "hermes-agent")
+    # 6. ~/.yusuf-mussa/hermes-agent (explicit common path)
+    candidates.append(HOME / ".yusuf-mussa" / "hermes-agent")
 
-    # 6. ~/hermes-agent
+    # 7. ~/hermes-agent
     candidates.append(HOME / "hermes-agent")
 
-    # 7. XDG_DATA_HOME / hermes-agent  (e.g. ~/.local/share/hermes-agent)
+    # 8. XDG_DATA_HOME / hermes-agent
     xdg_data = Path(os.getenv("XDG_DATA_HOME", str(HOME / ".local" / "share")))
     candidates.append(xdg_data.expanduser() / "hermes-agent")
 
-    # 8. System-wide install paths (e.g. /opt/hermes-agent, /usr/local/hermes-agent)
+    # 9. System-wide install paths
     for sys_prefix in ("/opt", "/usr/local", "/usr/local/share"):
         candidates.append(Path(sys_prefix) / "hermes-agent")
 
@@ -108,16 +111,16 @@ def _discover_agent_dir() -> Path:
 
 def _discover_python(agent_dir: Path) -> str:
     """
-    Locate a Python executable that has the Hermes agent dependencies installed.
+    Locate a Python executable that has the Yusuf Mussa agent dependencies installed.
 
     Priority:
-      1. HERMES_WEBUI_PYTHON env var
+      1. YM_WEBUI_PYTHON env var
       2. Agent venv at <agent_dir>/venv/bin/python
       3. Local .venv inside this repo
       4. System python3
     """
-    if os.getenv("HERMES_WEBUI_PYTHON"):
-        return os.getenv("HERMES_WEBUI_PYTHON")
+    if os.getenv("YM_WEBUI_PYTHON"):
+        return os.getenv("YM_WEBUI_PYTHON")
 
     if agent_dir:
         venv_py = agent_dir / "venv" / "bin" / "python"
@@ -157,10 +160,10 @@ def _discover_python(agent_dir: Path) -> str:
 _AGENT_DIR = _discover_agent_dir()
 PYTHON_EXE = _discover_python(_AGENT_DIR)
 
-# ── Inject agent dir into sys.path so Hermes modules are importable ──────────
+# ── Inject agent dir into sys.path so agent modules are importable ──────────
 
 # When users (or CI builds) run `pip install --target .` or
-# `pip install -t .` inside the hermes-agent checkout, third-party
+# `pip install -t .` inside the agent checkout, third-party
 # package directories (openai/, pydantic/, requests/, etc.) end up
 # alongside real Hermes source files.  Putting _AGENT_DIR at the
 # FRONT of sys.path means Python resolves `import pydantic` from that
@@ -169,15 +172,15 @@ PYTHON_EXE = _discover_python(_AGENT_DIR)
 #
 # Fix: insert _AGENT_DIR at the END of sys.path.  Python searches
 # entries in order, so site-packages resolves pip packages correctly,
-# and Hermes-specific modules (run_agent, hermes/, etc.) still
+# and agent-specific modules (run_agent, hermes/, etc.) still
 # resolve because they do not exist in site-packages.
 
 if _AGENT_DIR is not None:
     if str(_AGENT_DIR) not in sys.path:
         sys.path.append(str(_AGENT_DIR))
-    _HERMES_FOUND = True
+    _AGENT_FOUND = True
 else:
-    _HERMES_FOUND = False
+    _AGENT_FOUND = False
 
 # ── Config file (reloadable -- supports profile switching) ──────────────────
 _cfg_cache = {}
@@ -187,15 +190,15 @@ _cfg_mtime: float = 0.0  # last known mtime of config.yaml; 0 = never loaded
 
 def _get_config_path() -> Path:
     """Return config.yaml path for the active profile."""
-    env_override = os.getenv("HERMES_CONFIG_PATH")
+    env_override = os.getenv("YM_CONFIG_PATH")
     if env_override:
         return Path(env_override).expanduser()
     try:
-        from api.profiles import get_active_hermes_home
+        from api.profiles import get_active_ym_home
 
-        return get_active_hermes_home() / "config.yaml"
+        return get_active_ym_home() / "config.yaml"
     except ImportError:
-        return HOME / ".hermes" / "config.yaml"
+        return HOME / ".yusuf-mussa" / "config.yaml"
 
 
 def get_config() -> dict:
@@ -286,8 +289,8 @@ def _workspace_candidates(raw: str | Path | None = None) -> list[Path]:
             candidates.append(path)
 
     add(raw)
-    if os.getenv("HERMES_WEBUI_DEFAULT_WORKSPACE"):
-        add(os.getenv("HERMES_WEBUI_DEFAULT_WORKSPACE"))
+    if os.getenv("YM_WEBUI_DEFAULT_WORKSPACE"):
+        add(os.getenv("YM_WEBUI_DEFAULT_WORKSPACE"))
 
     home_workspace = HOME / "workspace"
     home_work = HOME / "work"
@@ -320,7 +323,7 @@ def resolve_default_workspace(raw: str | Path | None = None) -> Path:
             return candidate
     raise RuntimeError(
         "Could not create or access any usable workspace directory. "
-        "Set HERMES_WEBUI_DEFAULT_WORKSPACE to a writable path."
+        "Set YM_WEBUI_DEFAULT_WORKSPACE to a writable path."
     )
 
 
@@ -328,7 +331,7 @@ def resolve_default_workspace(raw: str | Path | None = None) -> Path:
 def _discover_default_workspace() -> Path:
     """
     Resolve the default workspace in order:
-      1. HERMES_WEBUI_DEFAULT_WORKSPACE env var
+      1. YM_WEBUI_DEFAULT_WORKSPACE env var
       2. ~/workspace if it already exists
       3. ~/work if it already exists
       4. ~/workspace (create if needed)
@@ -338,7 +341,7 @@ def _discover_default_workspace() -> Path:
 
 
 DEFAULT_WORKSPACE = _discover_default_workspace()
-DEFAULT_MODEL = os.getenv("HERMES_WEBUI_DEFAULT_MODEL", "")  # Empty = use provider default; avoids showing unavailable OpenAI model to non-OpenAI users (#646)
+DEFAULT_MODEL = os.getenv("YM_WEBUI_DEFAULT_MODEL", "")  # Empty = use provider default; avoids showing unavailable OpenAI model to non-OpenAI users (#646)
 
 
 # ── Startup diagnostics ───────────────────────────────────────────────────────
@@ -363,22 +366,22 @@ def print_startup_config() -> None:
     ]
     print("\n".join(lines), flush=True)
 
-    if not _HERMES_FOUND:
+    if not _AGENT_FOUND:
         print(
             f"{err}  Could not find the Yusuf Mussa agent directory.\n"
             "      The server will start but agent features will not work.\n"
             "\n"
             "      To fix, set one of:\n"
-            "        export HERMES_WEBUI_AGENT_DIR=/path/to/hermes-agent\n"
-            "        export HERMES_HOME=/path/to/.hermes\n"
+            "        export YM_WEBUI_AGENT_DIR=/path/to/agent\n"
+            "        export YM_HOME=/path/to/.yusuf-mussa\n"
             "\n"
-            "      Or clone hermes-agent as a sibling of this repo:\n"
-            "        git clone <hermes-agent-repo> ../hermes-agent\n",
+            "      Or clone agent as a sibling of this repo:\n"
+            "        git clone <agent-repo> ../agent\n",
             flush=True,
         )
 
 
-def verify_hermes_imports() -> tuple:
+def verify_agent_imports() -> tuple:
     """
     Attempt to import the key Hermes modules.
     Returns (ok: bool, missing: list[str], errors: dict[str, str]).
@@ -577,7 +580,7 @@ _PROVIDER_DISPLAY = {
 # is importable we also merge its ``_PROVIDER_ALIASES`` on top so any
 # new aliases added to the agent automatically apply.  Keeping the local
 # copy means the fix works even in environments where the agent tree is
-# not on ``sys.path`` (CI, installs without hermes-agent cloned
+# not on ``sys.path`` (CI, installs without agent cloned
 # alongside the WebUI).
 _PROVIDER_ALIASES = {
     "glm": "zai",
@@ -1096,7 +1099,7 @@ def get_reasoning_status() -> dict:
     """
     config_data = _load_yaml_config_file(_get_config_path())
     display_cfg = config_data.get("display") or {}
-    agent_cfg = config_data.get("agent") or {}
+    agent_cfg = config_data.get("ym-agent") or {}
     show_raw = display_cfg.get("show_reasoning") if isinstance(display_cfg, dict) else None
     effort_raw = agent_cfg.get("reasoning_effort") if isinstance(agent_cfg, dict) else None
     return {
@@ -1144,7 +1147,7 @@ def set_reasoning_effort(effort: str) -> dict:
     config_path = _get_config_path()
     with _cfg_lock:
         config_data = _load_yaml_config_file(config_path)
-        agent_cfg = config_data.get("agent")
+        agent_cfg = config_data.get("ym-agent")
         if not isinstance(agent_cfg, dict):
             agent_cfg = {}
         agent_cfg["reasoning_effort"] = raw
@@ -1154,7 +1157,7 @@ def set_reasoning_effort(effort: str) -> dict:
     return get_reasoning_status()
 
 
-def set_hermes_default_model(model_id: str) -> dict:
+def set_ym_default_model(model_id: str) -> dict:
     """Persist the Hermes default model in config.yaml and reload runtime config."""
     selected_model = str(model_id or "").strip()
     if not selected_model:
@@ -1175,9 +1178,9 @@ def set_hermes_default_model(model_id: str) -> dict:
             selected_model
         )
         # Persist the resolved bare/slash form, NOT the `@provider:` prefix. The
-        # prefix is a WebUI-internal routing hint that the hermes-agent CLI does
+        # prefix is a WebUI-internal routing hint that the agent CLI does
         # not understand — if we wrote `@nous:anthropic/claude-opus-4.6` to
-        # config.yaml, a user who ran `hermes` in the terminal right after
+        # config.yaml, a user who ran `ym` in the terminal right after
         # saving via WebUI would have the agent send that literal string to the
         # Nous API, which would reject it (Nous expects `anthropic/claude-opus-4.6`,
         # not the prefixed form). The Settings picker handles the resulting
@@ -1232,7 +1235,7 @@ _provider_models_invalidated_ts: dict[str, float] = {}  # provider_id -> timesta
 # signal is somehow missed, but the cache will always be warm after the first
 # page load following a server start.
 # Cache file lives inside STATE_DIR so each server instance (different
-# HERMES_WEBUI_STATE_DIR / port) has its own file and test runs never
+# YM_WEBUI_STATE_DIR / port) has its own file and test runs never
 # pollute the production server's cache. Also works on macOS and Windows
 # where /dev/shm does not exist.
 _models_cache_path = STATE_DIR / "models_cache.json"
@@ -1404,7 +1407,7 @@ def get_available_models() -> dict:
 
     Discovery order:
       1. Read config.yaml 'model' section for active provider info
-      2. Check for known API keys in env or ~/.hermes/.env
+      2. Check for known API keys in env or ~/.yusuf-mussa/.env
       3. Fetch models from custom endpoint if base_url is configured
       4. Fall back to hardcoded model list (OpenRouter-style)
 
@@ -1543,11 +1546,11 @@ def get_available_models() -> dict:
         # 2. Read auth store (active_provider fallback + credential_pool inspection)
         auth_store = {}
         try:
-            from api.profiles import get_active_hermes_home as _gah
+            from api.profiles import get_active_ym_home as _gah
 
             auth_store_path = _gah() / "auth.json"
         except ImportError:
-            auth_store_path = HOME / ".hermes" / "auth.json"
+            auth_store_path = HOME / ".yusuf-mussa" / "auth.json"
         if auth_store_path.exists():
             try:
                 import json as _j
@@ -1620,7 +1623,7 @@ def get_available_models() -> dict:
 
         all_env: dict = {}
 
-        _hermes_auth_used = False
+        _ym_auth_used = False
         try:
             from hermes_cli.models import list_available_providers as _lap
             from hermes_cli.auth import get_auth_status as _gas
@@ -1635,27 +1638,27 @@ def get_available_models() -> dict:
                 except Exception:
                     logger.debug("Failed to get key source for provider %s", _p.get("id", "unknown"))
                 detected_providers.add(_p["id"])
-            _hermes_auth_used = True
+            _ym_auth_used = True
         except Exception:
-            logger.debug("Failed to detect auth providers from hermes")
+            logger.debug("Failed to detect auth providers from agent")
 
-        if not _hermes_auth_used:
+        if not _ym_auth_used:
             try:
-                from api.profiles import get_active_hermes_home as _gah2
+                from api.profiles import get_active_ym_home as _gah2
 
-                hermes_env_path = _gah2() / ".env"
+                ym_env_path = _gah2() / ".env"
             except ImportError:
-                hermes_env_path = HOME / ".hermes" / ".env"
+                ym_env_path = HOME / ".yusuf-mussa" / ".env"
             env_keys = {}
-            if hermes_env_path.exists():
+            if ym_env_path.exists():
                 try:
-                    for line in hermes_env_path.read_text(encoding="utf-8").splitlines():
+                    for line in ym_env_path.read_text(encoding="utf-8").splitlines():
                         line = line.strip()
                         if line and not line.startswith("#") and "=" in line:
                             k, v = line.split("=", 1)
                             env_keys[k.strip()] = v.strip().strip('"').strip("'")
                 except Exception:
-                    logger.debug("Failed to parse hermes env file")
+                    logger.debug("Failed to parse YM env file")
             all_env = {**env_keys}
             for k in (
                 "ANTHROPIC_API_KEY",
@@ -2387,7 +2390,7 @@ def save_settings(settings: dict) -> dict:
 
 
 # Apply saved settings on startup (override env-derived defaults)
-# Exception: if HERMES_WEBUI_DEFAULT_WORKSPACE is explicitly set in the
+# Exception: if YM_WEBUI_DEFAULT_WORKSPACE is explicitly set in the
 # environment, it wins over whatever settings.json has stored.  Persisted
 # config must never shadow an explicit env-var override (Docker deployments
 # rely on this — otherwise deleting settings.json is the only escape).
@@ -2397,7 +2400,7 @@ try:
 except OSError:
     _settings_file_exists = False
 if _settings_file_exists:
-    if not os.getenv("HERMES_WEBUI_DEFAULT_WORKSPACE"):
+    if not os.getenv("YM_WEBUI_DEFAULT_WORKSPACE"):
         DEFAULT_WORKSPACE = resolve_default_workspace(
             _startup_settings.get("default_workspace")
         )

@@ -1751,7 +1751,7 @@ Each has automated API-level tests in `tests/test_sprint{N}.py`.
 
 ### Sprint 19: Auth + Security
 - No password set: everything works as normal. No login page.
-- Set `HERMES_WEBUI_PASSWORD=test` env var. Restart. All pages redirect to `/login`.
+- Set `YM_WEBUI_PASSWORD=test` env var. Restart. All pages redirect to `/login`.
 - Login page: minimal card, password field, "Sign in" button.
 - Enter correct password → redirected to `/`. Cookie set (24h).
 - Enter wrong password → error message, stay on login page.
@@ -1798,14 +1798,14 @@ Each has automated API-level tests in `tests/test_sprint{N}.py`.
 - Create profile → appears in list and dropdown.
 - Delete profile → confirmation modal. Auto-switches to default if deleting active.
 - Attempt switch while agent busy → blocked with toast message.
-- With hermes-agent not installed → only default profile shown, graceful fallback.
+- With agent not installed → only default profile shown, graceful fallback.
 
 ---
 
 ## Slash command parity (manual checklist)
 
-For each batch-1 command, run via webui slash menu AND via `hermes` CLI in the
-same `HERMES_HOME` (when applicable) and verify identical effect.
+For each batch-1 command, run via webui slash menu AND via `ym` CLI in the
+same `YM_HOME` (when applicable) and verify identical effect.
 
 - [ ] `/help` — dropdown lists 25+ commands; selecting `/help` posts an assistant message listing them.
 - [ ] `/new` (and alias `/reset`) — starts fresh session.

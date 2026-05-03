@@ -5,7 +5,7 @@ affect sessions created by other concurrent clients.
 Root cause: _active_profile was a process-level global in api/profiles.py.
 Fix: new_session() now accepts an explicit `profile` param passed from the client
 request body (S.activeProfile), which bypasses the shared global entirely.
-get_hermes_home_for_profile() resolves a HERMES_HOME path from a name without
+get_ym_home_for_profile() resolves a YM_HOME path from a name without
 touching os.environ or module-level state.
 """
 
@@ -18,57 +18,57 @@ from unittest.mock import patch
 import pytest
 
 
-# ── R19: get_hermes_home_for_profile ─────────────────────────────────────────
+# ── R19: get_ym_home_for_profile ─────────────────────────────────────────
 
-def test_get_hermes_home_for_profile_returns_default_for_none():
+def test_get_ym_home_for_profile_returns_default_for_none():
     """R19a: None / empty string / 'default' all return the base home."""
     import api.profiles as p
-    base = p._DEFAULT_HERMES_HOME
-    assert p.get_hermes_home_for_profile(None) == base
-    assert p.get_hermes_home_for_profile('') == base
-    assert p.get_hermes_home_for_profile('default') == base
+    base = p._DEFAULT_YM_HOME
+    assert p.get_ym_home_for_profile(None) == base
+    assert p.get_ym_home_for_profile('') == base
+    assert p.get_ym_home_for_profile('default') == base
 
 
-def test_get_hermes_home_for_profile_returns_profile_subdir(tmp_path, monkeypatch):
+def test_get_ym_home_for_profile_returns_profile_subdir(tmp_path, monkeypatch):
     """R19b: Named profile that exists returns its subdirectory."""
     import api.profiles as p
 
     profile_dir = tmp_path / 'profiles' / 'alice'
     profile_dir.mkdir(parents=True)
-    monkeypatch.setattr(p, '_DEFAULT_HERMES_HOME', tmp_path)
-    result = p.get_hermes_home_for_profile('alice')
+    monkeypatch.setattr(p, '_DEFAULT_YM_HOME', tmp_path)
+    result = p.get_ym_home_for_profile('alice')
     assert result == profile_dir
 
 
-def test_get_hermes_home_for_profile_falls_back_for_missing_profile(tmp_path, monkeypatch):
+def test_get_ym_home_for_profile_falls_back_for_missing_profile(tmp_path, monkeypatch):
     """R19c: Named profile that does not exist falls back to base home."""
     import api.profiles as p
 
-    monkeypatch.setattr(p, '_DEFAULT_HERMES_HOME', tmp_path)
-    result = p.get_hermes_home_for_profile('ghost')
+    monkeypatch.setattr(p, '_DEFAULT_YM_HOME', tmp_path)
+    result = p.get_ym_home_for_profile('ghost')
     assert result == tmp_path
 
 
-def test_get_hermes_home_for_profile_does_not_mutate_globals():
-    """R19d: get_hermes_home_for_profile() must never change _active_profile or os.environ."""
+def test_get_ym_home_for_profile_does_not_mutate_globals():
+    """R19d: get_ym_home_for_profile() must never change _active_profile or os.environ."""
     import api.profiles as p
 
     before_active = p._active_profile
-    before_hermes_home = os.environ.get('HERMES_HOME')
+    before_hermes_home = os.environ.get('YM_HOME')
 
-    p.get_hermes_home_for_profile('some-other-profile')
+    p.get_ym_home_for_profile('some-other-profile')
 
     assert p._active_profile == before_active, (
-        "get_hermes_home_for_profile() must not mutate _active_profile"
+        "get_ym_home_for_profile() must not mutate _active_profile"
     )
-    assert os.environ.get('HERMES_HOME') == before_hermes_home, (
-        "get_hermes_home_for_profile() must not mutate os.environ['HERMES_HOME']"
+    assert os.environ.get('YM_HOME') == before_hermes_home, (
+        "get_ym_home_for_profile() must not mutate os.environ['YM_HOME']"
     )
 
 
 # ── R19e-h: new_session() profile isolation ───────────────────────────────────
 # These tests call new_session() directly in-process.  Session.save() would write
-# to SESSION_DIR which is set from HERMES_WEBUI_STATE_DIR at import time and may
+# to SESSION_DIR which is set from YM_WEBUI_STATE_DIR at import time and may
 # point to a test-scoped tmp dir that has already been torn down.  We patch save()
 # to a no-op — the tests only care about s.profile, not persistence.
 
@@ -169,18 +169,18 @@ def test_sessions_js_sends_profile_in_new_session_post():
     )
 
 
-def test_get_hermes_home_for_profile_rejects_path_traversal():
-    """R19j: get_hermes_home_for_profile() must reject names that don't match
+def test_get_ym_home_for_profile_rejects_path_traversal():
+    """R19j: get_ym_home_for_profile() must reject names that don't match
     _PROFILE_ID_RE (e.g. path traversal like '../../etc') and return the base home.
     The regex guard is defence-in-depth on top of the is_dir() fallback."""
     import api.profiles as p
-    base = p._DEFAULT_HERMES_HOME
-    assert p.get_hermes_home_for_profile('../../etc') == base
-    assert p.get_hermes_home_for_profile('../escape') == base
-    assert p.get_hermes_home_for_profile('/absolute/path') == base
-    assert p.get_hermes_home_for_profile('has spaces') == base
-    assert p.get_hermes_home_for_profile('UPPERCASE') == base
+    base = p._DEFAULT_YM_HOME
+    assert p.get_ym_home_for_profile('../../etc') == base
+    assert p.get_ym_home_for_profile('../escape') == base
+    assert p.get_ym_home_for_profile('/absolute/path') == base
+    assert p.get_ym_home_for_profile('has spaces') == base
+    assert p.get_ym_home_for_profile('UPPERCASE') == base
     # Valid names still work
-    assert p.get_hermes_home_for_profile('alice') == base   # nonexistent → fallback
-    assert p.get_hermes_home_for_profile('my-profile') == base
-    assert p.get_hermes_home_for_profile('profile_1') == base
+    assert p.get_ym_home_for_profile('alice') == base   # nonexistent → fallback
+    assert p.get_ym_home_for_profile('my-profile') == base
+    assert p.get_ym_home_for_profile('profile_1') == base

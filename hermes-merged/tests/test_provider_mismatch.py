@@ -686,7 +686,7 @@ class TestChatStartEffectiveModelRecovery:
             "send() must read effective_model from /api/chat/start so the UI can "
             "recover from stale persisted session models"
         )
-        assert "localStorage.setItem('hermes-webui-model', startData.effective_model)" in src, (
+        assert "localStorage.setItem('ym-model', startData.effective_model)" in src, (
             "effective_model correction must update the saved model preference"
         )
 

@@ -65,10 +65,10 @@ _OAUTH_PROVIDERS = frozenset({
 def _get_hermes_home() -> Path:
     """Return the active Hermes home directory."""
     try:
-        from api.profiles import get_active_hermes_home
-        return get_active_hermes_home()
+        from api.profiles import get_active_ym_home
+        return get_active_ym_home()
     except ImportError:
-        return Path.home() / ".hermes"
+        return Path.home() / ".yusuf-mussa"
 
 
 def _load_env_file(env_path: Path) -> dict[str, str]:
@@ -159,7 +159,7 @@ def _write_env_file(env_path: Path, updates: dict[str, str | None]) -> None:
             content += "\n"
         # Atomic write via tempfile + os.replace so cross-process readers
         # (Telegram bot, CLI) never see a half-truncated file.  The shared
-        # ``~/.hermes/.env`` is also written by ``hermes_cli.config.save_env_value``
+        # ``~/.yusuf-mussa/.env`` is also written by ``hermes_cli.config.save_env_value``
         # using the same atomic pattern; matching it here closes the
         # cross-process leg of #1164 (within-process is covered by _ENV_LOCK).
         _mode = _stat.S_IRUSR | _stat.S_IWUSR  # 0o600
@@ -190,7 +190,7 @@ def _provider_has_key(provider_id: str) -> bool:
     """Check whether a provider has a configured API key.
 
     Checks (in order):
-    1. ``~/.hermes/.env`` for the known env var
+    1. ``~/.yusuf-mussa/.env`` for the known env var
     2. ``os.environ`` for the known env var
     3. ``config.yaml → model.api_key`` (only if provider is the active one)
     4. ``config.yaml → providers.<id>.api_key``
@@ -406,7 +406,7 @@ def get_providers() -> dict[str, Any]:
 def set_provider_key(provider_id: str, api_key: str | None) -> dict[str, Any]:
     """Set or update the API key for a provider.
 
-    Writes the key to ``~/.hermes/.env`` using the standard env var name.
+    Writes the key to ``~/.yusuf-mussa/.env`` using the standard env var name.
     If ``api_key`` is None or empty, the key is removed.
 
     Returns a status dict with the operation result.
@@ -420,7 +420,7 @@ def set_provider_key(provider_id: str, api_key: str | None) -> dict[str, Any]:
         return {
             "ok": False,
             "error": f"'{_PROVIDER_DISPLAY.get(provider_id, provider_id)}' uses OAuth authentication. "
-                     f"Use `hermes model` in the terminal to configure it.",
+                     f"Use `ym model` in the terminal to configure it.",
         }
 
     env_var = _PROVIDER_ENV_VAR.get(provider_id)
@@ -464,7 +464,7 @@ def set_provider_key(provider_id: str, api_key: str | None) -> dict[str, Any]:
 def remove_provider_key(provider_id: str) -> dict[str, Any]:
     """Remove the API key for a provider.
 
-    Removes the key from ``~/.hermes/.env`` (via ``set_provider_key``)
+    Removes the key from ``~/.yusuf-mussa/.env`` (via ``set_provider_key``)
     and also cleans up ``config.yaml`` if the key is stored there
     (``providers.<id>.api_key`` or top-level ``model.api_key`` when this
     provider is the active one).

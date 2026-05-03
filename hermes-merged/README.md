@@ -9,35 +9,81 @@
 
 **وكيل ذكاء اصطناعي متقدم لبناء التطبيقات والتصاميم وحل الأخطاء وإنشاء مشاريع SaaS**
 
-[English](#features) | [العربية](#المميزات) | [تثبيت Termux](#التثبيت-على-termux)
+[English](#english) | [العربية](#العربية) | [التثبيت السريع](#التثبيت-السريع-1)
 
 </div>
 
 ---
 
+<a id="english"></a>
+
+## What is Yusuf Mussa?
+
+Yusuf Mussa is a fully self-hosted, privacy-first AI agent that runs entirely on your machine. It combines a powerful web-based chat interface with a sophisticated backend agent engine capable of programming, design, debugging, application building, SaaS creation, and complex program development. Unlike cloud-only AI tools, all your data, conversations, and code stay on your device.
+
+### Core Capabilities
+
+| Capability | Description |
+|------------|-------------|
+| **Full-Stack Programming** | Write code in any language (Python, JS, TS, Rust, Go, Java, C++, Ruby, PHP) — build complete applications from scratch |
+| **SaaS Building** | Create multi-tenant SaaS projects with authentication, payments (Stripe/Paymob/PayPal), and APIs |
+| **UI/UX Design** | Generate modern, responsive designs with CSS frameworks, design systems, and component libraries |
+| **Bug Fixing & Debugging** | Analyze errors, trace bugs, review code, optimize performance across any codebase |
+| **Infrastructure & DevOps** | Docker, Kubernetes, CI/CD pipelines, deployment automation, monitoring setup |
+| **Database Design** | PostgreSQL, MySQL, MongoDB, SQLite, Redis — schema design, migrations, optimization |
+| **Browser Automation** | Web scraping, data extraction, task automation using headless browser control |
+| **Research & Analysis** | Web search, academic paper analysis, data synthesis, report generation |
+| **Persistent Memory** | Learns and remembers across sessions, improves over time |
+| **Image Generation** | Create AI-generated images, logos, icons, and visual assets |
+
+### Web Interface Features
+
+- **Live Streaming** — Responses appear character-by-character as they are generated via Server-Sent Events (SSE)
+- **20+ AI Providers** — OpenAI, Anthropic, Google, DeepSeek, Qwen, Z.AI, xAI, Mistral, OpenRouter, and more
+- **10 Themes & Skins** — Default, Ares, Mono, Slate, Poseidon, Sisyphus, Charizard, Sienna, Aurora (glassmorphism), Neon (cyberpunk)
+- **8 Languages** — English, العربية (full RTL), Русский, Español, Deutsch, 中文, Português, 한국어
+- **File Browser** — Browse, edit, and create files directly in the workspace panel
+- **Built-in Terminal** — Execute shell commands from the browser using xterm.js
+- **Voice Input** — Speak instead of typing using Web Speech API or MediaRecorder
+- **Scheduled Tasks** — Cron jobs that run even when you are offline
+- **Self-improving Skills** — Automatically writes and saves new skills as it works
+- **PWA Support** — Install as a native-like app on your phone
+- **Multi-profile Support** — Switch between different agent configurations and workspaces
+- **Workspace Panel** — Side-by-side file browsing and code preview while chatting
+
+### 60+ Built-in Tools
+
+```
+browser         — Browser automation (13 sub-tools)
+code_execution  — Execute Python/JS/any language
+file            — Read, write, edit, search files
+terminal        — Execute shell commands
+web             — Web search and content extraction
+image_gen       — AI image generation
+delegation      — Delegate tasks to sub-agents
+memory          — Persistent memory across sessions
+todo            — Task list management
+cronjob         — Schedule recurring tasks
+skills          — Extensible skill system
+clarify         — Ask clarifying questions
+webhook         — Send/receive webhook notifications
+```
+
+---
+
+<a id="العربية"></a>
+
 ## ما هو Yusuf Mussa؟
 
-Yusuf Mussa هو وكيل ذكاء اصطناعي متقدم ومتكامل يعمل محلياً على جهازك، قادر على:
+Yusuf Mussa هو وكيل ذكاء اصطناعي متقدم ومتكامل يعمل محلياً على جهازك بالكامل، مما يضمن خصوصية بياناتك. يجمع بين واجهة ويب متطورة ومحرك وكيل خلفي قادر على البرمجة والتصميم وحل الأخطاء وبناء التطبيقات وإنشاء مشاريع SaaS وتطوير برامج معقدة. على عكس أدوات الذكاء الاصطناعي السحابية، جميع بياناتك ومحادثاتك وشيفراتك تبقى على جهازك.
 
-- **البرمجة والتطوير** — كتابة كود بأي لغة (Python, JavaScript, TypeScript, Rust, Go, إلخ)، بناء تطبيقات كاملة من الصفر
-- **بناء تطبيقات SaaS** — إنشاء مشاريع SaaS كاملة مع المصادقة، الدفع، المتعدد المستخدمين
-- **التصميم** — إنشاء تصاميم UI/UX حديثة، واجهات متجاوبة، وتوليد صور
-- **حل الأخطاء** — تحليل وإصلاح الباجات، مراجعة الكود، تحسين الأداء
-- **إدارة البنية التحتية** — DevOps، Docker، CI/CD، النشر والتشغيل
-- **قاعدة بيانات** — تصميم وإدارة قواعد البيانات، SQL و NoSQL
-- **أتمتة المتصفح** — تصفح الويب، استخراج البيانات، أتمتة المهام
-- **البحث** — بحث ويب، تحليل أوراق علمية، استخراج المعلومات
-- **الذاكرة المستمرة** — يتذكر ما يتعلمه عبر الجلسات، يتحسن مع الوقت
-
-## المميزات
-
-### قدرات الوكيل المتقدم
+### القدرات الأساسية
 
 | القدرة | الوصف |
 |--------|-------|
 | برمجة كاملة | Python, JS, TS, Rust, Go, Java, C++, Ruby, PHP وأكثر |
 | بناء تطبيقات ويب | Next.js, React, Vue, Django, Flask, FastAPI |
-| بناء SaaS | مصادقة، دفع Stripe/PayPal، multi-tenancy، APIs |
+| بناء SaaS | مصادقة، دفع Stripe/Paymob/PayPal، multi-tenancy، APIs |
 | تطبيقات موبايل | React Native, Flutter, PWA |
 | قواعد بيانات | PostgreSQL, MySQL, MongoDB, SQLite, Redis |
 | DevOps | Docker, K8s, GitHub Actions, CI/CD |
@@ -45,227 +91,103 @@ Yusuf Mussa هو وكيل ذكاء اصطناعي متقدم ومتكامل يع
 | حل الأخطاء | تحليل، تصحيح، مراجعة كود، تحسين أداء |
 | أتمتة | Shell scripts، cron jobs، web scraping |
 | أمان | فحص ثغرات، تصحيح أمني، أفضل الممارسات |
-
-### واجهة الويب
-
-- **بث مباشر** — تظهر الاستجابة حرفاً بحرف فور توليدها
-- **20+ مزود ذكاء اصطناعي** — OpenAI, Anthropic, Google, DeepSeek, Qwen, Z.AI وأكثر
-- **10 ثيمات** — Default, Ares, Mono, Slate, Poseidon, Sisyphus, Charizard, Sienna, **Aurora**, **Neon**
-- **8 لغات** — English, العربية, Русский, Español, Deutsch, 中文, Português, 한국어
-- **دعم RTL كامل** — واجهة عربية من اليمين لليسار
-- **متصفح ملفات** — تصفح، تعديل، إنشاء ملفات مباشرة
-- **طرفية مدمجة** — تنفيذ أوامر shell مباشرة من المتصفح
-- **إدخال صوتي** — تحدث بدلاً من الكتابة
-- **مهام مجدولة** — cron jobs تعمل حتى وأنت غير متصل
-- **مهارات ذاتية التحسين** — يكتب ويحفظ مهاراته تلقائياً
-- **PWA** — يعمل كتطبيق على الهاتف
-
-### الأدوات المتاحة (60+ أداة)
-
-```
-browser         — أتمتة المتصفح (13 أداة فرعية)
-code_execution  — تنفيذ Python/JS/أي لغة
-file            — قراءة، كتابة، تعديل، بحث في الملفات
-terminal        — تنفيذ أوامر shell
-web             — بحث ويب واستخراج محتوى
-image_gen       — توليد صور بالذكاء الاصطناعي
-delegation      — تفويض مهام لوكيل فرعي
-memory          — ذاكرة مستمرة عبر الجلسات
-todo            — إدارة قائمة المهام
-cronjob         — جدولة مهام دورية
-skills          — نظام مهارات قابل للتوسيع
-```
+| توليد صور | إنشاء صور ورموز وأصول بصرية بالذكاء الاصطناعي |
+| بحث وتحليل | بحث ويب، تحليل أوراق علمية، استخراج معلومات |
 
 ---
 
+<a id="التثبيت-السريع-1"></a>
+
 ## التثبيت السريع
 
-### Linux / macOS
+### Linux / macOS (أمر واحد)
+
+```bash
+git clone https://github.com/gjbvsjjvgm-sketch/hermes-merged.git && cd hermes-merged && python3 start_server.py
+```
+
+### أو بالتفصيل
 
 ```bash
 git clone https://github.com/gjbvsjjvgm-sketch/hermes-merged.git
 cd hermes-merged
-python3 bootstrap.py
+python3 start_server.py
 ```
 
-أو:
-
-```bash
-./start.sh
-```
+ثم افتح **http://localhost:8788** في المتصفح.
 
 ### Docker
 
 ```bash
-docker pull ghcr.io/nesquena/hermes-webui:latest
-docker run -d \
-  -e WANTED_UID=$(id -u) -e WANTED_GID=$(id -g) \
-  -v ~/.hermes:/home/hermeswebui/.hermes \
-  -v ~/workspace:/workspace \
-  -p 8788:8788 ghcr.io/nesquena/hermes-webui:latest
+docker compose up -d
 ```
 
-افتح http://localhost:8788 في المتصفح.
+أو بناء يدوي:
+
+```bash
+docker build -t yusuf-mussa .
+docker run -d -p 8788:8788 -v ~/.yusuf-mussa:/home/yusufmussa/.yusuf-mussa yusuf-mussa
+```
 
 ---
 
-## التثبيت على Termux
+## التثبيت على Termux (أندرويد)
 
-> **Termux** هو محاكي طرفية أندرويد يتيح تشغيل بيئة Linux كاملة على هاتفك. يمكنك تشغيل Yusuf Mussa بالكامل على هاتفك الأندرويد!
-
-### المتطلبات
-
-- هاتف أندرويد 7.0+
-- 2GB RAM كحد أدنى (4GB+ مستحسن)
-- 1GB مساحة تخزين حرة
-- اتصال إنترنت
-
-### الخطوة 1: تثبيت Termux
-
-قم بتحميل Termux من **F-Droid** (النسخة الموصى بها):
-
-```bash
-# لا تستخدم نسخة Google Play — قديمة ولا تعمل
-# حمّل من F-Droid:
-# https://f-droid.org/packages/com.termux/
-```
-
-أو من سطر الأوامر:
-
-```bash
-# افتح المتصفح على هاتفك وادخل:
-# https://f-droid.org/packages/com.termux/
-```
-
-### الخطوة 2: تحديث Termux وتثبيت الحزم الأساسية
-
-```bash
-# تحديث الحزم
-pkg update && pkg upgrade -y
-
-# تثبيت الأدوات الأساسية
-pkg install -y git python python-pip nodejs-lts build-essential binutils openssl
-
-# تثبيت أدوات إضافية مفيدة
-pkg install -y curl wget nano vim
-```
-
-### الخطوة 3: إعداد بيئة Python
-
-```bash
-# تحديث pip
-pip install --upgrade pip
-
-# تثبيت الحزم الأساسية
-pip install pyyaml
-```
-
-### الخطوة 4: تحميل Yusuf Mussa
-
-```bash
-# استنساخ المشروع
-cd ~
-git clone https://github.com/gjbvsjjvgm-sketch/hermes-merged.git
-cd hermes-merged
-```
-
-### الخطوة 5: تشغيل Yusuf Mussa
-
-```bash
-# الطريقة الأولى: استخدام سكريبت البدء
-chmod +x start.sh
-./start.sh
-
-# الطريقة الثانية: تشغيل مباشر بـ Python
-python3 start_server.py
-```
-
-### الخطوة 6: الوصول من المتصفح
-
-بعد التشغيل، سترى رسالة مثل:
-
-```
-Yusuf Mussa Web UI listening on http://0.0.0.0:8788
-```
-
-افتح متصفح هاتفك وادخل:
-
-```
-http://localhost:8788
-```
-
-### إعداد مفتاح API
-
-عند أول تشغيل، سيظهر معالج الإعداد. ستحتاج إلى:
-
-1. **اختيار مزود AI** — مثلاً OpenAI, Anthropic, أو OpenRouter
-2. **إدخال مفتاح API** — احصل عليه من موقع المزود
-3. **اختيار نموذج** — مثل `gpt-4o-mini` أو `claude-sonnet-4-20250514`
-4. **اختيار مساحة عمل** — المجلد الذي سيعمل فيه الوكيل
-
-أو يدوياً:
-
-```bash
-# إنشاء ملف الإعدادات
-mkdir -p ~/.hermes
-cat > ~/.hermes/.env << 'EOF'
-OPENAI_API_KEY=sk-your-key-here
-# أو أي مزود آخر:
-# ANTHROPIC_API_KEY=sk-ant-your-key
-# DEEPSEEK_API_KEY=your-key
-# OPENROUTER_API_KEY=your-key
-EOF
-
-# إنشاء ملف config.yaml
-cat > ~/.hermes/config.yaml << 'EOF'
-provider: openai
-model: gpt-4o-mini
-EOF
-```
+> **Termux** هو محاكي طرفية أندرويد يتيح تشغيل Yusuf Mussa بالكامل على هاتفك!
 
 ### تثبيت سريع بأمر واحد (Termux)
 
 ```bash
-pkg update -y && pkg upgrade -y && \
-pkg install -y git python python-pip build-essential && \
-pip install pyyaml && \
-cd ~ && \
-git clone https://github.com/gjbvsjjvgm-sketch/hermes-merged.git && \
-cd hermes-merged && \
+pkg update -y && pkg upgrade -y && pkg install -y git python python-pip build-essential && pip install pyyaml && cd ~ && git clone https://github.com/gjbvsjjvgm-sketch/hermes-merged.git && cd hermes-merged && python3 start_server.py
+```
+
+### تثبيت مفصل خطوة بخطوة
+
+**الخطوة 1:** ثبّت Termux من [F-Droid](https://f-droid.org/packages/com.termux/) (لا تستخدم نسخة Google Play)
+
+**الخطوة 2:** حدّث الحزم وثبّت الأدوات:
+
+```bash
+pkg update && pkg upgrade -y
+pkg install -y git python python-pip nodejs-lts build-essential binutils openssl
+pip install --upgrade pip pyyaml
+```
+
+**الخطوة 3:** حمّل المشروع وشغّله:
+
+```bash
+cd ~
+git clone https://github.com/gjbvsjjvgm-sketch/hermes-merged.git
+cd hermes-merged
 python3 start_server.py
 ```
+
+**الخطوة 4:** افتح **http://localhost:8788** في متصفح هاتفك.
 
 ### نصائح Termux
 
 ```bash
-# تشغيل في الخلفية (حتى لا يتوقف عند إغلاق التermux)
+# تشغيل في الخلفية
 nohup python3 start_server.py &
 
-# أو استخدام tmux
+# أو باستخدام tmux
 pkg install tmux
 tmux new -s yusuf
 python3 start_server.py
-# اضغط Ctrl+B ثم D للفصل
-# tmux attach -t yusuf  للعودة
+# Ctrl+B ثم D للفصل | tmux attach -t yusuf للعودة
 
 # تشغيل تلقائي عند فتح Termux
 echo 'cd ~/hermes-merged && python3 start_server.py' >> ~/.bashrc
 
 # تغيير المنفذ
-HERMES_WEBUI_PORT=9000 python3 start_server.py
+YM_WEBUI_PORT=9000 python3 start_server.py
 
 # تفعيل كلمة المرور
-HERMES_WEBUI_PASSWORD=your-secret python3 start_server.py
-```
+YM_WEBUI_PASSWORD=your-secret python3 start_server.py
 
-### الوصول من كمبيوتر آخر على نفس الشبكة
-
-```bash
-# اعرف عنوان IP لهاتفك
-ifconfig | grep inet
-
-# على الكمبيوتر، افتح:
-# http://PHONE-IP:8788
+# الوصول من كمبيوتر آخر على نفس الشبكة
+ifconfig | grep inet    # اعرف IP الهاتف
+# ثم من الكمبيوتر: http://PHONE-IP:8788
 ```
 
 ### حل مشاكل Termux الشائعة
@@ -274,10 +196,9 @@ ifconfig | grep inet
 |---------|------|
 | `python: command not found` | `pkg install python` |
 | `pip: command not found` | `pkg install python-pip` |
-| `git: command not found` | `pkg install git` |
 | `ModuleNotFoundError` | `pip install pyyaml` |
 | `Permission denied` | `chmod +x start.sh` |
-| `Address already in use` | غيّر المنفذ: `HERMES_WEBUI_PORT=9000` |
+| `Address already in use` | `YM_WEBUI_PORT=9000 python3 start_server.py` |
 | `No space left` | `pkg clean && pip cache purge` |
 | بناء حزم يفشل | `pkg install build-essential binutils` |
 | مشاكل OpenSSL | `pkg install openssl && pip install --upgrade certifi` |
@@ -290,31 +211,56 @@ ifconfig | grep inet
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `HERMES_WEBUI_HOST` | `0.0.0.0` | Bind address |
-| `HERMES_WEBUI_PORT` | `8788` | Port number |
-| `HERMES_WEBUI_PASSWORD` | *(unset)* | Set to enable password auth |
-| `HERMES_WEBUI_AGENT_DIR` | `./hermes-agent` | Path to agent |
-| `HERMES_WEBUI_STATE_DIR` | `./.hermes-state/webui` | State directory |
-| `HERMES_WEBUI_DEFAULT_WORKSPACE` | `./workspace` | Default workspace |
-| `HERMES_WEBUI_DEFAULT_MODEL` | `openai/gpt-5.4-mini` | Default model |
-| `HERMES_HOME` | `~/.hermes` | Base config directory |
+| `YM_WEBUI_HOST` | `0.0.0.0` | Bind address |
+| `YM_WEBUI_PORT` | `8788` | Port number |
+| `YM_WEBUI_PASSWORD` | *(unset)* | Set to enable password authentication |
+| `YM_WEBUI_AGENT_DIR` | `./hermes-agent` | Path to agent engine |
+| `YM_WEBUI_STATE_DIR` | `./.ym-state/webui` | State storage directory |
+| `YM_WEBUI_DEFAULT_WORKSPACE` | `./workspace` | Default workspace path |
+| `YM_WEBUI_DEFAULT_MODEL` | *(provider default)* | Default model to use |
+| `YM_WEBUI_TLS_CERT` | *(unset)* | TLS certificate path (HTTPS) |
+| `YM_WEBUI_TLS_KEY` | *(unset)* | TLS key path (HTTPS) |
+| `YM_HOME` | `~/.yusuf-mussa` | Base configuration directory |
+
+### Quick Configuration
+
+```bash
+# Set up API key
+mkdir -p ~/.yusuf-mussa
+cat > ~/.yusuf-mussa/.env << 'EOF'
+OPENAI_API_KEY=sk-your-key-here
+# Or any other provider:
+# ANTHROPIC_API_KEY=sk-ant-your-key
+# DEEPSEEK_API_KEY=your-key
+# OPENROUTER_API_KEY=your-key
+# GOOGLE_API_KEY=your-key
+EOF
+
+# Set default model
+cat > ~/.yusuf-mussa/config.yaml << 'EOF'
+provider: openai
+model: gpt-4o-mini
+EOF
+```
 
 ### Supported AI Providers (20+)
 
 | Provider | Models | API Key Env |
 |----------|--------|-------------|
-| OpenAI | GPT-4o, GPT-5, o3 | `OPENAI_API_KEY` |
-| Anthropic | Claude Sonnet, Opus, Haiku | `ANTHROPIC_API_KEY` |
-| Google | Gemini 2.5 Pro/Flash | `GOOGLE_API_KEY` |
-| DeepSeek | V3, R1 | `DEEPSEEK_API_KEY` |
-| Qwen | Qwen3, Qwen2.5 | `DASHSCOPE_API_KEY` |
-| xAI | Grok 3 | `XAI_API_KEY` |
+| OpenAI | GPT-4o, GPT-5.4, o3 | `OPENAI_API_KEY` |
+| Anthropic | Claude Opus 4.7, Sonnet 4.6, Haiku 4.5 | `ANTHROPIC_API_KEY` |
+| Google | Gemini 3.1 Pro, 2.5 Flash | `GOOGLE_API_KEY` |
+| DeepSeek | V4 Pro, V4 Flash, R1 | `DEEPSEEK_API_KEY` |
+| Qwen | Qwen3 Coder, Qwen3.6 Plus | `DASHSCOPE_API_KEY` |
+| xAI | Grok 4.20 | `XAI_API_KEY` |
 | Mistral | Mistral Large, Codestral | `MISTRAL_API_KEY` |
-| OpenRouter | 200+ models | `OPENROUTER_API_KEY` |
-| Z.AI | GLM-4 | `ZAI_API_KEY` |
-| Ollama | Local models | *(no key needed)* |
+| OpenRouter | 200+ models from all providers | `OPENROUTER_API_KEY` |
+| Z.AI / GLM | GLM-5.1, GLM-5, GLM-5 Turbo | `ZAI_API_KEY` |
+| Ollama | Local models (Llama, Mistral, etc.) | *(no key needed)* |
 | GitHub Copilot | Copilot models | `GITHUB_TOKEN` |
-| NVIDIA | NIM models | `NVIDIA_API_KEY` |
+| NVIDIA NIM | Nemotron, Llama models | `NVIDIA_API_KEY` |
+| MiniMax | M2.7, M2.5 | `MINIMAX_API_KEY` |
+| MiniMax (China) | M2.7, M2.5, M2 | `MINIMAX_API_KEY` |
 
 ---
 
@@ -327,73 +273,114 @@ ifconfig | grep inet
 | **Mono** | Monochrome, minimalist |
 | **Slate** | Blue-gray, professional |
 | **Poseidon** | Ocean blue, calming |
-| **Sisyphus** | Purple, deep |
-| **Charizard** | Orange, fiery |
-| **Sienna** | Warm clay, earthy |
-| **Aurora** ✨ | Gradient glassmorphism, aurora borealis |
-| **Neon** ✨ | Cyberpunk, neon glow, dark |
+| **Sisyphus** | Purple, deep and rich |
+| **Charizard** | Orange, fiery energy |
+| **Sienna** | Warm clay, earthy tones |
+| **Aurora** | Gradient glassmorphism, aurora borealis effect |
+| **Neon** | Cyberpunk, neon glow on dark background |
 
-Switch with `/theme` command or Settings → Appearance.
-
----
-
-## Skills System
-
-Yusuf Mussa automatically creates and saves skills as it works. Built-in skills include:
-
-- **Full-Stack Development** — Complete web application building
-- **Software Development** — General programming and debugging
-- **Research** — Web research, paper analysis
-- **Email** — Email drafting and management
-- **Social Media** — Content creation
-- **Smart Home** — IoT automation
-- **MLOps** — Machine learning operations
-- **Red Teaming** — Security testing
+Switch themes with the Appearance settings or use `/theme dark` and `/skin neon` commands.
 
 ---
 
 ## Architecture
 
 ```
-Yusuf Mussa Merged Application
-├── server.py               — HTTP server (Python stdlib)
+Yusuf Mussa
+├── server.py               — HTTP server (Python stdlib, no external deps)
 ├── start_server.py         — Environment setup + launcher
-├── start.sh                — Shell startup script
+├── start.sh / run.sh       — Shell startup scripts
+├── .env                    — Environment configuration
 ├── api/                    — Backend Python modules
-│   ├── config.py           — Discovery, model catalog
-│   ├── routes.py           — All API routes
-│   ├── streaming.py        — SSE engine, agent runner
+│   ├── config.py           — Discovery, model catalog, provider resolution
+│   ├── routes.py           — All API route handlers
+│   ├── streaming.py        — SSE streaming engine, agent runner
 │   ├── auth.py             — Password authentication
-│   ├── workspace.py        — File operations
-│   ├── terminal.py         — Terminal support
-│   └── ...                 — 20+ more modules
-├── static/                 — Frontend (vanilla JS, no build step)
-│   ├── index.html          — Full HTML app
-│   ├── style.css           — CSS with 10 skins + RTL
-│   ├── ui.js               — DOM helpers, markdown
-│   ├── messages.js         — Chat + SSE streaming
-│   ├── i18n.js             — 8 languages
-│   ├── terminal.js         — xterm.js terminal
-│   └── ...                 — 10+ more modules
+│   ├── workspace.py        — File operations API
+│   ├── terminal.py         — Terminal support (xterm.js backend)
+│   ├── models.py           — Model discovery and caching
+│   ├── providers.py        — Provider management and credential pooling
+│   ├── profiles.py         — Multi-profile support
+│   ├── paymob.py           — Paymob payment integration
+│   ├── background.py       — Background task execution
+│   └── ...                 — 15+ more modules
+├── static/                 — Frontend (vanilla JS, zero build step)
+│   ├── index.html          — Full single-page application
+│   ├── style.css           — CSS with 10 skins + full RTL support
+│   ├── boot.js             — App initialization and event handlers
+│   ├── ui.js               — DOM helpers, markdown rendering
+│   ├── messages.js         — Chat messages + SSE streaming display
+│   ├── i18n.js             — Internationalization (8 languages)
+│   ├── sessions.js         — Session management and persistence
+│   ├── panels.js           — Settings and configuration panels
+│   ├── commands.js         — Slash command system
+│   ├── terminal.js         — xterm.js terminal integration
+│   ├── workspace.js        — File browser and preview
+│   ├── onboarding.js       — First-run setup wizard
+│   └── ...                 — More modules
 ├── hermes-agent/           — AI Agent engine
 │   ├── run_agent.py        — Core agent loop
 │   ├── model_tools.py      — 60+ tool definitions
 │   ├── toolsets.py         — Toolset organization
 │   ├── agent/              — Agent internals
 │   │   ├── prompt_builder.py — System prompt assembly
-│   │   ├── memory_manager.py — Persistent memory
+│   │   ├── memory_manager.py — Persistent memory system
 │   │   └── ...             — More internals
-│   ├── plugins/            — Plugin system
-│   ├── skills/             — Skill definitions
+│   ├── gateway/            — Messaging gateway (Telegram, Discord, Slack)
+│   ├── plugins/            — Plugin system (achievements, disk-cleanup)
+│   ├── skills/             — 50+ skill definitions
 │   └── environments/       — Execution environments
+├── skills/                 — Bundled WebUI skills
+│   ├── data-analyst/       — Data analysis skill
+│   ├── code-assistant/     — Code assistance skill
+│   ├── image-creator/      — Image generation skill
+│   ├── web-research/       — Web research skill
+│   └── arabic-assistant/   — Arabic language assistant
 └── tests/                  — 130+ test files
+```
+
+---
+
+## Skills System
+
+Yusuf Mussa features a powerful skill system that allows the agent to learn and improve. Skills are automatically created and saved as the agent works, making it smarter over time.
+
+### Built-in Skills
+
+- **Full-Stack Development** — Complete web application building with modern frameworks
+- **Software Development** — General programming, debugging, and code review
+- **Research** — Web research, academic paper analysis, information synthesis
+- **Email** — Email drafting, scheduling, and management
+- **Social Media** — Content creation and scheduling across platforms
+- **Smart Home** — IoT device automation and control
+- **MLOps** — Machine learning model training, deployment, and monitoring
+- **Red Teaming** — Security testing and vulnerability assessment
+- **Data Analyst** — Data analysis, visualization, and reporting
+- **Code Assistant** — Pair programming and code generation
+- **Image Creator** — AI image generation and editing
+- **Web Research** — Automated web research and summarization
+- **Arabic Assistant** — Specialized Arabic language support
+
+### Creating Custom Skills
+
+Skills are defined in YAML and can be created through the Web UI or manually:
+
+```yaml
+name: my-custom-skill
+description: A custom skill for specific tasks
+instructions: |
+  When this skill is active, follow these specific instructions...
+tools:
+  - file
+  - terminal
+  - web
 ```
 
 ---
 
 ## Accessing Remotely
 
-### SSH Tunnel
+### SSH Tunnel (Secure)
 
 ```bash
 ssh -N -L 8788:127.0.0.1:8788 user@your.server.com
@@ -401,25 +388,31 @@ ssh -N -L 8788:127.0.0.1:8788 user@your.server.com
 
 Then open `http://localhost:8788` on your local machine.
 
-### Tailscale (Phone Access)
+### Tailscale / ZeroTier
 
 ```bash
-HERMES_WEBUI_HOST=0.0.0.0 HERMES_WEBUI_PASSWORD=your-secret ./start.sh
+YM_WEBUI_HOST=0.0.0.0 YM_WEBUI_PASSWORD=your-secret ./start.sh
 ```
 
-Open `http://<tailscale-ip>:8788` from your phone.
+Open `http://<tailscale-ip>:8788` from any device on your tailnet.
+
+### HTTPS with TLS
+
+```bash
+YM_WEBUI_TLS_CERT=/path/to/cert.pem YM_WEBUI_TLS_KEY=/path/to/key.pem ./start.sh
+```
 
 ---
 
 ## Docker Compose
 
-### Single Container
+### Single Container (Simplest)
 
 ```bash
 docker compose up -d
 ```
 
-### Two Containers (Agent + WebUI)
+### Two Containers (Agent + WebUI separated)
 
 ```bash
 docker compose -f docker-compose.two-container.yml up -d
@@ -436,8 +429,27 @@ docker compose -f docker-compose.three-container.yml up -d
 ## Running Tests
 
 ```bash
+# Run all tests
 pytest tests/ -v --timeout=60
+
+# Run specific test file
+pytest tests/test_auth_sessions.py -v
+
+# Run with coverage
+pytest tests/ --cov=api --cov-report=html
 ```
+
+---
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Cmd/Ctrl + K` | New conversation |
+| `Enter` | Send message (configurable) |
+| `Shift + Enter` | New line |
+| `Escape` | Close panels / cancel edit |
+| `Tab` | Accept autocomplete suggestion |
 
 ---
 

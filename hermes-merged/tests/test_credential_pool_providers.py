@@ -35,9 +35,9 @@ def _install_fake_hermes_cli(monkeypatch, *, with_load_pool: bool = False, pool_
 
     # Always remove the real agent.credential_pool so get_available_models() takes
     # the ImportError fallback path and reads from the monkeypatched auth store,
-    # not the live ~/.hermes/auth.json via the real venv module.
+    # not the live ~/.yusuf-mussa/auth.json via the real venv module.
     monkeypatch.delitem(sys.modules, "agent.credential_pool", raising=False)
-    monkeypatch.delitem(sys.modules, "agent", raising=False)
+    monkeypatch.delitem(sys.modules, "ym-agent", raising=False)
 
     if with_load_pool:
         _pool_data = pool_data or {}
@@ -78,7 +78,7 @@ def _call_get_available_models(monkeypatch, tmp_path, auth_payload, *, with_load
     )
 
     (tmp_path / "auth.json").write_text(json.dumps(auth_payload), encoding="utf-8")
-    monkeypatch.setattr(profiles, "get_active_hermes_home", lambda: tmp_path)
+    monkeypatch.setattr(profiles, "get_active_ym_home", lambda: tmp_path)
 
     old_cfg = dict(config.cfg)
     old_mtime = config._cfg_mtime
@@ -477,7 +477,7 @@ def test_ollama_cloud_empty_catalog_skips_group(monkeypatch, tmp_path):
     }
 
     (tmp_path / "auth.json").write_text(json.dumps(auth_payload), encoding="utf-8")
-    monkeypatch.setattr(profiles, "get_active_hermes_home", lambda: tmp_path)
+    monkeypatch.setattr(profiles, "get_active_ym_home", lambda: tmp_path)
 
     old_cfg = dict(config.cfg)
     old_mtime = config._cfg_mtime
@@ -568,7 +568,7 @@ def test_fallback_path_resolves_alias_when_load_pool_unavailable(monkeypatch, tm
     }
 
     (tmp_path / "auth.json").write_text(json.dumps(auth_payload), encoding="utf-8")
-    monkeypatch.setattr(profiles, "get_active_hermes_home", lambda: tmp_path)
+    monkeypatch.setattr(profiles, "get_active_ym_home", lambda: tmp_path)
 
     old_cfg = dict(config.cfg)
     old_mtime = config._cfg_mtime

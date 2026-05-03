@@ -57,7 +57,7 @@ def _install_fake_hermes_cli(monkeypatch):
     monkeypatch.setitem(sys.modules, "hermes_cli.models", fake_models)
     monkeypatch.setitem(sys.modules, "hermes_cli.auth", fake_auth)
     monkeypatch.delitem(sys.modules, "agent.credential_pool", raising=False)
-    monkeypatch.delitem(sys.modules, "agent", raising=False)
+    monkeypatch.delitem(sys.modules, "ym-agent", raising=False)
 
     # Flush the 60-second TTL model cache so no prior test's result bleeds in.
     try:
@@ -76,7 +76,7 @@ class TestGetProviders:
     def test_returns_list_of_known_providers(self, monkeypatch, tmp_path):
         """GET /api/providers should return a list of all known providers."""
         _install_fake_hermes_cli(monkeypatch)
-        monkeypatch.setattr(profiles, "get_active_hermes_home", lambda: tmp_path)
+        monkeypatch.setattr(profiles, "get_active_ym_home", lambda: tmp_path)
 
         old_cfg = dict(config.cfg)
         old_mtime = config._cfg_mtime
@@ -106,7 +106,7 @@ class TestGetProviders:
     def test_provider_entries_have_required_fields(self, monkeypatch, tmp_path):
         """Each provider entry should have id, display_name, has_key, configurable."""
         _install_fake_hermes_cli(monkeypatch)
-        monkeypatch.setattr(profiles, "get_active_hermes_home", lambda: tmp_path)
+        monkeypatch.setattr(profiles, "get_active_ym_home", lambda: tmp_path)
 
         old_cfg = dict(config.cfg)
         old_mtime = config._cfg_mtime
@@ -136,7 +136,7 @@ class TestGetProviders:
     def test_oauth_providers_not_configurable(self, monkeypatch, tmp_path):
         """OAuth providers (copilot, nous, openai-codex) should not be configurable."""
         _install_fake_hermes_cli(monkeypatch)
-        monkeypatch.setattr(profiles, "get_active_hermes_home", lambda: tmp_path)
+        monkeypatch.setattr(profiles, "get_active_ym_home", lambda: tmp_path)
 
         old_cfg = dict(config.cfg)
         old_mtime = config._cfg_mtime
@@ -166,12 +166,12 @@ class TestSetProviderKey:
     """Unit tests for set_provider_key() function."""
 
     def test_set_key_writes_to_env_file(self, monkeypatch, tmp_path):
-        """Setting a key should write the env var to ~/.hermes/.env."""
+        """Setting a key should write the env var to ~/.yusuf-mussa/.env."""
         _install_fake_hermes_cli(monkeypatch)
-        monkeypatch.setattr(profiles, "get_active_hermes_home", lambda: tmp_path)
-        # Also pin HERMES_HOME so code that reads it directly gets tmp_path,
+        monkeypatch.setattr(profiles, "get_active_ym_home", lambda: tmp_path)
+        # Also pin YM_HOME so code that reads it directly gets tmp_path,
         # not the conftest session TEST_STATE_DIR that bleeds into the main process.
-        monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+        monkeypatch.setenv("YM_HOME", str(tmp_path))
 
         old_cfg = dict(config.cfg)
         old_mtime = config._cfg_mtime
@@ -191,7 +191,7 @@ class TestSetProviderKey:
 
             # Verify .env file was written
             env_path = tmp_path / ".env"
-            assert env_path.exists(), f".env not written to {env_path}; HERMES_HOME={__import__('os').environ.get('HERMES_HOME')!r}"
+            assert env_path.exists(), f".env not written to {env_path}; YM_HOME={__import__('os').environ.get('YM_HOME')!r}"
             content = env_path.read_text()
             assert "ANTHROPIC_API_KEY=sk-ant-test-key-12345678" in content
         finally:
@@ -202,7 +202,7 @@ class TestSetProviderKey:
     def test_remove_key_deletes_from_env_file(self, monkeypatch, tmp_path):
         """Removing a key should delete the env var from .env."""
         _install_fake_hermes_cli(monkeypatch)
-        monkeypatch.setattr(profiles, "get_active_hermes_home", lambda: tmp_path)
+        monkeypatch.setattr(profiles, "get_active_ym_home", lambda: tmp_path)
 
         old_cfg = dict(config.cfg)
         old_mtime = config._cfg_mtime
@@ -234,7 +234,7 @@ class TestSetProviderKey:
     def test_oauth_provider_rejected(self, monkeypatch, tmp_path):
         """Setting a key for an OAuth provider should fail."""
         _install_fake_hermes_cli(monkeypatch)
-        monkeypatch.setattr(profiles, "get_active_hermes_home", lambda: tmp_path)
+        monkeypatch.setattr(profiles, "get_active_ym_home", lambda: tmp_path)
 
         old_cfg = dict(config.cfg)
         old_mtime = config._cfg_mtime
@@ -258,7 +258,7 @@ class TestSetProviderKey:
     def test_short_key_rejected(self, monkeypatch, tmp_path):
         """API keys shorter than 8 chars should be rejected."""
         _install_fake_hermes_cli(monkeypatch)
-        monkeypatch.setattr(profiles, "get_active_hermes_home", lambda: tmp_path)
+        monkeypatch.setattr(profiles, "get_active_ym_home", lambda: tmp_path)
 
         old_cfg = dict(config.cfg)
         old_mtime = config._cfg_mtime
@@ -300,7 +300,7 @@ class TestRemoveProviderKey:
     def test_remove_provider_key_calls_set_with_none(self, monkeypatch, tmp_path):
         """remove_provider_key should delegate to set_provider_key(id, None)."""
         _install_fake_hermes_cli(monkeypatch)
-        monkeypatch.setattr(profiles, "get_active_hermes_home", lambda: tmp_path)
+        monkeypatch.setattr(profiles, "get_active_ym_home", lambda: tmp_path)
 
         old_cfg = dict(config.cfg)
         old_mtime = config._cfg_mtime

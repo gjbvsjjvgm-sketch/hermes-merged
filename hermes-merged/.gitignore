@@ -28,7 +28,7 @@ node_modules/
 Thumbs.db
 
 # State & runtime
-.hermes-state/
+.ym-state/
 workspace/
 *.log
 

@@ -1149,7 +1149,7 @@
     .topbar-chips{flex-wrap:nowrap;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
     .topbar-chips .chip,.topbar-chips .ws-chip,.topbar-chips button{font-size:11px!important;padding:4px 8px!important;white-space:nowrap;}
     .settings-main{padding:18px 16px;}
-    .hermes-action-grid{grid-template-columns:1fr;}
+    .ym-action-grid{grid-template-columns:1fr;}
     .messages-inner{padding:12px 10px 20px;}
     .msg-body{padding-left:0;max-width:100%;}
     .msg-role{font-size:12px;}
@@ -1994,7 +1994,7 @@ main.main.showing-profiles > #mainProfiles{display:flex;}
 #mainSettings select:disabled{opacity:.6;cursor:not-allowed;}
 
 /* Quick-action grid in Conversation pane — outlined card buttons. */
-.hermes-action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px;}
+.ym-action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px;}
 .settings-action-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--sidebar);color:var(--text);font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,border-color .15s,color .15s;}
 .settings-action-btn:hover{background:var(--accent-bg);border-color:var(--accent-bg-strong);color:var(--accent-text);}
 .settings-action-btn.danger{color:var(--error,#e05);border-color:color-mix(in srgb,var(--error,#e05) 30%,transparent);}
@@ -2074,7 +2074,7 @@ main.main.showing-profiles > #mainProfiles{display:flex;}
 @media (max-width: 768px){
   .settings-main{padding:16px 12px;}
   .settings-section-title{font-size:16px;}
-  .hermes-action-grid{grid-template-columns:1fr;}
+  .ym-action-grid{grid-template-columns:1fr;}
   #mainSettings .settings-field{padding:14px;}
 }
 
@@ -2537,7 +2537,7 @@ main.main.showing-profiles > #mainProfiles{display:flex;}
 .tool-card-preview { font-size: 11px; }
 
 /* ── Streaming cursor at the end of the live assistant body ── */
-@keyframes hermes-cursor-blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+@keyframes ym-cursor-blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
 #toolRunningRow { margin-top: 10px; }
 [data-live-assistant="1"]:last-child .msg-body > :last-child::after,
 [data-live-assistant="1"]:last-child .msg-body:not(:has(> *))::after {
@@ -2549,7 +2549,7 @@ main.main.showing-profiles > #mainProfiles{display:flex;}
   border-radius: 1px;
   margin-left: 3px;
   vertical-align: -0.16em;
-  animation: hermes-cursor-blink 1.05s steps(2, start) infinite;
+  animation: ym-cursor-blink 1.05s steps(2, start) infinite;
 }
 
 /* ── Error state: distinct red-accent card, not italic emphasis ── */

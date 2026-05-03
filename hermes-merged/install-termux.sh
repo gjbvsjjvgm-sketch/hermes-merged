@@ -73,7 +73,7 @@ echo ""
 echo -e "${BLUE}[5/7] Setting up environment...${NC}"
 mkdir -p "$HOME/.hermes"
 mkdir -p "$INSTALL_DIR/workspace"
-mkdir -p "$INSTALL_DIR/.hermes-state/webui/sessions"
+mkdir -p "$INSTALL_DIR/.ym-state/webui/sessions"
 
 # Create .env if it doesn't exist
 if [ ! -f "$INSTALL_DIR/.env" ]; then
@@ -97,8 +97,8 @@ if [ ! -f "$INSTALL_DIR/.env" ]; then
 # GOOGLE_API_KEY=your-key-here
 
 # Default provider and model
-HERMES_WEBUI_HOST=0.0.0.0
-HERMES_WEBUI_PORT=8788
+YM_WEBUI_HOST=0.0.0.0
+YM_WEBUI_PORT=8788
 ENVEOF
     echo -e "${GREEN}[✓] Created .env file — edit it to add your API keys${NC}"
 fi

@@ -12,7 +12,7 @@ from api.config import (
     DEFAULT_MODEL,
     DEFAULT_WORKSPACE,
     _FALLBACK_MODELS,
-    _HERMES_FOUND,
+    _AGENT_FOUND,
     _PROVIDER_DISPLAY,
     _PROVIDER_MODELS,
     _get_config_path,
@@ -21,7 +21,7 @@ from api.config import (
     load_settings,
     reload_config,
     save_settings,
-    verify_hermes_imports,
+    verify_agent_imports,
 )
 from api.providers import _write_env_file  # shared impl with _ENV_LOCK (#1164)
 from api.workspace import get_last_workspace, load_workspaces
@@ -161,13 +161,13 @@ _UNSUPPORTED_PROVIDER_NOTE = (
 )
 
 
-def _get_active_hermes_home() -> Path:
+def _get_active_ym_home() -> Path:
     try:
-        from api.profiles import get_active_hermes_home
+        from api.profiles import get_active_ym_home
 
-        return get_active_hermes_home()
+        return get_active_ym_home()
     except ImportError:
-        return Path.home() / ".hermes"
+        return Path.home() / ".yusuf-mussa"
 
 
 def _load_env_file(env_path: Path) -> dict[str, str]:
@@ -369,7 +369,7 @@ def _status_from_runtime(cfg: dict, imports_ok: bool) -> dict:
     provider = _extract_current_provider(cfg)
     model = _extract_current_model(cfg)
     base_url = _extract_current_base_url(cfg)
-    env_values = _load_env_file(_get_active_hermes_home() / ".env")
+    env_values = _load_env_file(_get_active_ym_home() / ".env")
 
     provider_configured = bool(provider and model)
     provider_ready = False
@@ -388,12 +388,12 @@ def _status_from_runtime(cfg: dict, imports_ok: bool) -> dict:
             # third-party providers), then OAuth auth.json.
             provider_ready = (
                 _provider_api_key_present(provider, cfg, env_values)
-                or _provider_oauth_authenticated(provider, _get_active_hermes_home())
+                or _provider_oauth_authenticated(provider, _get_active_ym_home())
             )
 
-    chat_ready = bool(_HERMES_FOUND and imports_ok and provider_ready)
+    chat_ready = bool(_AGENT_FOUND and imports_ok and provider_ready)
 
-    if not _HERMES_FOUND or not imports_ok:
+    if not _AGENT_FOUND or not imports_ok:
         state = "agent_unavailable"
         note = (
             "Yusuf Mussa is not fully importable from the Web UI yet. Finish bootstrap or fix the "
@@ -416,7 +416,7 @@ def _status_from_runtime(cfg: dict, imports_ok: bool) -> dict:
             # OAuth / unsupported provider: avoid misleading "API key" wording.
             note = (
                 f"Provider '{provider}' is configured but not yet authenticated. "
-                "Run 'hermes auth' or 'hermes model' in a terminal to complete "
+                "Run 'ym auth' or 'ym model' in a terminal to complete "
                 "setup, then reload the Web UI."
             )
         else:
@@ -437,7 +437,7 @@ def _status_from_runtime(cfg: dict, imports_ok: bool) -> dict:
         "current_provider": provider or None,
         "current_model": model or None,
         "current_base_url": base_url or None,
-        "env_path": str(_get_active_hermes_home() / ".env"),
+        "env_path": str(_get_active_ym_home() / ".env"),
     }
 
 
@@ -477,7 +477,7 @@ def _build_setup_catalog(cfg: dict) -> dict:
 
     # Flag whether the currently-configured provider is OAuth-based (not in the
     # API-key flow).  The frontend uses this to show a confirmation card instead
-    # of a key input when the user has already authenticated via 'hermes auth'.
+    # of a key input when the user has already authenticated via 'ym auth'.
     current_is_oauth = current_provider not in _SUPPORTED_PROVIDER_SETUPS and bool(
         current_provider
     )
@@ -501,7 +501,7 @@ def _build_setup_catalog(cfg: dict) -> dict:
 def get_onboarding_status() -> dict:
     settings = load_settings()
     cfg = get_config()
-    imports_ok, missing, errors = verify_hermes_imports()
+    imports_ok, missing, errors = verify_agent_imports()
     runtime = _status_from_runtime(cfg, imports_ok)
     workspaces = load_workspaces()
     last_workspace = get_last_workspace()
@@ -546,7 +546,7 @@ def get_onboarding_status() -> dict:
     )
 
     # Persist the flag so it survives future transient import failures (e.g. after
-    # a git branch switch in the hermes-agent repo).  Without this, a CLI-configured
+    # a git branch switch in the agent repo).  Without this, a CLI-configured
     # user who never ran the wizard has no onboarding_completed flag — any momentary
     # imports_ok=False during restart makes chat_ready=False, config_auto_completed=False,
     # and the wizard reappears with a broken dropdown that clobbers their config.
@@ -574,7 +574,7 @@ def get_onboarding_status() -> dict:
             "bot_name": settings.get("bot_name") or "Yusuf Mussa",
         },
         "system": {
-            "hermes_found": bool(_HERMES_FOUND),
+            "hermes_found": bool(_AGENT_FOUND),
             "imports_ok": bool(imports_ok),
             "missing_modules": missing,
             "import_errors": errors,
@@ -639,7 +639,7 @@ def apply_onboarding_setup(body: dict) -> dict:
         }
 
     cfg = _load_yaml_config(config_path)
-    env_path = _get_active_hermes_home() / ".env"
+    env_path = _get_active_ym_home() / ".env"
     env_values = _load_env_file(env_path)
 
     if not api_key and not _provider_api_key_present(provider, cfg, env_values):
@@ -669,7 +669,7 @@ def apply_onboarding_setup(body: dict) -> dict:
     # picks up the new key without requiring a server restart.
     try:
         from api.profiles import _reload_dotenv
-        _reload_dotenv(_get_active_hermes_home())
+        _reload_dotenv(_get_active_ym_home())
     except Exception:
         logger.debug("Failed to reload dotenv")
 

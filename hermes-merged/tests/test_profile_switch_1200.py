@@ -30,7 +30,7 @@ def test_switch_profile_returns_target_workspace_not_current(tmp_path, monkeypat
     import api.profiles as profiles
 
     # Build fake profile structure
-    default_home = tmp_path / '.hermes'
+    default_home = tmp_path / '.yusuf-mussa'
     default_home.mkdir()
     ayan_home = default_home / 'profiles' / 'ayan'
     ayan_home.mkdir(parents=True)
@@ -52,9 +52,9 @@ def test_switch_profile_returns_target_workspace_not_current(tmp_path, monkeypat
     default_state.mkdir()
     (default_state / 'last_workspace.txt').write_text(str(default_ws), encoding='utf-8')
 
-    # Patch _DEFAULT_HERMES_HOME to our tmp dir
-    orig_default = profiles._DEFAULT_HERMES_HOME
-    profiles._DEFAULT_HERMES_HOME = default_home
+    # Patch _DEFAULT_YM_HOME to our tmp dir
+    orig_default = profiles._DEFAULT_YM_HOME
+    profiles._DEFAULT_YM_HOME = default_home
     # Ensure _active_profile = 'default'
     orig_active = profiles._active_profile
     profiles._active_profile = 'default'
@@ -72,7 +72,7 @@ def test_switch_profile_returns_target_workspace_not_current(tmp_path, monkeypat
             f"Returned default profile workspace ({default_ws}) instead of ayan's"
         )
     finally:
-        profiles._DEFAULT_HERMES_HOME = orig_default
+        profiles._DEFAULT_YM_HOME = orig_default
         profiles._active_profile = orig_active
         profiles._tls.profile = None
 
@@ -84,7 +84,7 @@ def test_switch_profile_uses_last_workspace_txt_over_config(tmp_path, monkeypatc
     """
     import api.profiles as profiles
 
-    default_home = tmp_path / '.hermes'
+    default_home = tmp_path / '.yusuf-mussa'
     default_home.mkdir()
     target_home = default_home / 'profiles' / 'myprofile'
     target_home.mkdir(parents=True)
@@ -103,8 +103,8 @@ def test_switch_profile_uses_last_workspace_txt_over_config(tmp_path, monkeypatc
     state_dir.mkdir()
     (state_dir / 'last_workspace.txt').write_text(str(explicit_ws), encoding='utf-8')
 
-    orig_default = profiles._DEFAULT_HERMES_HOME
-    profiles._DEFAULT_HERMES_HOME = default_home
+    orig_default = profiles._DEFAULT_YM_HOME
+    profiles._DEFAULT_YM_HOME = default_home
     orig_active = profiles._active_profile
     profiles._active_profile = 'default'
     profiles._tls.profile = None
@@ -119,7 +119,7 @@ def test_switch_profile_uses_last_workspace_txt_over_config(tmp_path, monkeypatc
             f"terminal.cwd ({cfg_ws}) should not override last_workspace.txt"
         )
     finally:
-        profiles._DEFAULT_HERMES_HOME = orig_default
+        profiles._DEFAULT_YM_HOME = orig_default
         profiles._active_profile = orig_active
         profiles._tls.profile = None
 
@@ -131,7 +131,7 @@ def test_switch_profile_process_wide_false_returns_correct_model(tmp_path, monke
     """
     import api.profiles as profiles
 
-    default_home = tmp_path / '.hermes'
+    default_home = tmp_path / '.yusuf-mussa'
     default_home.mkdir()
     target_home = default_home / 'profiles' / 'aiprofile'
     target_home.mkdir(parents=True)
@@ -144,8 +144,8 @@ def test_switch_profile_process_wide_false_returns_correct_model(tmp_path, monke
         encoding='utf-8',
     )
 
-    orig_default = profiles._DEFAULT_HERMES_HOME
-    profiles._DEFAULT_HERMES_HOME = default_home
+    orig_default = profiles._DEFAULT_YM_HOME
+    profiles._DEFAULT_YM_HOME = default_home
     orig_active = profiles._active_profile
     profiles._active_profile = 'default'
     profiles._tls.profile = None
@@ -156,7 +156,7 @@ def test_switch_profile_process_wide_false_returns_correct_model(tmp_path, monke
             f"Expected 'kimi-k2-instruct', got: {result.get('default_model')!r}"
         )
     finally:
-        profiles._DEFAULT_HERMES_HOME = orig_default
+        profiles._DEFAULT_YM_HOME = orig_default
         profiles._active_profile = orig_active
         profiles._tls.profile = None
 
@@ -253,7 +253,7 @@ def test_regression_switch_profile_default_workspace_not_from_process_global(tmp
     """
     import api.profiles as profiles
 
-    base = tmp_path / ".hermes"
+    base = tmp_path / ".yusuf-mussa"
     base.mkdir()
 
     # Old profile (default) has workspace A
@@ -275,9 +275,9 @@ def test_regression_switch_profile_default_workspace_not_from_process_global(tmp
         "model:\n  default: some-model\n", encoding="utf-8"
     )
 
-    orig_default = profiles._DEFAULT_HERMES_HOME
+    orig_default = profiles._DEFAULT_YM_HOME
     orig_active = profiles._active_profile
-    profiles._DEFAULT_HERMES_HOME = base
+    profiles._DEFAULT_YM_HOME = base
     profiles._active_profile = "default"
     profiles._tls.profile = None
 
@@ -293,7 +293,7 @@ def test_regression_switch_profile_default_workspace_not_from_process_global(tmp
             f"REGRESSION: Returned old profile workspace. Bug 1 regressed."
         )
     finally:
-        profiles._DEFAULT_HERMES_HOME = orig_default
+        profiles._DEFAULT_YM_HOME = orig_default
         profiles._active_profile = orig_active
         profiles._tls.profile = None
 
@@ -374,9 +374,9 @@ def test_regression_switch_profile_returns_target_model():
             encoding="utf-8",
         )
 
-        orig = profiles._DEFAULT_HERMES_HOME
+        orig = profiles._DEFAULT_YM_HOME
         orig_act = profiles._active_profile
-        profiles._DEFAULT_HERMES_HOME = base
+        profiles._DEFAULT_YM_HOME = base
         profiles._active_profile = "default"
         profiles._tls.profile = None
         try:
@@ -386,6 +386,6 @@ def test_regression_switch_profile_returns_target_model():
                 "switch_profile() is not reading from target profile's config. Bug 2 regressed."
             )
         finally:
-            profiles._DEFAULT_HERMES_HOME = orig
+            profiles._DEFAULT_YM_HOME = orig
             profiles._active_profile = orig_act
             profiles._tls.profile = None

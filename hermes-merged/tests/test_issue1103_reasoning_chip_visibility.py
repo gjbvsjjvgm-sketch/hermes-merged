@@ -16,8 +16,8 @@ def test_boot_call_before_session_load():
     """fetchReasoningChip() should be called before session load in boot sequence."""
     with open("static/boot.js") as f:
         src = f.read()
-    # Find the boot session load: "const saved=localStorage.getItem('hermes-webui-session')"
-    boot_marker = "const saved=localStorage.getItem('hermes-webui-session')"
+    # Find the boot session load: "const saved=localStorage.getItem('ym-session')"
+    boot_marker = "const saved=localStorage.getItem('ym-session')"
     boot_pos = src.index(boot_marker)
     fetch_pos = src.index("fetchReasoningChip()")
     # fetchReasoningChip must be called just before the saved session load

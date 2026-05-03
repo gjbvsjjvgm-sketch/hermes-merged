@@ -118,9 +118,9 @@ class TestStatusFromRuntimeUnsupportedProvider:
         from api.onboarding import _status_from_runtime
         cfg = {"model": {"provider": provider, "default": model}}
         with (
-            mock.patch("api.onboarding._HERMES_FOUND", True),
+            mock.patch("api.onboarding._AGENT_FOUND", True),
             mock.patch("api.onboarding._load_env_file", return_value={}),
-            mock.patch("api.onboarding._get_active_hermes_home", return_value=pathlib.Path("/tmp")),
+            mock.patch("api.onboarding._get_active_ym_home", return_value=pathlib.Path("/tmp")),
             mock.patch("api.onboarding._provider_api_key_present", return_value=api_key_present),
             mock.patch("api.onboarding._provider_oauth_authenticated", return_value=oauth_present),
         ):
@@ -174,7 +174,7 @@ class TestOnboardingStatusUnsupportedProvider:
         with (
             mock.patch.object(mod, "load_settings", return_value={}),
             mock.patch.object(mod, "get_config", return_value=cfg),
-            mock.patch.object(mod, "verify_hermes_imports", return_value=(True, [], {})),
+            mock.patch.object(mod, "verify_agent_imports", return_value=(True, [], {})),
             mock.patch.object(mod, "_status_from_runtime", return_value=runtime),
             mock.patch.object(mod, "load_workspaces", return_value=[]),
             mock.patch.object(mod, "get_last_workspace", return_value=None),

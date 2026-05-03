@@ -8,7 +8,7 @@ The env-var detection block in ``api/config.py`` previously mapped
 ``_PROVIDER_MODELS`` (9 models: gpt-5.5, gpt-5.4, codex-specific
 variants, etc.) but no automatic detection path.
 
-Note (cross-tool): hermes-agent's ``openai-codex`` provider config
+Note (cross-tool): agent's ``openai-codex`` provider config
 declares ``auth_type="oauth_external"`` with a default
 ``inference_base_url=https://chatgpt.com/backend-api/codex`` — the same
 ``OPENAI_API_KEY`` does NOT actually authenticate the default Codex

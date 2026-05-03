@@ -115,7 +115,7 @@ def test_session_with_tool_calls_in_json_loads_ok(cleanup_test_sessions):
     sid = make_session(cleanup_test_sessions)
 
     # Manually inject tool_calls into the session's JSON file
-    sessions_dir = pathlib.Path(os.environ.get("HERMES_WEBUI_TEST_STATE_DIR", str(pathlib.Path.home() / ".hermes" / "webui-mvp-test"))) / "sessions"
+    sessions_dir = pathlib.Path(os.environ.get("HERMES_WEBUI_TEST_STATE_DIR", str(pathlib.Path.home() / ".yusuf-mussa" / "webui-mvp-test"))) / "sessions"
     session_file = sessions_dir / f"{sid}.json"
     if session_file.exists():
         d = json.loads(session_file.read_text())
@@ -185,10 +185,10 @@ def test_server_py_sse_loop_breaks_on_cancel(cleanup_test_sessions):
 # ── R6: Test cron isolation (Sprint 10) ──────────────────────────────────────
 
 def test_real_jobs_json_not_polluted_by_tests(cleanup_test_sessions):
-    """R6: Test runs must not write to the real ~/.hermes/cron/jobs.json.
-    When HERMES_HOME isolation was missing, every test run added test-job-* entries.
+    """R6: Test runs must not write to the real ~/.yusuf-mussa/cron/jobs.json.
+    When YM_HOME isolation was missing, every test run added test-job-* entries.
     """
-    real_jobs_path = pathlib.Path.home() / ".hermes" / "cron" / "jobs.json"
+    real_jobs_path = pathlib.Path.home() / ".yusuf-mussa" / "cron" / "jobs.json"
     if not real_jobs_path.exists():
         return  # no jobs file at all -- fine
 
@@ -745,7 +745,7 @@ def test_skills_slash_command_defined():
 
     Pre-Task 2 (slash-command-parity batch 1) this checked for the
     hardcoded ``name:'skills'`` entry in the COMMANDS array. The COMMANDS
-    array is now sourced from hermes-agent's ``COMMAND_REGISTRY`` at boot
+    array is now sourced from agent's ``COMMAND_REGISTRY`` at boot
     via ``GET /api/commands``, so the literal string is gone. The handler
     must still exist and be registered, otherwise ``/skills`` would fall
     through to \"not yet supported\".
@@ -770,7 +770,7 @@ def test_reload_recovery_persists_durable_inflight_state(cleanup_test_sessions):
     messages_src = (REPO_ROOT / "static/messages.js").read_text()
     sessions_src = (REPO_ROOT / "static/sessions.js").read_text()
 
-    assert "const INFLIGHT_STATE_KEY = 'hermes-webui-inflight-state'" in ui_src
+    assert "const INFLIGHT_STATE_KEY = 'ym-webui-inflight-state'" in ui_src
     assert "function saveInflightState(sid, state)" in ui_src
     assert "function loadInflightState(sid, streamId)" in ui_src
     assert "function clearInflightState(sid)" in ui_src
@@ -861,18 +861,18 @@ def test_status_from_runtime_marks_openai_codex_ready_from_credential_pool(
     from api.onboarding import _status_from_runtime
     import api.onboarding as _ob
 
-    orig_home = _ob._get_active_hermes_home
-    orig_found = _ob._HERMES_FOUND
-    _ob._get_active_hermes_home = lambda: tmp_path
-    _ob._HERMES_FOUND = True
+    orig_home = _ob._get_active_ym_home
+    orig_found = _ob._AGENT_FOUND
+    _ob._get_active_ym_home = lambda: tmp_path
+    _ob._AGENT_FOUND = True
     try:
         result = _status_from_runtime(
             {"model": {"provider": "openai-codex", "default": "codex-mini-latest"}},
             True,
         )
     finally:
-        _ob._get_active_hermes_home = orig_home
-        _ob._HERMES_FOUND = orig_found
+        _ob._get_active_ym_home = orig_home
+        _ob._AGENT_FOUND = orig_found
 
     assert result["provider_configured"] is True
     assert result["provider_ready"] is True

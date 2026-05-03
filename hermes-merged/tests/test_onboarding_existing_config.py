@@ -63,7 +63,7 @@ def _make_status(*, config_exists: bool, chat_ready: bool, onboarding_done: bool
         mock.patch.object(mod, "get_config", return_value={}),
         mock.patch.object(
             mod,
-            "verify_hermes_imports",
+            "verify_agent_imports",
             return_value=(chat_ready, [], {}),
         ),
         mock.patch.object(mod, "_status_from_runtime", return_value=runtime),
@@ -140,7 +140,7 @@ class TestOnboardingGate:
         with (
             mock.patch.object(mod, "load_settings", return_value=settings),
             mock.patch.object(mod, "get_config", return_value={}),
-            mock.patch.object(mod, "verify_hermes_imports", return_value=(True, [], {})),
+            mock.patch.object(mod, "verify_agent_imports", return_value=(True, [], {})),
             mock.patch.object(mod, "_status_from_runtime", return_value=runtime),
             mock.patch.object(mod, "load_workspaces", return_value=[]),
             mock.patch.object(mod, "get_last_workspace", return_value=None),
@@ -203,9 +203,9 @@ class TestApplyOnboardingSetupGuard:
             with tempfile.TemporaryDirectory() as tmp_home:
                 tmp_home_path = pathlib.Path(tmp_home)
                 # Without patching Path.exists, use a non-existent path so it won't block.
-                # Also redirect _get_active_hermes_home so .env writes go to the temp dir,
-                # never to the real ~/.hermes/.env.
-                with mock.patch.object(mod, "_get_active_hermes_home", return_value=tmp_home_path):
+                # Also redirect _get_active_ym_home so .env writes go to the temp dir,
+                # never to the real ~/.yusuf-mussa/.env.
+                with mock.patch.object(mod, "_get_active_ym_home", return_value=tmp_home_path):
                     result = mod.apply_onboarding_setup(
                         {
                             "provider": "openrouter",
@@ -234,10 +234,10 @@ class TestApplyOnboardingSetupGuard:
             with tempfile.TemporaryDirectory() as tmp_home:
                 tmp_home_path = pathlib.Path(tmp_home)
                 # Redirect both config path and hermes home so writes stay in /tmp,
-                # never touching the real ~/.hermes/.env.
+                # never touching the real ~/.yusuf-mussa/.env.
                 with (
                     mock.patch.object(mod, "_get_config_path", return_value=fake_config_path),
-                    mock.patch.object(mod, "_get_active_hermes_home", return_value=tmp_home_path),
+                    mock.patch.object(mod, "_get_active_ym_home", return_value=tmp_home_path),
                 ):
                     result = mod.apply_onboarding_setup(
                         {
@@ -282,7 +282,7 @@ def _server_hermes_home() -> pathlib.Path:
     env_path = data.get("system", {}).get("env_path", "")
     if env_path:
         return pathlib.Path(env_path).parent
-    return pathlib.Path(os.environ.get("HERMES_WEBUI_TEST_STATE_DIR", str(pathlib.Path.home() / ".hermes" / "webui-mvp-test")))
+    return pathlib.Path(os.environ.get("HERMES_WEBUI_TEST_STATE_DIR", str(pathlib.Path.home() / ".yusuf-mussa" / "webui-mvp-test")))
 
 
 def _server_reachable() -> bool:

@@ -79,7 +79,7 @@ class TestConflictError:
         monkeypatch.setattr(upd, 'REPO_ROOT', tmp_path)
         monkeypatch.setattr(upd, '_AGENT_DIR', tmp_path)
 
-        result = upd.apply_update('agent')
+        result = upd.apply_update('ym-agent')
         # Message must be actionable — should mention git checkout or pull
         msg = result['message']
         assert 'git' in msg.lower(), f"message should mention git: {msg}"

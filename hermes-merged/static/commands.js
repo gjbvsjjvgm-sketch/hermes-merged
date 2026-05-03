@@ -355,7 +355,7 @@ async function _runManualCompression(focusTopic){
         S.messages=data.session.messages||[];
         S.toolCalls=data.session.tool_calls||[];
         clearLiveToolCards();
-        localStorage.setItem('hermes-webui-session',S.session.session_id);
+        localStorage.setItem('ym-session',S.session.session_id);
         syncTopbar();
         renderMessages();
         await renderSessionList();
@@ -440,10 +440,10 @@ async function cmdTheme(args){
   if(themes.includes(val)||legacyThemes.includes(val)){
     const appearance=_normalizeAppearance(
       val,
-      legacyThemes.includes(val)?null:localStorage.getItem('hermes-skin')
+      legacyThemes.includes(val)?null:localStorage.getItem('ym-skin')
     );
-    localStorage.setItem('hermes-theme',appearance.theme);
-    localStorage.setItem('hermes-skin',appearance.skin);
+    localStorage.setItem('ym-theme',appearance.theme);
+    localStorage.setItem('ym-skin',appearance.skin);
     _applyTheme(appearance.theme);
     _applySkin(appearance.skin);
     try{await api('/api/settings',{method:'POST',body:JSON.stringify({theme:appearance.theme,skin:appearance.skin})});}catch(e){}
@@ -458,9 +458,9 @@ async function cmdTheme(args){
   }
   // Check if it's a skin
   if(skins.includes(val)){
-    const appearance=_normalizeAppearance(localStorage.getItem('hermes-theme'),val);
-    localStorage.setItem('hermes-theme',appearance.theme);
-    localStorage.setItem('hermes-skin',appearance.skin);
+    const appearance=_normalizeAppearance(localStorage.getItem('ym-theme'),val);
+    localStorage.setItem('ym-theme',appearance.theme);
+    localStorage.setItem('ym-skin',appearance.skin);
     _applyTheme(appearance.theme);
     _applySkin(appearance.skin);
     try{await api('/api/settings',{method:'POST',body:JSON.stringify({theme:appearance.theme,skin:appearance.skin})});}catch(e){}
@@ -616,7 +616,7 @@ async function cmdInterrupt(args){
  * next iteration — same pathway as the CLI's /steer command.
  *
  * Falls back to interrupt mode when the agent isn't running, isn't cached,
- * or doesn't support steer (older hermes-agent versions).
+ * or doesn't support steer (older agent versions).
  */
 async function cmdSteer(args){
   const msg=(args||'').trim();

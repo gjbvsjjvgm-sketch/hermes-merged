@@ -105,7 +105,7 @@ to keep important conversations accessible.
 ### Track B: Features
 - **Settings panel:** A gear icon in the topbar opens a slide-in settings panel.
   Sections: Default Model, Default Workspace. Persisted server-side in
-  `~/.hermes/webui-mvp/settings.json`. Server reads settings on startup and
+  `~/.yusuf-mussa/webui-mvp/settings.json`. Server reads settings on startup and
   uses them as defaults. `GET /api/settings` + `POST /api/settings` endpoints.
 - **SSE auto-reconnect:** When the EventSource connection drops mid-stream
   (network blip, SSH tunnel hiccup), auto-reconnect once using the same
@@ -382,7 +382,7 @@ hardening feature before the app is safe to expose to a network.
 
 ### Track B: Features
 - **Password authentication (Issue #23).** Off by default — zero friction for
-  localhost. Enable via `HERMES_WEBUI_PASSWORD` env var or Settings panel.
+  localhost. Enable via `YM_WEBUI_PASSWORD` env var or Settings panel.
   Password-only (no username — single-user app). Signed HMAC HTTP-only cookie
   with 24h TTL. Minimal dark-themed login page at `/login`. API calls without
   auth return 401; page loads redirect to `/login`. Settings panel gains
@@ -477,11 +477,11 @@ own config, skills, memory, cron, and API keys. The web UI was locked to a
 single default profile, blocking multi-persona workflows.
 
 ### Track A: Bugs
-- **Hardcoded `~/.hermes` paths.** Memory read/write in routes.py and model
+- **Hardcoded `~/.yusuf-mussa` paths.** Memory read/write in routes.py and model
   discovery in config.py used hardcoded paths instead of the active profile's
-  directory. Fixed to resolve through `get_active_hermes_home()`.
-- **Module-level cached paths.** hermes-agent's `skills_tool.py` and `cron/jobs.py`
-  snapshot `HERMES_HOME` at import time. Profile switch now monkey-patches these
+  directory. Fixed to resolve through `get_active_ym_home()`.
+- **Module-level cached paths.** agent's `skills_tool.py` and `cron/jobs.py`
+  snapshot `YM_HOME` at import time. Profile switch now monkey-patches these
   cached variables (`SKILLS_DIR`, `CRON_DIR`, `JOBS_FILE`, `OUTPUT_DIR`).
 
 ### Track B: Features
@@ -498,7 +498,7 @@ single default profile, blocking multi-persona workflows.
 - **Profile deletion.** Confirm dialog, auto-switches to default if deleting
   the active profile. Blocked while agent is running.
 - **Seamless switching.** No server restart required. Profile switch updates
-  `HERMES_HOME` env var, patches module-level caches, reloads `.env` API keys,
+  `YM_HOME` env var, patches module-level caches, reloads `.env` API keys,
   reloads `config.yaml`, and refreshes the model dropdown, skills, memory, and
   cron panels.
 - **Per-session profile tracking.** New `profile` field on Session records which
@@ -512,13 +512,13 @@ single default profile, blocking multi-persona workflows.
 - `api/config.py`: Replaced module-level `cfg` dict with reloadable
   `get_config()`/`reload_config()`. Dynamic `_get_config_path()` resolves
   through active profile.
-- `api/streaming.py`: `HERMES_HOME` added to env save/restore block around
+- `api/streaming.py`: `YM_HOME` added to env save/restore block around
   agent runs (alongside `TERMINAL_CWD`, `HERMES_EXEC_ASK`).
 - Profile switch blocked while any agent stream is active (process-global
-  `HERMES_HOME` cannot be changed mid-run).
-- Zero modifications to hermes-agent code required.
+  `YM_HOME` cannot be changed mid-run).
+- Zero modifications to agent code required.
 
-**Tests:** 0 new (profile management requires hermes-agent integration). Total: 415.
+**Tests:** 0 new (profile management requires agent integration). Total: 415.
 **Hermes CLI parity impact:** Very High (profile support is a major CLI feature)
 **Claude parity impact:** Low (Claude has no profile concept)
 
@@ -943,7 +943,7 @@ as `send_key` and `show_token_usage`. The server includes `theme` in the
 `GET /api/settings` response. Boot.js reads it and applies before first paint.
 
 **Flicker prevention.** A tiny inline `<script>` in `<head>` (before the
-stylesheet link) reads `localStorage.getItem('hermes-theme')` and sets
+stylesheet link) reads `localStorage.getItem('ym-theme')` and sets
 `document.documentElement.dataset.theme` synchronously. This prevents a
 dark-flash on light-mode users during the round-trip to `/api/settings`.
 The localStorage value is kept in sync whenever the user changes themes.
@@ -1030,7 +1030,7 @@ Immediately after `<head>` opens, before the stylesheet `<link>`:
 ```html
 <script>
 (function(){
-  var t=localStorage.getItem('hermes-theme');
+  var t=localStorage.getItem('ym-theme');
   if(t && t!=='dark') document.documentElement.dataset.theme=t;
 })();
 </script>
@@ -1050,7 +1050,7 @@ window._showCliSessions = !!s.show_cli_sessions;
 // Theme: apply server preference, update localStorage for flicker prevention
 const theme = s.theme || 'dark';
 document.documentElement.dataset.theme = theme;
-localStorage.setItem('hermes-theme', theme);
+localStorage.setItem('ym-theme', theme);
 ```
 
 **4. Theme setting in `api/config.py`**
@@ -1103,7 +1103,7 @@ body.theme = $('settingsTheme').value;
 ```js
 $('settingsTheme').addEventListener('change', e => {
   document.documentElement.dataset.theme = e.target.value;
-  localStorage.setItem('hermes-theme', e.target.value);
+  localStorage.setItem('ym-theme', e.target.value);
 });
 ```
 
@@ -1120,7 +1120,7 @@ async function cmdTheme(arg) {
     return;
   }
   document.documentElement.dataset.theme = arg;
-  localStorage.setItem('hermes-theme', arg);
+  localStorage.setItem('ym-theme', arg);
   try { await api('/api/settings', {method:'POST', body: JSON.stringify({theme: arg})}); } catch(e) {}
   showToast('Theme: ' + arg);
 }

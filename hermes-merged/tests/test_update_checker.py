@@ -279,7 +279,7 @@ class TestApplyUpdateDiagnostics:
         from api import updates
         # Patch the cache's 'checked_at' key directly to avoid the lock
         # invalidation block raising. We use a fresh dict swap.
-        fake_cache = {'webui': None, 'agent': None, 'checked_at': 1}
+        fake_cache = {'webui': None, 'ym-agent': None, 'checked_at': 1}
         with patch(f'{_MODULE}.REPO_ROOT', tmp_path), \
              patch(f'{_MODULE}._run_git') as mock_run_git, \
              patch(f'{_MODULE}._update_cache', fake_cache), \
@@ -309,7 +309,7 @@ class TestApplyUpdateDiagnostics:
                 ('origin/master', True),
                 ('', False),   # fetch fails
             ]
-            result = updates._apply_update_inner('agent')
+            result = updates._apply_update_inner('ym-agent')
 
         assert result['ok'] is False
         assert 'could not reach' in result['message'].lower() or \

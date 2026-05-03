@@ -17,7 +17,7 @@ import webbrowser
 from pathlib import Path
 
 
-INSTALLER_URL = "https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh"
+INSTALLER_URL = "https://raw.githubusercontent.com/NousResearch/agent/main/scripts/install.sh"
 REPO_ROOT = Path(__file__).resolve().parent
 
 
@@ -31,7 +31,7 @@ def _load_repo_dotenv() -> None:
     To keep a CLI-supplied value, unset it from .env or launch via start.sh
     and override there.
 
-    Only loads the webui repo .env — not ~/.hermes/.env, which the server
+    Only loads the webui repo .env — not ~/.yusuf-mussa/.env, which the server
     loads independently at startup for provider credentials.
 
     Note: does not handle the ``export FOO=bar`` prefix — strip ``export``
@@ -63,8 +63,8 @@ def _load_repo_dotenv() -> None:
 # values from .env even when bootstrap.py is invoked directly (not via start.sh).
 _load_repo_dotenv()
 
-DEFAULT_HOST = os.getenv("HERMES_WEBUI_HOST", "127.0.0.1")
-DEFAULT_PORT = int(os.getenv("HERMES_WEBUI_PORT", "8788"))
+DEFAULT_HOST = os.getenv("YM_WEBUI_HOST", "127.0.0.1")
+DEFAULT_PORT = int(os.getenv("YM_WEBUI_PORT", "8788"))
 # Set HERMES_WEBUI_SKIP_ONBOARDING=1 to bypass the first-run wizard when
 # the environment is already fully configured (e.g. managed hosting).
 
@@ -91,13 +91,13 @@ def ensure_supported_platform() -> None:
 
 
 def discover_agent_dir() -> Path | None:
-    home = Path(os.getenv("HERMES_HOME", str(Path.home() / ".hermes"))).expanduser()
+    home = Path(os.getenv("YM_HOME", str(Path.home() / ".yusuf-mussa"))).expanduser()
     candidates = [
-        os.getenv("HERMES_WEBUI_AGENT_DIR", ""),
-        str(home / "hermes-agent"),
-        str(REPO_ROOT.parent / "hermes-agent"),
-        str(Path.home() / ".hermes" / "hermes-agent"),
-        str(Path.home() / "hermes-agent"),
+        os.getenv("YM_WEBUI_AGENT_DIR", ""),
+        str(home / "ym-agent"),
+        str(REPO_ROOT.parent / "ym-agent"),
+        str(Path.home() / ".yusuf-mussa" / "ym-agent"),
+        str(Path.home() / "ym-agent"),
     ]
     for raw in candidates:
         if not raw:
@@ -109,7 +109,7 @@ def discover_agent_dir() -> Path | None:
 
 
 def discover_launcher_python(agent_dir: Path | None) -> str:
-    env_python = os.getenv("HERMES_WEBUI_PYTHON")
+    env_python = os.getenv("YM_WEBUI_PYTHON")
     if env_python:
         return env_python
     if agent_dir:
@@ -161,7 +161,7 @@ def ensure_python_has_webui_deps(python_exe: str) -> str:
     return str(venv_python)
 
 
-def hermes_command_exists() -> bool:
+def ym_command_exists() -> bool:
     return shutil.which("hermes") is not None
 
 
@@ -216,7 +216,7 @@ def main() -> int:
     ensure_supported_platform()
 
     agent_dir = discover_agent_dir()
-    if not agent_dir and not hermes_command_exists():
+    if not agent_dir and not ym_command_exists():
         if args.skip_agent_install:
             raise RuntimeError(
                 "Hermes Agent was not found and auto-install was disabled."
@@ -226,17 +226,17 @@ def main() -> int:
 
     python_exe = ensure_python_has_webui_deps(discover_launcher_python(agent_dir))
     state_dir = Path(
-        os.getenv("HERMES_WEBUI_STATE_DIR", str(Path.home() / ".hermes" / "webui"))
+        os.getenv("YM_WEBUI_STATE_DIR", str(Path.home() / ".yusuf-mussa" / "webui"))
     ).expanduser()
     state_dir.mkdir(parents=True, exist_ok=True)
     log_path = state_dir / f"bootstrap-{args.port}.log"
 
     env = os.environ.copy()
-    env["HERMES_WEBUI_HOST"] = args.host
-    env["HERMES_WEBUI_PORT"] = str(args.port)
-    env.setdefault("HERMES_WEBUI_STATE_DIR", str(state_dir))
+    env["YM_WEBUI_HOST"] = args.host
+    env["YM_WEBUI_PORT"] = str(args.port)
+    env.setdefault("YM_WEBUI_STATE_DIR", str(state_dir))
     if agent_dir:
-        env["HERMES_WEBUI_AGENT_DIR"] = str(agent_dir)
+        env["YM_WEBUI_AGENT_DIR"] = str(agent_dir)
 
     info(f"Starting Yusuf Mussa Web UI on http://{args.host}:{args.port}")
     with log_path.open("ab") as log_file:

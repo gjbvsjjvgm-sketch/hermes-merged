@@ -30,7 +30,7 @@ function _syncWorkspacePanelInlineWidth(){
     return;
   }
 
-  const saved = localStorage.getItem('hermes-panel-w');
+  const saved = localStorage.getItem('ym-panel-w');
   if(!saved) return;
   const parsed = parseInt(saved, 10);
   if(Number.isNaN(parsed) || parsed <= 0) return;
@@ -60,7 +60,7 @@ function _setWorkspacePanelMode(mode){
   // Persist open/closed across refreshes (browse/preview → open; closed → closed)
   // Do NOT overwrite the user's "keep open" preference — only track runtime state
   // so that toggleWorkspacePanel(false) from the toolbar doesn't clear the setting.
-  localStorage.setItem('hermes-webui-workspace-panel', open ? 'open' : 'closed');
+  localStorage.setItem('ym-workspace-panel', open ? 'open' : 'closed');
   layout.classList.toggle('workspace-panel-collapsed',!open);
   if(_isCompactWorkspaceViewport()){
     panel.classList.toggle('mobile-open',open);
@@ -464,7 +464,7 @@ $('modelSelect').onchange=async()=>{
   if(!S.session)return;
   const selectedModel=$('modelSelect').value;
   if(typeof closeModelDropdown==='function') closeModelDropdown();
-  localStorage.setItem('hermes-webui-model', selectedModel);
+  localStorage.setItem('ym-model', selectedModel);
   await api('/api/session/update',{method:'POST',body:JSON.stringify({session_id:S.session.session_id,workspace:S.session.workspace,model:selectedModel})});
   S.session.model=selectedModel;
   if(typeof syncModelChip==='function') syncModelChip();
@@ -610,7 +610,7 @@ window.addEventListener('resize',()=>{
     if(!handle || !targetEl) return;
 
     // Restore saved width
-    if(storageKey === 'hermes-panel-w'){
+    if(storageKey === 'ym-panel-w'){
       _syncWorkspacePanelInlineWidth();
     }else{
       const saved = localStorage.getItem(storageKey);
@@ -647,8 +647,8 @@ window.addEventListener('resize',()=>{
   window._initResizePanels = function(){
     const sidebar    = document.querySelector('.sidebar');
     const rightpanel = document.querySelector('.rightpanel');
-    initResize('sidebarResize',    sidebar,    'right', SIDEBAR_MIN, SIDEBAR_MAX, 'hermes-sidebar-w');
-    initResize('rightpanelResize', rightpanel, 'left',  PANEL_MIN,   PANEL_MAX,   'hermes-panel-w');
+    initResize('sidebarResize',    sidebar,    'right', SIDEBAR_MIN, SIDEBAR_MAX, 'ym-sidebar-w');
+    initResize('rightpanelResize', rightpanel, 'left',  PANEL_MIN,   PANEL_MAX,   'ym-panel-w');
   };
 })();
 
@@ -726,10 +726,10 @@ function _applySkin(name){
 }
 
 function _pickTheme(name){
-  const currentSkin=localStorage.getItem('hermes-skin');
+  const currentSkin=localStorage.getItem('ym-skin');
   const appearance=_normalizeAppearance(name,currentSkin);
-  localStorage.setItem('hermes-theme',appearance.theme);
-  localStorage.setItem('hermes-skin',appearance.skin);
+  localStorage.setItem('ym-theme',appearance.theme);
+  localStorage.setItem('ym-skin',appearance.skin);
   _applyTheme(appearance.theme);
   _applySkin(appearance.skin);
   _syncThemePicker(appearance.theme);
@@ -742,9 +742,9 @@ function _pickTheme(name){
 }
 
 function _pickSkin(name){
-  const appearance=_normalizeAppearance(localStorage.getItem('hermes-theme'),name);
-  localStorage.setItem('hermes-theme',appearance.theme);
-  localStorage.setItem('hermes-skin',appearance.skin);
+  const appearance=_normalizeAppearance(localStorage.getItem('ym-theme'),name);
+  localStorage.setItem('ym-theme',appearance.theme);
+  localStorage.setItem('ym-skin',appearance.skin);
   _applyTheme(appearance.theme);
   _applySkin(appearance.skin);
   _syncThemePicker(appearance.theme);
@@ -781,7 +781,7 @@ function _applyFontSize(size){
 }
 
 function _pickFontSize(size){
-  localStorage.setItem('hermes-font-size',size);
+  localStorage.setItem('ym-font-size',size);
   _applyFontSize(size);
   _syncFontSizePicker(size);
   const hidden=$('settingsFontSize');
@@ -858,23 +858,23 @@ function applyBotName(){
     // and workspace actions (New file/folder) work before the first session (#804).
     if(s.default_workspace) S._profileDefaultWorkspace=s.default_workspace;
     const appearance=_normalizeAppearance(s.theme,s.skin);
-    localStorage.setItem('hermes-theme',appearance.theme);
+    localStorage.setItem('ym-theme',appearance.theme);
     _applyTheme(appearance.theme);
-    localStorage.setItem('hermes-skin',appearance.skin);
+    localStorage.setItem('ym-skin',appearance.skin);
     _applySkin(appearance.skin);
-    const fontSize=(s.font_size||localStorage.getItem('hermes-font-size')||'default');
-    localStorage.setItem('hermes-font-size',fontSize);
+    const fontSize=(s.font_size||localStorage.getItem('ym-font-size')||'default');
+    localStorage.setItem('ym-font-size',fontSize);
     _applyFontSize(fontSize);
     if(typeof setLocale==='function'){
       const _lang=typeof resolvePreferredLocale==='function'
-        ? resolvePreferredLocale(s.language, localStorage.getItem('hermes-lang'))
-        : (s.language || localStorage.getItem('hermes-lang') || 'en');
+        ? resolvePreferredLocale(s.language, localStorage.getItem('ym-lang'))
+        : (s.language || localStorage.getItem('ym-lang') || 'en');
       setLocale(_lang);
       if(typeof applyLocaleToDOM==='function')applyLocaleToDOM();
     }
     applyBotName();
     // TTS: apply enabled state on boot so buttons show/hide correctly (#499)
-    if(typeof _applyTtsEnabled==='function') _applyTtsEnabled(localStorage.getItem('hermes-tts-enabled')==='true');
+    if(typeof _applyTtsEnabled==='function') _applyTtsEnabled(localStorage.getItem('ym-tts-enabled')==='true');
   }catch(e){
     window._sendKey='enter';
     window._showTokenUsage=false;
@@ -889,20 +889,20 @@ function applyBotName(){
     _bootSettings={check_for_updates:false};
     if(typeof setLocale==='function'){
       const _lang=typeof resolvePreferredLocale==='function'
-        ? resolvePreferredLocale(null, localStorage.getItem('hermes-lang'))
-        : (localStorage.getItem('hermes-lang') || 'en');
+        ? resolvePreferredLocale(null, localStorage.getItem('ym-lang'))
+        : (localStorage.getItem('ym-lang') || 'en');
       setLocale(_lang);
       if(typeof applyLocaleToDOM==='function')applyLocaleToDOM();
     }
     applyBotName();
-    if(typeof _applyTtsEnabled==='function') _applyTtsEnabled(localStorage.getItem('hermes-tts-enabled')==='true');
+    if(typeof _applyTtsEnabled==='function') _applyTtsEnabled(localStorage.getItem('ym-tts-enabled')==='true');
   }
   // Non-blocking update check (fire-and-forget, once per tab session)
   // ?test_updates=1 in URL forces banner display for testing (bypasses sessionStorage guards)
   const _testUpdates=new URLSearchParams(location.search).get('test_updates')==='1';
-  if(_testUpdates||(_bootSettings.check_for_updates!==false&&!sessionStorage.getItem('hermes-update-checked')&&!sessionStorage.getItem('hermes-update-dismissed'))){
+  if(_testUpdates||(_bootSettings.check_for_updates!==false&&!sessionStorage.getItem('ym-update-checked')&&!sessionStorage.getItem('ym-update-dismissed'))){
     const _checkUrl='/api/updates/check'+(_testUpdates?'?simulate=1':'');
-    api(_checkUrl).then(d=>{if(!_testUpdates)sessionStorage.setItem('hermes-update-checked','1');if((d.webui&&d.webui.behind>0)||(d.agent&&d.agent.behind>0))_showUpdateBanner(d);}).catch(()=>{});
+    api(_checkUrl).then(d=>{if(!_testUpdates)sessionStorage.setItem('ym-update-checked','1');if((d.webui&&d.webui.behind>0)||(d.agent&&d.agent.behind>0))_showUpdateBanner(d);}).catch(()=>{});
   }
   // Fetch active profile
   try{const p=await api('/api/profile/active');S.activeProfile=p.name||'default';}catch(e){S.activeProfile='default';}
@@ -913,11 +913,11 @@ function applyBotName(){
   // options are enough for first paint; the dynamic provider list can settle
   // after the saved session is visible.
   const _modelDropdownReady=populateModelDropdown().then(()=>{
-    const savedModel=localStorage.getItem('hermes-webui-model');
+    const savedModel=localStorage.getItem('ym-model');
     if(savedModel && $('modelSelect')){
       $('modelSelect').value=savedModel;
       // If the value didn't take (model not in list), clear the bad pref
-      if($('modelSelect').value!==savedModel) localStorage.removeItem('hermes-webui-model');
+      if($('modelSelect').value!==savedModel) localStorage.removeItem('ym-model');
       else if(typeof syncModelChip==='function') syncModelChip();
     }
     if(S.session) syncTopbar();
@@ -939,7 +939,7 @@ function applyBotName(){
   const _srch = document.getElementById('sessionSearch'); if (_srch) _srch.value = '';
   // Initialize reasoning chip on boot (fixes #1103 — chip hidden until session load)
   if(typeof fetchReasoningChip==='function') fetchReasoningChip();
-  const saved=localStorage.getItem('hermes-webui-session');
+  const saved=localStorage.getItem('ym-session');
   if(saved){
     try{
       await loadSession(saved);
@@ -955,8 +955,8 @@ function applyBotName(){
         S._bootReady=true;
         // Restore panel pref before syncing so the workspace panel stays visible
         // even though there is no active session (#workspace-persist).
-        const _ephPanelPref=localStorage.getItem('hermes-webui-workspace-panel-pref')==='open'
-          || localStorage.getItem('hermes-webui-workspace-panel')==='open';
+        const _ephPanelPref=localStorage.getItem('ym-workspace-panel-pref')==='open'
+          || localStorage.getItem('ym-workspace-panel')==='open';
         if(_ephPanelPref) _workspacePanelMode='browse';
         syncTopbar();syncWorkspacePanelState();
         $('emptyState').style.display='';
@@ -966,22 +966,22 @@ function applyBotName(){
       // Restore the panel from localStorage when the session has a workspace.
       // Preference key takes priority over runtime state so that closing
       // the panel via toolbar X doesn't suppress the "keep open" setting.
-      const panelPref=localStorage.getItem('hermes-webui-workspace-panel-pref')==='open'
-        || localStorage.getItem('hermes-webui-workspace-panel')==='open';
+      const panelPref=localStorage.getItem('ym-workspace-panel-pref')==='open'
+        || localStorage.getItem('ym-workspace-panel')==='open';
       if(S.session&&S.session.workspace&&panelPref){
         _workspacePanelMode='browse';
       }
       S._bootReady=true;
       syncTopbar();syncWorkspacePanelState();await renderSessionList();if(typeof startGatewaySSE==='function')startGatewaySSE();await checkInflightOnBoot(saved);return;}
-    catch(e){localStorage.removeItem('hermes-webui-session');}
+    catch(e){localStorage.removeItem('ym-session');}
   }
   // no saved session - show empty state, wait for user to hit +
   S._bootReady=true;
   syncTopbar();
   // Restore panel pref so the workspace panel stays visible on a fresh load if the
   // user had it open during their last session (#workspace-persist).
-  const _freshPanelPref=localStorage.getItem('hermes-webui-workspace-panel-pref')==='open'
-    || localStorage.getItem('hermes-webui-workspace-panel')==='open';
+  const _freshPanelPref=localStorage.getItem('ym-workspace-panel-pref')==='open'
+    || localStorage.getItem('ym-workspace-panel')==='open';
   if(_freshPanelPref) _workspacePanelMode='browse';
   syncWorkspacePanelState();
   $('emptyState').style.display='';

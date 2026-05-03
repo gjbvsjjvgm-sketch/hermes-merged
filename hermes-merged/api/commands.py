@@ -1,7 +1,7 @@
-"""Expose hermes-agent's COMMAND_REGISTRY to the webui frontend.
+"""Expose agent's COMMAND_REGISTRY to the webui frontend.
 
 This module is the single integration point with hermes_cli.commands.
-If hermes-agent is unavailable the endpoint degrades to an empty list
+If agent is unavailable the endpoint degrades to an empty list
 so the frontend can still load with WEBUI_ONLY commands.
 """
 from __future__ import annotations

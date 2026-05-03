@@ -62,7 +62,7 @@ def _install_fake_hermes_cli(monkeypatch):
     monkeypatch.setitem(sys.modules, "hermes_cli.models", fake_models)
     monkeypatch.setitem(sys.modules, "hermes_cli.auth", fake_auth)
     monkeypatch.delitem(sys.modules, "agent.credential_pool", raising=False)
-    monkeypatch.delitem(sys.modules, "agent", raising=False)
+    monkeypatch.delitem(sys.modules, "ym-agent", raising=False)
 
     try:
         from api.config import invalidate_models_cache
@@ -78,7 +78,7 @@ def _setup_clean_config(monkeypatch, tmp_path):
     doesn't detect keys from the host environment.
     """
     _install_fake_hermes_cli(monkeypatch)
-    monkeypatch.setattr(profiles, "get_active_hermes_home", lambda: tmp_path)
+    monkeypatch.setattr(profiles, "get_active_ym_home", lambda: tmp_path)
 
     # Clear provider API key env vars to prevent host env leaking into tests
     _provider_env_vars = [

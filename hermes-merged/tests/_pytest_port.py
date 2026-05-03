@@ -29,8 +29,8 @@ def _auto_state_dir_name(repo_root: pathlib.Path) -> str:
 
 _TESTS_DIR   = pathlib.Path(__file__).parent.resolve()
 _REPO_ROOT   = _TESTS_DIR.parent.resolve()
-_HERMES_HOME = pathlib.Path(os.getenv('HERMES_HOME',
-                             str(pathlib.Path.home() / '.hermes')))
+_YM_HOME = pathlib.Path(os.getenv('YM_HOME',
+                             str(pathlib.Path.home() / '.yusuf-mussa')))
 
 TEST_PORT = int(os.environ.get('HERMES_WEBUI_TEST_PORT',
                                str(_auto_test_port(_REPO_ROOT))))
@@ -38,9 +38,9 @@ BASE = f"http://127.0.0.1:{TEST_PORT}"
 
 TEST_STATE_DIR = pathlib.Path(os.environ.get(
     'HERMES_WEBUI_TEST_STATE_DIR',
-    str(_HERMES_HOME / _auto_state_dir_name(_REPO_ROOT))
+    str(_YM_HOME / _auto_state_dir_name(_REPO_ROOT))
 ))
 
 # Default model injected by conftest — tests that mutate the default model
 # must restore to this value so later tests see a consistent baseline.
-TEST_DEFAULT_MODEL = os.environ.get('HERMES_WEBUI_DEFAULT_MODEL', 'openai/gpt-5.4-mini')
+TEST_DEFAULT_MODEL = os.environ.get('YM_WEBUI_DEFAULT_MODEL', 'openai/gpt-5.4-mini')

@@ -363,7 +363,7 @@ class TestStreamingReasoningWiring:
         )
         assert "reasoning_config" in src and "'reasoning_config' in _agent_params" in src, (
             "api/streaming.py must guard the reasoning_config kwarg with "
-            "inspect.signature so older hermes-agent builds don't TypeError"
+            "inspect.signature so older agent builds don't TypeError"
         )
 
 

@@ -44,23 +44,23 @@ WORKDIR /apptoo
 # Every sudo group user does not need a password
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-# Create a new group for the hermeswebui and hermeswebuitoo users
-RUN groupadd -g 1024 hermeswebui \ 
-    && groupadd -g 1025 hermeswebuitoo
+# Create a new group for the yusufmussa and yusufmussatoo users
+RUN groupadd -g 1024 yusufmussa \ 
+    && groupadd -g 1025 yusufmussatoo
 
-# The hermeswebui (resp. hermeswebuitoo) user will have UID 1024 (resp. 1025), 
-# be part of the hermeswebui (resp. hermeswebuitoo) and users groups and be sudo capable (passwordless) 
-RUN useradd -u 1024 -d /home/hermeswebui -g hermeswebui -s /bin/bash -m hermeswebui \
-    && usermod -G users hermeswebui \
-    && adduser hermeswebui sudo
-RUN useradd -u 1025 -d /home/hermeswebuitoo -g hermeswebuitoo -s /bin/bash -m hermeswebuitoo \
-    && usermod -G users hermeswebuitoo \
-    && adduser hermeswebuitoo sudo
-RUN chown -R hermeswebuitoo:hermeswebuitoo /apptoo
+# The yusufmussa (resp. yusufmussatoo) user will have UID 1024 (resp. 1025), 
+# be part of the yusufmussa (resp. yusufmussatoo) and users groups and be sudo capable (passwordless) 
+RUN useradd -u 1024 -d /home/yusufmussa -g yusufmussa -s /bin/bash -m yusufmussa \
+    && usermod -G users yusufmussa \
+    && adduser yusufmussa sudo
+RUN useradd -u 1025 -d /home/yusufmussatoo -g yusufmussatoo -s /bin/bash -m yusufmussatoo \
+    && usermod -G users yusufmussatoo \
+    && adduser yusufmussatoo sudo
+RUN chown -R yusufmussatoo:yusufmussatoo /apptoo
 
 USER root
 
-COPY --chmod=555 docker_init.bash /hermeswebui_init.bash
+COPY --chmod=555 docker_init.bash /yusufmussa_init.bash
 
 RUN touch /.within_container
 
@@ -75,25 +75,25 @@ USER root
 # The init script will skip the download when uv is already on PATH.
 RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin sh
 
-USER hermeswebuitoo
+USER yusufmussatoo
 
-COPY --chown=hermeswebuitoo:hermeswebuitoo . /apptoo
+COPY --chown=yusufmussatoo:yusufmussatoo . /apptoo
 
 # Bake the git version tag into the image so the settings badge works even
 # when .git is not present (it is excluded by .dockerignore).
-# CI passes: --build-arg HERMES_VERSION=$(git describe --tags --always)
+# CI passes: --build-arg YM_VERSION=$(git describe --tags --always)
 # Local builds that omit the arg get "unknown" as the fallback.
-ARG HERMES_VERSION=unknown
-RUN echo "__version__ = '${HERMES_VERSION}'" > /apptoo/api/_version.py
+ARG YM_VERSION=unknown
+RUN echo "__version__ = '${YM_VERSION}'" > /apptoo/api/_version.py
 
 # Default to binding all interfaces (required for container networking)
-ENV HERMES_WEBUI_HOST=0.0.0.0
-ENV HERMES_WEBUI_PORT=8787
+ENV YM_WEBUI_HOST=0.0.0.0
+ENV YM_WEBUI_PORT=8787
 
 EXPOSE 8787
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD curl -f http://localhost:8787/health || exit 1
 
-CMD ["/hermeswebui_init.bash"]
+CMD ["/yusufmussa_init.bash"]
 

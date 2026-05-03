@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 def test_profile_switch_clears_previous_profile_env_vars(monkeypatch, tmp_path):
-    base = tmp_path / ".hermes"
+    base = tmp_path / ".yusuf-mussa"
     (base / "profiles" / "p1").mkdir(parents=True)
     (base / "profiles" / "p2").mkdir(parents=True)
     (base / "profiles" / "p1" / ".env").write_text(
@@ -14,7 +14,7 @@ def test_profile_switch_clears_previous_profile_env_vars(monkeypatch, tmp_path):
     )
 
     monkeypatch.setenv("HERMES_BASE_HOME", str(base))
-    monkeypatch.delenv("HERMES_HOME", raising=False)
+    monkeypatch.delenv("YM_HOME", raising=False)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.delenv("CUSTOM_TOKEN", raising=False)
 
@@ -35,7 +35,7 @@ def test_profile_switch_clears_previous_profile_env_vars(monkeypatch, tmp_path):
 
 
 def test_profile_switch_replaces_overlapping_keys(monkeypatch, tmp_path):
-    base = tmp_path / ".hermes"
+    base = tmp_path / ".yusuf-mussa"
     (base / "profiles" / "p1").mkdir(parents=True)
     (base / "profiles" / "p2").mkdir(parents=True)
     (base / "profiles" / "p1" / ".env").write_text(
@@ -48,7 +48,7 @@ def test_profile_switch_replaces_overlapping_keys(monkeypatch, tmp_path):
     )
 
     monkeypatch.setenv("HERMES_BASE_HOME", str(base))
-    monkeypatch.delenv("HERMES_HOME", raising=False)
+    monkeypatch.delenv("YM_HOME", raising=False)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.delenv("ONLY_P1", raising=False)
     monkeypatch.delenv("ONLY_P2", raising=False)

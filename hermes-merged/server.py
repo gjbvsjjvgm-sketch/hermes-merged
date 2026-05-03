@@ -110,7 +110,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main() -> None:
-    from api.config import print_startup_config, verify_hermes_imports, _HERMES_FOUND
+    from api.config import print_startup_config, verify_agent_imports, _AGENT_FOUND
 
     print_startup_config()
 
@@ -133,23 +133,23 @@ def main() -> None:
     if HOST not in ('127.0.0.1', '::1', 'localhost') and not is_auth_enabled():
         print(f'[!!] WARNING: Binding to {HOST} with NO PASSWORD SET.', flush=True)
         print(f'     Anyone on the network can access your filesystem and agent.', flush=True)
-        print(f'     Set a password via Settings or HERMES_WEBUI_PASSWORD env var.', flush=True)
+        print(f'     Set a password via Settings or YM_WEBUI_PASSWORD env var.', flush=True)
         print(f'     To suppress: bind to 127.0.0.1 or set a password.', flush=True)
         if within_container:
             print(f'     Note: You are running within a container, must bind to 0.0.0.0 to publish the port.', flush=True)
     elif not is_auth_enabled():
         print(f'  [tip] No password set. Any process on this machine can read sessions', flush=True)
-        print(f'        and memory via the local API. Set HERMES_WEBUI_PASSWORD to', flush=True)
+        print(f'        and memory via the local API. Set YM_WEBUI_PASSWORD to', flush=True)
         print(f'        enable authentication.', flush=True)
 
-    ok, missing, errors = verify_hermes_imports()
-    if not ok and _HERMES_FOUND:
+    ok, missing, errors = verify_agent_imports()
+    if not ok and _AGENT_FOUND:
         print(f'[!!] Warning: Yusuf Mussa agent found but missing modules: {missing}', flush=True)
         for mod, err in errors.items():
             print(f'     {mod}: {err}', flush=True)
         print('     Attempting to install missing dependencies from agent requirements.txt...', flush=True)
         auto_install_agent_deps()
-        ok, missing, errors = verify_hermes_imports()
+        ok, missing, errors = verify_agent_imports()
         if not ok:
             print(f'[!!] Still missing after install attempt: {missing}', flush=True)
             for mod, err in errors.items():

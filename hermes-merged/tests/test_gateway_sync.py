@@ -47,7 +47,7 @@ def _get_test_state_dir():
     (via os.environ.setdefault) so that tests writing directly to state.db always
     use the same path the test server was started with.  If the env var is not
     set (e.g. when running this file standalone), fall back to the conftest
-    formula: HERMES_HOME/webui-mvp-test.
+    formula: YM_HOME/webui-mvp-test.
     """
     # Use _pytest_port which applies the same auto-derivation as conftest.py
     from tests._pytest_port import TEST_STATE_DIR as _ptsd

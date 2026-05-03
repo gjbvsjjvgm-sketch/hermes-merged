@@ -99,7 +99,7 @@
 | JavaScript | <repo>/static/{ui,workspace,sessions,messages,panels,boot,commands,icons,i18n,login}.js | 10 modules, ~7100 lines total |
 | Docker | Dockerfile, docker-compose.yml, .dockerignore | python:3.12-slim, multi-arch (amd64+arm64) |
 | CI/CD | .github/workflows/release.yml | Auto-release + GHCR publish on tag push |
-| Runtime state | ~/.hermes/webui-mvp/sessions/ | Session JSON files |
+| Runtime state | ~/.yusuf-mussa/webui-mvp/sessions/ | Session JSON files |
 | Test server | Port 8788 (conftest.py), port 8789 (browser sanity) | Isolated, wiped per run |
 | Production server | Port 8787 | SSH tunnel from Mac |
 
@@ -278,7 +278,7 @@
 |---------|------|-------|
 | Session content search | Search message text across all sessions, not just titles. GET /api/sessions/search already does title search; extend to message content with a configurable depth limit | High: the single most-requested nav feature after rename |
 | Cron edit + delete | Edit an existing cron job (name, schedule, prompt, delivery) inline in the tasks panel. Delete with confirm. POST /api/crons/update and /api/crons/delete | High: closes the cron CRUD gap (create was Sprint 6) |
-| Skill create + edit | A "New skill" form in the Skills panel. Name, category, SKILL.md content in a textarea editor. Save calls POST /api/skills/save (writes to ~/.hermes/skills/). Edit opens existing skill in the same editor | High: biggest remaining CLI gap after cron |
+| Skill create + edit | A "New skill" form in the Skills panel. Name, category, SKILL.md content in a textarea editor. Save calls POST /api/skills/save (writes to ~/.yusuf-mussa/skills/). Edit opens existing skill in the same editor | High: biggest remaining CLI gap after cron |
 
 ### Track C: Architecture
 | Item | What |

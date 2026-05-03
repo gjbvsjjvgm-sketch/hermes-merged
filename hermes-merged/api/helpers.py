@@ -115,7 +115,7 @@ MAX_BODY_BYTES = 20 * 1024 * 1024  # 20MB limit for non-upload POST bodies
 # ── Credential redaction ──────────────────────────────────────────────────────
 
 def _build_redact_fn():
-    """Return redact_sensitive_text from hermes-agent if available, else a fallback."""
+    """Return redact_sensitive_text from agent if available, else a fallback."""
     try:
         from agent.redact import redact_sensitive_text
         return redact_sensitive_text
@@ -208,11 +208,11 @@ def read_body(handler) -> dict:
 
 # ── Profile cookie helpers (issue #798) ─────────────────────────────────────
 
-PROFILE_COOKIE_NAME = 'hermes_profile'
+PROFILE_COOKIE_NAME = 'ym_profile'
 
 
 def get_profile_cookie(handler) -> str | None:
-    """Extract the hermes_profile cookie value from the request, or None."""
+    """Extract the ym_profile cookie value from the request, or None."""
     cookie_header = handler.headers.get('Cookie', '')
     if not cookie_header:
         return None
@@ -233,7 +233,7 @@ def get_profile_cookie(handler) -> str | None:
 
 
 def build_profile_cookie(name: str) -> str:
-    """Build a Set-Cookie header value for the hermes_profile cookie.
+    """Build a Set-Cookie header value for the ym_profile cookie.
 
     Always persist the selected profile in the cookie, including 'default'.
     Clearing the cookie causes the backend to fall back to process-global

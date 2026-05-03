@@ -38,8 +38,8 @@ class TestFontSizeBootScript:
 
     def test_boot_script_reads_hermes_font_size(self):
         html = _read("static/index.html")
-        assert "hermes-font-size" in html, (
-            "index.html boot script must read 'hermes-font-size' from localStorage"
+        assert "ym-font-size" in html, (
+            "index.html boot script must read 'ym-font-size' from localStorage"
         )
         assert "data-font-size" in html, (
             "boot script must set document.documentElement.dataset.fontSize"
@@ -128,7 +128,7 @@ class TestFontSizeJsFunctions:
         boot = _read("static/boot.js")
         idx = boot.find("function _pickFontSize(")
         block = boot[idx:idx+400]
-        assert "localStorage.setItem('hermes-font-size'" in block, (
+        assert "localStorage.setItem('ym-font-size'" in block, (
             "_pickFontSize must persist choice to localStorage"
         )
 

@@ -287,7 +287,7 @@ def test_fix_credential_permissions_corrects_loose_files(tmp_path, monkeypatch):
     google_file.write_text("{}")
     google_file.chmod(0o664)  # group-readable -- should be fixed
 
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("YM_HOME", str(tmp_path))
     fix_credential_permissions()
 
     import stat
@@ -301,7 +301,7 @@ def test_fix_credential_permissions_skips_correct_files(tmp_path, monkeypatch):
     env_file.write_text("SECRET=abc")
     env_file.chmod(0o600)
 
-    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
+    monkeypatch.setenv("YM_HOME", str(tmp_path))
 
     from api.startup import fix_credential_permissions
     fix_credential_permissions()

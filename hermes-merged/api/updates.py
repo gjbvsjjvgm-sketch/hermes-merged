@@ -1,7 +1,7 @@
 """
 Yusuf Mussa Web UI -- Self-update checker.
 
-Checks if the webui and hermes-agent git repos are behind their upstream
+Checks if the webui and agent git repos are behind their upstream
 branches. Results are cached server-side (30-min TTL) so git fetch runs
 at most twice per hour regardless of client count.
 
@@ -21,7 +21,7 @@ try:
 except ImportError:
     _AGENT_DIR = None
 
-_update_cache = {'webui': None, 'agent': None, 'checked_at': 0}
+_update_cache = {'webui': None, 'ym-agent': None, 'checked_at': 0}
 _cache_lock = threading.Lock()
 _check_in_progress = False
 _apply_lock = threading.Lock()   # prevents concurrent stash/pull/pop on same repo
@@ -172,7 +172,7 @@ def check_for_updates(force=False):
     try:
         # Run checks outside the lock (network I/O)
         webui_info = _check_repo(REPO_ROOT, 'webui')
-        agent_info = _check_repo(_AGENT_DIR, 'agent')
+        agent_info = _check_repo(_AGENT_DIR, 'ym-agent')
 
         with _cache_lock:
             _update_cache['webui'] = webui_info

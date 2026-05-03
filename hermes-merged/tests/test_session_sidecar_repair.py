@@ -64,13 +64,13 @@ def _isolate_agent_locks():
 
 @pytest.fixture()
 def hermes_home(tmp_path, monkeypatch):
-    """Set up a HERMES_HOME directory with a sessions subdirectory."""
+    """Set up a YM_HOME directory with a sessions subdirectory."""
     home = tmp_path / "hermes_home"
     home.mkdir()
     sessions_dir = home / "sessions"
     sessions_dir.mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(home))
-    monkeypatch.setattr(profiles, "_DEFAULT_HERMES_HOME", home)
+    monkeypatch.setenv("YM_HOME", str(home))
+    monkeypatch.setattr(profiles, "_DEFAULT_YM_HOME", home)
     return home
 
 
@@ -366,28 +366,28 @@ class TestGetProfileHome:
     """_get_profile_home expands ~ correctly in the ImportError fallback path."""
 
     def test_expands_tilde_when_profiles_unavailable(self, monkeypatch):
-        """When api.profiles import fails, fallback uses HERMES_HOME or ~/.hermes
+        """When api.profiles import fails, fallback uses YM_HOME or ~/.yusuf-mussa
         with proper tilde expansion."""
         # Make api.profiles import fail
         monkeypatch.setitem(sys.modules, "api.profiles", None)
 
-        # Default fallback without HERMES_HOME env var
-        monkeypatch.delenv("HERMES_HOME", raising=False)
+        # Default fallback without YM_HOME env var
+        monkeypatch.delenv("YM_HOME", raising=False)
         result = _get_profile_home(None)
         assert "~" not in str(result), f"Path should have ~ expanded, got: {result}"
-        assert str(result) == str(Path.home() / ".hermes")
+        assert str(result) == str(Path.home() / ".yusuf-mussa")
 
     def test_uses_hermes_home_env_var(self, monkeypatch):
-        """When HERMES_HOME is set, fallback uses it with expansion."""
+        """When YM_HOME is set, fallback uses it with expansion."""
         monkeypatch.setitem(sys.modules, "api.profiles", None)
-        monkeypatch.setenv("HERMES_HOME", "/custom/hermes")
+        monkeypatch.setenv("YM_HOME", "/custom/hermes")
         result = _get_profile_home(None)
         assert str(result) == "/custom/hermes"
 
     def test_expands_tilde_in_hermes_home(self, monkeypatch):
-        """If HERMES_HOME contains ~, it gets expanded."""
+        """If YM_HOME contains ~, it gets expanded."""
         monkeypatch.setitem(sys.modules, "api.profiles", None)
-        monkeypatch.setenv("HERMES_HOME", "~/my-hermes")
+        monkeypatch.setenv("YM_HOME", "~/my-hermes")
         result = _get_profile_home(None)
         assert "~" not in str(result)
         assert str(result) == str(Path.home() / "my-hermes")

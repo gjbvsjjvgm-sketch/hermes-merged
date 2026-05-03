@@ -8,9 +8,9 @@ TEST ISOLATION:
 
 PATH DISCOVERY:
   No hardcoded paths. Discovery order:
-    1. Environment variables (HERMES_WEBUI_AGENT_DIR, HERMES_WEBUI_PYTHON, etc.)
+    1. Environment variables (YM_WEBUI_AGENT_DIR, YM_WEBUI_PYTHON, etc.)
     2. Sibling checkout heuristics relative to this repo
-    3. Common install paths (~/.hermes/hermes-agent)
+    3. Common install paths (~/.yusuf-mussa/agent)
     4. System python3 as a last resort
 """
 import json
@@ -28,7 +28,7 @@ import pytest
 TESTS_DIR  = pathlib.Path(__file__).parent.resolve()
 REPO_ROOT  = TESTS_DIR.parent.resolve()
 HOME       = pathlib.Path.home()
-HERMES_HOME = pathlib.Path(os.getenv('HERMES_HOME', str(HOME / '.hermes')))
+YM_HOME = pathlib.Path(os.getenv('YM_HOME', str(HOME / '.yusuf-mussa')))
 
 # ── Test server config ────────────────────────────────────────────────────
 # Port and state dir auto-derive from the repo path when no env var is set,
@@ -53,7 +53,7 @@ TEST_PORT      = int(os.getenv('HERMES_WEBUI_TEST_PORT',
 TEST_BASE      = f"http://127.0.0.1:{TEST_PORT}"
 TEST_STATE_DIR = pathlib.Path(os.getenv(
     'HERMES_WEBUI_TEST_STATE_DIR',
-    str(HERMES_HOME / _auto_state_dir_name(REPO_ROOT))
+    str(YM_HOME / _auto_state_dir_name(REPO_ROOT))
 ))
 TEST_WORKSPACE = TEST_STATE_DIR / 'test-workspace'
 
@@ -62,12 +62,12 @@ TEST_WORKSPACE = TEST_STATE_DIR / 'test-workspace'
 #
 # Direct assignment is intentional for production-risk paths: tests that import
 # api.config/api.models in the pytest process must never inherit the real
-# ~/.hermes state tree before the server subprocess fixture starts.
+# ~/.yusuf-mussa state tree before the server subprocess fixture starts.
 os.environ['HERMES_WEBUI_TEST_PORT'] = str(TEST_PORT)
 os.environ['HERMES_WEBUI_TEST_STATE_DIR'] = str(TEST_STATE_DIR)
-os.environ['HERMES_WEBUI_STATE_DIR'] = str(TEST_STATE_DIR)
-os.environ['HERMES_WEBUI_DEFAULT_WORKSPACE'] = str(TEST_WORKSPACE)
-os.environ['HERMES_HOME'] = str(TEST_STATE_DIR)
+os.environ['YM_WEBUI_STATE_DIR'] = str(TEST_STATE_DIR)
+os.environ['YM_WEBUI_DEFAULT_WORKSPACE'] = str(TEST_WORKSPACE)
+os.environ['YM_HOME'] = str(TEST_STATE_DIR)
 os.environ['HERMES_BASE_HOME'] = str(TEST_STATE_DIR)
 
 # ── Server script: always relative to repo root ───────────────────────────
@@ -81,11 +81,11 @@ if not SERVER_SCRIPT.exists():
 # ── Hermes agent discovery (mirrors api/config._discover_agent_dir) ───────
 def _discover_agent_dir() -> pathlib.Path:
     candidates = [
-        os.getenv('HERMES_WEBUI_AGENT_DIR', ''),
-        str(HERMES_HOME / 'hermes-agent'),
-        str(REPO_ROOT.parent / 'hermes-agent'),
-        str(HOME / '.hermes' / 'hermes-agent'),
-        str(HOME / 'hermes-agent'),
+        os.getenv('YM_WEBUI_AGENT_DIR', ''),
+        str(YM_HOME / 'ym-agent'),
+        str(REPO_ROOT.parent / 'ym-agent'),
+        str(HOME / '.yusuf-mussa' / 'ym-agent'),
+        str(HOME / 'ym-agent'),
     ]
     for c in candidates:
         if not c:
@@ -97,8 +97,8 @@ def _discover_agent_dir() -> pathlib.Path:
 
 # ── Python discovery (mirrors api/config._discover_python) ────────────────
 def _discover_python(agent_dir) -> str:
-    if os.getenv('HERMES_WEBUI_PYTHON'):
-        return os.getenv('HERMES_WEBUI_PYTHON')
+    if os.getenv('YM_WEBUI_PYTHON'):
+        return os.getenv('YM_WEBUI_PYTHON')
     if agent_dir:
         venv_py = agent_dir / 'venv' / 'bin' / 'python'
         if venv_py.exists():
@@ -115,12 +115,12 @@ VENV_PYTHON  = _discover_python(HERMES_AGENT)
 WORKDIR = str(HERMES_AGENT) if HERMES_AGENT else str(REPO_ROOT)
 
 # ── Agent availability detection ─────────────────────────────────────────────
-# Tests that require hermes-agent modules (cron, skills, approval, chat/stream)
+# Tests that require agent modules (cron, skills, approval, chat/stream)
 # are skipped when the agent isn't installed, instead of failing with 500 errors.
 AGENT_AVAILABLE = HERMES_AGENT is not None
 
 def _check_agent_modules():
-    """Verify hermes-agent Python modules are actually importable."""
+    """Verify agent Python modules are actually importable."""
     if not HERMES_AGENT:
         return False
     try:
@@ -134,32 +134,32 @@ def _check_agent_modules():
 
 AGENT_MODULES_AVAILABLE = _check_agent_modules()
 
-# pytest marker: skip tests that need hermes-agent when it's not present
+# pytest marker: skip tests that need agent when it's not present
 requires_agent = pytest.mark.skipif(
     not AGENT_AVAILABLE,
-    reason="hermes-agent not found (skipping agent-dependent test)"
+    reason="agent not found (skipping agent-dependent test)"
 )
 requires_agent_modules = pytest.mark.skipif(
     not AGENT_MODULES_AVAILABLE,
-    reason="hermes-agent Python modules not importable (cron, skills_tool)"
+    reason="agent Python modules not importable (cron, skills_tool)"
 )
 
 def pytest_configure(config):
-    config.addinivalue_line("markers", "requires_agent: skip when hermes-agent dir is not found")
-    config.addinivalue_line("markers", "requires_agent_modules: skip when hermes-agent Python modules are not importable")
+    config.addinivalue_line("markers", "requires_agent: skip when agent dir is not found")
+    config.addinivalue_line("markers", "requires_agent_modules: skip when agent Python modules are not importable")
 
 def pytest_collection_modifyitems(config, items):
-    """Auto-skip agent-dependent tests when hermes-agent is not available.
+    """Auto-skip agent-dependent tests when agent is not available.
 
     Instead of requiring markers on every test function, we pattern-match
-    test names to known categories that depend on hermes-agent modules.
+    test names to known categories that depend on agent modules.
     This keeps the test files clean and ensures new cron/skills tests
     get auto-skipped without manual annotation.
     """
     if AGENT_MODULES_AVAILABLE:
         return  # everything available, run all tests
 
-    # Exact list of tests known to fail without hermes-agent.
+    # Exact list of tests known to fail without agent.
     # These hit server endpoints that import cron.jobs, tools.skills_tool,
     # or require a running agent backend — returning 500 without the agent.
     _AGENT_DEPENDENT_TESTS = {
@@ -194,7 +194,7 @@ def pytest_collection_modifyitems(config, items):
         'test_new_session_inherits_last_workspace',
     }
 
-    skip_marker = pytest.mark.skip(reason="requires hermes-agent (not installed)")
+    skip_marker = pytest.mark.skip(reason="requires agent (not installed)")
     skipped = 0
 
     for item in items:
@@ -203,7 +203,7 @@ def pytest_collection_modifyitems(config, items):
             skipped += 1
 
     if skipped:
-        print(f"\nWARNING: hermes-agent not found; {skipped} agent-dependent tests will be skipped\n")
+        print(f"\nWARNING: agent not found; {skipped} agent-dependent tests will be skipped\n")
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
@@ -263,7 +263,7 @@ def test_server():
 
     # Symlink real skills into test home so skill-related tests work,
     # but all write-heavy state stays isolated.
-    real_skills  = HERMES_HOME / 'skills'
+    real_skills  = YM_HOME / 'skills'
     test_skills  = TEST_STATE_DIR / 'skills'
     if real_skills.exists() and not test_skills.exists():
         test_skills.symlink_to(real_skills)
@@ -274,7 +274,7 @@ def test_server():
     # Expose TEST_STATE_DIR to the test process itself so that tests which write
     # directly to state.db (e.g. test_gateway_sync.py) always use the same path
     # as the server.  Other test files (test_auth_sessions.py) may override
-    # HERMES_WEBUI_STATE_DIR for their own purposes, but HERMES_WEBUI_TEST_STATE_DIR
+    # YM_WEBUI_STATE_DIR for their own purposes, but HERMES_WEBUI_TEST_STATE_DIR
     # is reserved for this mapping and is never overridden by individual test files.
     # Export both port and state-dir as env vars so individual test files
     # can read them without importing conftest (avoids circular imports).
@@ -291,25 +291,25 @@ def test_server():
         )):
             del env[_k]
     env.update({
-        "HERMES_WEBUI_PORT":              str(TEST_PORT),
-        "HERMES_WEBUI_HOST":              "127.0.0.1",
-        "HERMES_WEBUI_STATE_DIR":         str(TEST_STATE_DIR),
-        "HERMES_WEBUI_DEFAULT_WORKSPACE": str(TEST_WORKSPACE),
-        "HERMES_WEBUI_DEFAULT_MODEL":     "openai/gpt-5.4-mini",
-        "HERMES_HOME":                    str(TEST_STATE_DIR),
-        # Belt-and-suspenders: HERMES_BASE_HOME hard-locks _DEFAULT_HERMES_HOME
+        "YM_WEBUI_PORT":              str(TEST_PORT),
+        "YM_WEBUI_HOST":              "127.0.0.1",
+        "YM_WEBUI_STATE_DIR":         str(TEST_STATE_DIR),
+        "YM_WEBUI_DEFAULT_WORKSPACE": str(TEST_WORKSPACE),
+        "YM_WEBUI_DEFAULT_MODEL":     "openai/gpt-5.4-mini",
+        "YM_HOME":                    str(TEST_STATE_DIR),
+        # Belt-and-suspenders: HERMES_BASE_HOME hard-locks _DEFAULT_YM_HOME
         # in api/profiles.py to the test state dir regardless of profile switching
         # or any os.environ mutation that happens inside the server process.
         # Without this, a profile switch or active_profile file in the real
-        # ~/.hermes can redirect _get_active_hermes_home() out of the sandbox,
+        # ~/.yusuf-mussa can redirect _get_active_ym_home() out of the sandbox,
         # causing onboarding writes (config.yaml, .env) to land in the production
-        # ~/.hermes/profiles/webui/ and overwrite real API keys.
+        # ~/.yusuf-mussa/profiles/webui/ and overwrite real API keys.
         "HERMES_BASE_HOME":               str(TEST_STATE_DIR),
     })
 
     # Pass agent dir if discovered so server.py doesn't have to re-discover
     if HERMES_AGENT:
-        env["HERMES_WEBUI_AGENT_DIR"] = str(HERMES_AGENT)
+        env["YM_WEBUI_AGENT_DIR"] = str(HERMES_AGENT)
 
     proc = subprocess.Popen(
         [VENV_PYTHON, str(SERVER_SCRIPT)],

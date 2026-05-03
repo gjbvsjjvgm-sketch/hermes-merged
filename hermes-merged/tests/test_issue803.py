@@ -2,14 +2,14 @@
 Issue #803 (completes #798) — per-client profile isolation via cookie + thread-local.
 
 PR #800 fixed POST /api/session/new (client sends profile in body).
-PR #805 extends the fix to ALL endpoints: profile switches set a hermes_profile
+PR #805 extends the fix to ALL endpoints: profile switches set a ym_profile
 cookie, server.py reads it per-request into a thread-local, and the existing
 api/profiles.py helpers consult the thread-local before the process global.
 
 Covers:
   1. build_profile_cookie() / get_profile_cookie() roundtrip + validation
   2. set_request_profile() / get_active_profile_name() / clear_request_profile()
-  3. get_active_hermes_home() routes via thread-local
+  3. get_active_ym_home() routes via thread-local
   4. switch_profile(process_wide=False) does NOT mutate process globals
   5. Concurrent requests on different threads see independent profiles
 """
@@ -28,7 +28,7 @@ class TestProfileCookieHelpers:
     def test_build_profile_cookie_sets_value(self):
         from api.helpers import build_profile_cookie
         s = build_profile_cookie('alice')
-        assert 'hermes_profile=alice' in s
+        assert 'ym_profile=alice' in s
         assert 'HttpOnly' in s
         assert 'SameSite=Lax' in s
         assert 'Path=/' in s
@@ -36,7 +36,7 @@ class TestProfileCookieHelpers:
     def test_build_profile_cookie_default_persists(self):
         from api.helpers import build_profile_cookie
         s = build_profile_cookie('default')
-        assert 'hermes_profile=default' in s
+        assert 'ym_profile=default' in s
         assert 'Max-Age=0' not in s
 
     def test_get_profile_cookie_returns_none_when_absent(self):
@@ -48,13 +48,13 @@ class TestProfileCookieHelpers:
     def test_get_profile_cookie_extracts_valid_name(self):
         from api.helpers import get_profile_cookie
         handler = MagicMock()
-        handler.headers.get = lambda k, d='': 'hermes_profile=alice' if k == 'Cookie' else d
+        handler.headers.get = lambda k, d='': 'ym_profile=alice' if k == 'Cookie' else d
         assert get_profile_cookie(handler) == 'alice'
 
     def test_get_profile_cookie_accepts_default(self):
         from api.helpers import get_profile_cookie
         handler = MagicMock()
-        handler.headers.get = lambda k, d='': 'hermes_profile=default' if k == 'Cookie' else d
+        handler.headers.get = lambda k, d='': 'ym_profile=default' if k == 'Cookie' else d
         assert get_profile_cookie(handler) == 'default'
 
     def test_get_profile_cookie_rejects_injection(self):
@@ -62,7 +62,7 @@ class TestProfileCookieHelpers:
         from api.helpers import get_profile_cookie
         for bad in ('../etc', 'a/b', 'name;DROP', 'WithCaps', 'has space', '.hidden'):
             handler = MagicMock()
-            handler.headers.get = lambda k, d='', v=bad: f'hermes_profile={v}' if k == 'Cookie' else d
+            handler.headers.get = lambda k, d='', v=bad: f'ym_profile={v}' if k == 'Cookie' else d
             assert get_profile_cookie(handler) is None, f"{bad!r} should be rejected"
 
     def test_get_profile_cookie_ignores_malformed_header(self):
@@ -107,18 +107,18 @@ class TestThreadLocalProfileContext:
         p.clear_request_profile()
 
 
-# ── 3. get_active_hermes_home routes through TLS ─────────────────────────────
+# ── 3. get_active_ym_home routes through TLS ─────────────────────────────
 
-def test_get_active_hermes_home_respects_tls(tmp_path, monkeypatch):
+def test_get_active_ym_home_respects_tls(tmp_path, monkeypatch):
     import api.profiles as p
-    monkeypatch.setattr(p, '_DEFAULT_HERMES_HOME', tmp_path)
+    monkeypatch.setattr(p, '_DEFAULT_YM_HOME', tmp_path)
     profile_dir = tmp_path / 'profiles' / 'alice'
     profile_dir.mkdir(parents=True)
     try:
         p.set_request_profile('alice')
-        assert p.get_active_hermes_home() == profile_dir
+        assert p.get_active_ym_home() == profile_dir
         p.set_request_profile('default')
-        assert p.get_active_hermes_home() == tmp_path
+        assert p.get_active_ym_home() == tmp_path
     finally:
         p.clear_request_profile()
 
@@ -131,7 +131,7 @@ def test_switch_profile_process_wide_false_does_not_mutate_global():
 
     # Monkey in a fake profile listing so switch_profile finds 'alice'
     original_global = p._active_profile
-    original_env_home = os.environ.get('HERMES_HOME')
+    original_env_home = os.environ.get('YM_HOME')
 
     # We need a profile that exists to get past the validation path.
     # Use 'default' — switch_profile accepts it without requiring hermes_cli.
@@ -142,9 +142,9 @@ def test_switch_profile_process_wide_false_does_not_mutate_global():
             f"process_wide=False must not mutate _active_profile "
             f"(was {original_global!r}, now {p._active_profile!r})"
         )
-        # HERMES_HOME env must not change
-        assert os.environ.get('HERMES_HOME') == original_env_home, (
-            "process_wide=False must not mutate os.environ['HERMES_HOME']"
+        # YM_HOME env must not change
+        assert os.environ.get('YM_HOME') == original_env_home, (
+            "process_wide=False must not mutate os.environ['YM_HOME']"
         )
         # Response still shape-compatible
         assert isinstance(result, dict)

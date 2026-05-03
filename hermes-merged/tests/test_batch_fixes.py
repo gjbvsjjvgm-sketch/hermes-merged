@@ -208,7 +208,7 @@ class TestSystemTheme:
 
     def test_panels_saves_system_string_not_resolved(self):
         src = read("static/panels.js")
-        assert "localStorage.getItem('hermes-theme')" in src, (
+        assert "localStorage.getItem('ym-theme')" in src, (
             "_settingsThemeOnOpen must read from localStorage to preserve "
             "the 'system' string, not the resolved 'dark'/'light'"
         )

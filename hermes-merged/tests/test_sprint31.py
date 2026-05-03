@@ -43,7 +43,7 @@ class TestWriteEndpointToConfig:
 
     def test_merges_with_existing_config(self, tmp_path):
         """Does not clobber other top-level config keys."""
-        existing = {"model": {"default": "gpt-4o", "provider": "openai"}, "agent": {"max_turns": 90}}
+        existing = {"model": {"default": "gpt-4o", "provider": "openai"}, "ym-agent": {"max_turns": 90}}
         (tmp_path / "config.yaml").write_text(yaml.dump(existing))
         from api.profiles import _write_endpoint_to_config
         _write_endpoint_to_config(tmp_path, base_url="http://localhost:1234")
@@ -93,8 +93,8 @@ class TestProfileCreateAPIWithEndpoint:
 
     def _cleanup(self):
         """Remove the test profile from wherever hermes_cli placed it."""
-        home_hermes = pathlib.Path.home() / ".hermes"
-        # Walk all profile roots: real ~/.hermes, and any subdirs that might be HERMES_HOME
+        home_hermes = pathlib.Path.home() / ".yusuf-mussa"
+        # Walk all profile roots: real ~/.yusuf-mussa, and any subdirs that might be YM_HOME
         roots_to_check = set()
         roots_to_check.add(home_hermes)
         for root, dirs, _ in os.walk(str(home_hermes)):

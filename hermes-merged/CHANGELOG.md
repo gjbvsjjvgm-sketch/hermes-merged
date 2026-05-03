@@ -14,7 +14,7 @@
 - **Duplicate header copy buttons on language-fenced code blocks** — for code blocks with a language header, the copy button is appended to the sibling `.pre-header`, not inside `<pre>`, but the existing duplicate guard only checked inside `<pre>`. Repeated post-render passes (cache replays, streaming updates) could append duplicate copy buttons in the header. The guard now also checks the header before creating a new button. (`static/ui.js`, `tests/test_issue1096_copy_buttons.py`) @dso2ng — PR #1324, fixes #1096
 - **zh-Hant locale labels — restore Traditional Chinese in tree/raw view and MCP server settings** — a recent locale-merge accidentally left Russian strings in the zh-Hant block for tree-toggle labels, the parse-failed note, and Settings → System → MCP Servers. zh-TW users saw mixed Russian/Chinese UI text in those areas. The labels are now restored to Traditional Chinese, plus a regression test that asserts no Cyrillic characters can slip back into the zh-Hant block. (`static/i18n.js`, `tests/test_chinese_locale.py`) @dso2ng — PR #1323
 - **Docker `HEALTHCHECK` instruction added** — the Dockerfile was missing a `HEALTHCHECK`, so `docker ps` couldn't show health, Docker Compose `depends_on: condition: service_healthy` didn't work, and orchestration tools (K8s, Swarm) couldn't use native health probes. Added a 30s-interval HEALTHCHECK that hits the existing `/health` endpoint. (`Dockerfile`) @zichen0116 — PR #1332
-- **`.env.example` state-dir default aligned with `bootstrap.py`** — `HERMES_WEBUI_STATE_DIR` in `.env.example` referenced the obsolete `~/.hermes/webui-mvp` path while `bootstrap.py` and `docker-compose.yml` already use `~/.hermes/webui`. Updated the example file so users following it land in the same state dir as the rest of the codebase. (`.env.example`) @zichen0116 — PR #1331
+- **`.env.example` state-dir default aligned with `bootstrap.py`** — `YM_WEBUI_STATE_DIR` in `.env.example` referenced the obsolete `~/.yusuf-mussa/webui-mvp` path while `bootstrap.py` and `docker-compose.yml` already use `~/.yusuf-mussa/webui`. Updated the example file so users following it land in the same state dir as the rest of the codebase. (`.env.example`) @zichen0116 — PR #1331
 
 ## [v0.50.244] — 2026-04-30
 
@@ -187,7 +187,7 @@
 ### Fixed
 - **Image attachments: composer tray thumbnails** — pasted/dragged images now show as 56×56 thumbnail chips in the composer instead of paperclip pills. Blob URL revoked on remove. (`static/ui.js`, `static/style.css`) [#1135]
 - **Image attachments: chat history inline** — uploaded images in sent messages now load correctly via `api/file/raw?session_id=SID&path=FILENAME` instead of the broken `api/media?path=FILENAME` path. Click any image to open a lightbox overlay (dark backdrop, 90vw/90vh, × or Escape to close). (`static/ui.js`, `static/style.css`) [#1135] Closes #1095
-- **pytest state isolation** — `conftest.py` now uses direct assignment for `HERMES_WEBUI_STATE_DIR` / `HERMES_HOME` / `HERMES_WEBUI_DEFAULT_WORKSPACE` so tests importing `api.config` in the pytest process cannot inherit the real `~/.hermes/webui` state tree. (`tests/conftest.py`) [#1136 @franksong2702]
+- **pytest state isolation** — `conftest.py` now uses direct assignment for `YM_WEBUI_STATE_DIR` / `YM_HOME` / `YM_WEBUI_DEFAULT_WORKSPACE` so tests importing `api.config` in the pytest process cannot inherit the real `~/.yusuf-mussa/webui` state tree. (`tests/conftest.py`) [#1136 @franksong2702]
 
 ## v0.50.223 — 2026-04-26
 
@@ -313,7 +313,7 @@
 
 ### Fixed
 - **Non-standard provider first-run experience** — agent dir discovery now searches XDG_DATA_HOME, `/opt`, `/usr/local` paths; onboarding wizard auto-completes for non-wizard providers (ollama-cloud, deepseek, xai, kimi-k2.6) with `provider_configured=True`; wizard model field no longer hardcodes `gpt-5.4-mini` literal; session model resolver correctly handles unlisted active providers. (`api/config.py`, `api/onboarding.py`, `api/routes.py`) Closes #1019–#1023 [#1049]
-- **Cron session titles in sidebar** — cron-launched sessions now display the human-friendly job name (from `~/.hermes/cron/jobs.json`) instead of a generic "Cron Session" label. (`api/models.py`, `api/routes.py`) [#1050 @waldmanz]
+- **Cron session titles in sidebar** — cron-launched sessions now display the human-friendly job name (from `~/.yusuf-mussa/cron/jobs.json`) instead of a generic "Cron Session" label. (`api/models.py`, `api/routes.py`) [#1050 @waldmanz]
 - **AIAgent reused per session — fixes Honcho first-turn injection** — `AIAgent` is now cached per `session_id` so the agent's turn counter increments correctly across messages. Cache is evicted on session delete/clear. (`api/config.py`, `api/routes.py`, `api/streaming.py`) Closes #1039 [#1051 @qxxaa]
 - **Mermaid Google Fonts CSP violation suppressed** — `fontFamily:'inherit'` in Mermaid themeVariables prevents `@import url('fonts.googleapis.com')` from being injected into diagram SVGs. (`static/ui.js`) Closes #1044 [#1054]
 - **bfcache layout and dropdown restore** — `pageshow+event.persisted` handler re-syncs topbar, workspace panel, session list, and gateway SSE; also closes open composer dropdowns frozen by bfcache. `_initResizePanels()` removed from pageshow (bfcache preserves listeners). (`static/boot.js`) Closes #1045 [#1055]
@@ -363,7 +363,7 @@
 ## v0.50.204 — 2026-04-24
 
 ### Fixed
-- **Docker: HERMES_HOME corrected from `/root/.hermes` to `/home/hermes/.hermes`** — `docker-compose.two-container.yml` and `docker-compose.three-container.yml` both set `HERMES_HOME=/root/.hermes` and mounted the shared `hermes-home` volume to `/root/.hermes`. The `nousresearch/hermes-agent` image drops privileges to a `hermes` user (uid=10000) via `gosu`, after which `/root` is mode `700` and inaccessible — causing `mkdir: cannot create directory '/root': Permission denied` on every startup. Fixed to use `/home/hermes/.hermes` throughout. (`docker-compose.two-container.yml`, `docker-compose.three-container.yml`) Closes #967. [#989]
+- **Docker: YM_HOME corrected from `/root/.hermes` to `/home/hermes/.hermes`** — `docker-compose.two-container.yml` and `docker-compose.three-container.yml` both set `YM_HOME=/root/.hermes` and mounted the shared `hermes-home` volume to `/root/.hermes`. The `nousresearch/agent` image drops privileges to a `ym` user (uid=10000) via `gosu`, after which `/root` is mode `700` and inaccessible — causing `mkdir: cannot create directory '/root': Permission denied` on every startup. Fixed to use `/home/hermes/.hermes` throughout. (`docker-compose.two-container.yml`, `docker-compose.three-container.yml`) Closes #967. [#989]
 
 ## v0.50.203 — 2026-04-24
 
@@ -518,7 +518,7 @@
   users are already detected via `hermes_cli.auth`; this fixes the env-var-only fallback path.
   (`api/config.py`) (#1189)
 - **Workspace files blank after second empty-session reload** — the ephemeral-session guard in
-  `boot.js` was calling `localStorage.removeItem('hermes-webui-session')`, which caused the second
+  `boot.js` was calling `localStorage.removeItem('ym-session')`, which caused the second
   reload to fall into the no-saved-session path that never calls `loadDir()`. Removing that line
   keeps the session key so every reload follows the same `loadSession → loadDir` path.
   (`static/boot.js`) (#1196)
@@ -711,7 +711,7 @@ Co-authored by @bergeouss.
 ## [v0.50.179] — 2026-04-23
 
 ### Fixed
-- **Onboarding wizard clobbering CLI users' config after server restart** — CLI-configured users (who set up via `hermes model` / `hermes auth`) had no `onboarding_completed` flag in `settings.json`. After a git branch switch or server restart, `verify_hermes_imports()` could momentarily return `imports_ok=False`, making `chat_ready=False` and causing the wizard to reappear with a destructive dropdown default (openrouter). Fixed by writing `onboarding_completed: True` to `settings.json` the first time `config_auto_completed` evaluates to `True`, so the flag survives future transient import failures. (`api/onboarding.py`) Co-authored by @bsgdigital.
+- **Onboarding wizard clobbering CLI users' config after server restart** — CLI-configured users (who set up via `hermes model` / `hermes auth`) had no `onboarding_completed` flag in `settings.json`. After a git branch switch or server restart, `verify_agent_imports()` could momentarily return `imports_ok=False`, making `chat_ready=False` and causing the wizard to reappear with a destructive dropdown default (openrouter). Fixed by writing `onboarding_completed: True` to `settings.json` the first time `config_auto_completed` evaluates to `True`, so the flag survives future transient import failures. (`api/onboarding.py`) Co-authored by @bsgdigital.
 
 ## [v0.50.177] — 2026-04-23
 
@@ -757,7 +757,7 @@ Co-authored by @bergeouss.
 ## [v0.50.171] — 2026-04-23
 
 ### Fixed
-- **Nous default model picker shows correct selection and saves no longer freeze** — two bugs for Nous/portal provider users: (1) Settings → Preferences → Default Model picker showed blank after saving because `set_hermes_default_model()` wrote a bare resolved form that didn't match the `@nous:...` option values in the dropdown; fixed by using `_applyModelToDropdown()`'s smart normalising matcher to find the right option without requiring an exact string match. (2) Every Settings save triggered a blocking live-fetch from the provider API (~5 s freeze) because `set_hermes_default_model()` called `get_available_models()` before returning; the function now returns a lightweight `{ok, model}` ack and invalidates the TTL cache instead. Config.yaml always stores the CLI-compatible bare/slash form (e.g. `anthropic/claude-opus-4.6`) so CLI users on the same install are unaffected. (`api/config.py`, `static/panels.js`) Closes #895.
+- **Nous default model picker shows correct selection and saves no longer freeze** — two bugs for Nous/portal provider users: (1) Settings → Preferences → Default Model picker showed blank after saving because `set_ym_default_model()` wrote a bare resolved form that didn't match the `@nous:...` option values in the dropdown; fixed by using `_applyModelToDropdown()`'s smart normalising matcher to find the right option without requiring an exact string match. (2) Every Settings save triggered a blocking live-fetch from the provider API (~5 s freeze) because `set_ym_default_model()` called `get_available_models()` before returning; the function now returns a lightweight `{ok, model}` ack and invalidates the TTL cache instead. Config.yaml always stores the CLI-compatible bare/slash form (e.g. `anthropic/claude-opus-4.6`) so CLI users on the same install are unaffected. (`api/config.py`, `static/panels.js`) Closes #895.
 - **Cross-namespace models (minimax/, qwen/) no longer 404 for Nous users** — `resolve_model_provider()` checked the `config_base_url` branch before the portal-provider guard. Nous always has a `base_url` in config, so known cross-namespace prefixes were stripped before reaching the portal check. Portal providers are now checked first so all slash-prefixed model IDs reach Nous intact. (`api/config.py`) Closes #894.
 
 ## [v0.50.170] — 2026-04-23
@@ -790,7 +790,7 @@ Co-authored by @bergeouss.
 ## [v0.50.159] — 2026-04-23
 
 ### Added
-- **Provider key management in Settings** — new "Providers" tab lets users add, update, or remove API keys for direct-API providers without editing `.env` files. Covers Anthropic, OpenAI, Google, DeepSeek, xAI, Mistral, MiniMax, Z.AI, Kimi, Ollama, Ollama Cloud, OpenCode Zen/Go. OAuth providers shown as read-only. Keys stored in `~/.hermes/.env`, take effect immediately. Fully localised (6 locales). (`api/providers.py`, `api/routes.py`, `static/panels.js`, `static/i18n.js`) (PR #867 by @bergeouss, closes #586)
+- **Provider key management in Settings** — new "Providers" tab lets users add, update, or remove API keys for direct-API providers without editing `.env` files. Covers Anthropic, OpenAI, Google, DeepSeek, xAI, Mistral, MiniMax, Z.AI, Kimi, Ollama, Ollama Cloud, OpenCode Zen/Go. OAuth providers shown as read-only. Keys stored in `~/.yusuf-mussa/.env`, take effect immediately. Fully localised (6 locales). (`api/providers.py`, `api/routes.py`, `static/panels.js`, `static/i18n.js`) (PR #867 by @bergeouss, closes #586)
 
 ### Security
 - Provider write endpoints require auth or local/private-network client (matching onboarding endpoint gate)
@@ -867,7 +867,7 @@ Co-authored by @bergeouss.
 ## [v0.50.150] — 2026-04-22
 
 ### Fixed
-- **Profile switching: three related state fixes** — (1) `hermes_profile=default`
+- **Profile switching: three related state fixes** — (1) `ym_profile=default`
   cookie is now persisted instead of being cleared with `max-age=0`, which had
   caused the browser to fall back to the process-global profile on the next
   request. (2) The `sessionInProgress` branch of `switchToProfile()` now calls
@@ -961,7 +961,7 @@ Co-authored by @bergeouss.
 ## [v0.50.135] — 2026-04-22
 
 ### Fixed
-- **BYOK/custom provider models now appear in the WebUI model dropdown** — three root causes fixed. (1) Provider aliases like `z.ai`, `x.ai`, `google`, `grok`, `claude`, `aws-bedrock`, `dashscope`, and ~25 others were not normalized to their internal catalog slugs, causing the provider to miss `_PROVIDER_MODELS` lookup and show an empty dropdown while the TUI worked. (2) The fix works even without `hermes-agent` on `sys.path` (CI, minimal installs) via an inlined `_PROVIDER_ALIASES` table in `api/config.py` — the previous `try/except ImportError` was silently swallowing the failure. (3) `custom_providers` entries now appear in the live model enrichment path. `provider_id` on every group makes optgroup matching deterministic. Closes #815. (#817)
+- **BYOK/custom provider models now appear in the WebUI model dropdown** — three root causes fixed. (1) Provider aliases like `z.ai`, `x.ai`, `google`, `grok`, `claude`, `aws-bedrock`, `dashscope`, and ~25 others were not normalized to their internal catalog slugs, causing the provider to miss `_PROVIDER_MODELS` lookup and show an empty dropdown while the TUI worked. (2) The fix works even without `agent` on `sys.path` (CI, minimal installs) via an inlined `_PROVIDER_ALIASES` table in `api/config.py` — the previous `try/except ImportError` was silently swallowing the failure. (3) `custom_providers` entries now appear in the live model enrichment path. `provider_id` on every group makes optgroup matching deterministic. Closes #815. (#817)
 
 ## [v0.50.134] — 2026-04-21
 
@@ -991,7 +991,7 @@ Co-authored by @bergeouss.
 ## [v0.50.129] — 2026-04-21
 
 ### Fixed
-- **Profile isolation: complete fix via cookie + thread-local context** — PR #800 (v0.50.127) only fixed `POST /api/session/new`. `GET /api/profile/active` still read the process-level `_active_profile` global, so a page refresh while another client had a different profile active would corrupt `S.activeProfile` in JS, defeating the session-creation fix on the next new chat. This release completes the isolation: profile switches now set a `hermes_profile` cookie (HttpOnly, SameSite=Lax) and never mutate the process global. Every request handler reads the cookie into a thread-local; all server functions (`get_active_profile_name()`, `get_active_hermes_home()`, `list_profiles_api()`, memory endpoints, model loading) automatically see the per-client profile. `switch_profile()` gains a `process_wide` kwarg — the HTTP route passes `False`, keeping the global clean; CLI callers default to `True` (unchanged behaviour). Absorbed from PR #803 by @bergeouss with correctness fixes reviewed by Opus. (#805)
+- **Profile isolation: complete fix via cookie + thread-local context** — PR #800 (v0.50.127) only fixed `POST /api/session/new`. `GET /api/profile/active` still read the process-level `_active_profile` global, so a page refresh while another client had a different profile active would corrupt `S.activeProfile` in JS, defeating the session-creation fix on the next new chat. This release completes the isolation: profile switches now set a `ym_profile` cookie (HttpOnly, SameSite=Lax) and never mutate the process global. Every request handler reads the cookie into a thread-local; all server functions (`get_active_profile_name()`, `get_active_ym_home()`, `list_profiles_api()`, memory endpoints, model loading) automatically see the per-client profile. `switch_profile()` gains a `process_wide` kwarg — the HTTP route passes `False`, keeping the global clean; CLI callers default to `True` (unchanged behaviour). Absorbed from PR #803 by @bergeouss with correctness fixes reviewed by Opus. (#805)
 
 ## [v0.50.128] — 2026-04-21
 
@@ -1001,7 +1001,7 @@ Co-authored by @bergeouss.
 ## [v0.50.127] — 2026-04-21
 
 ### Fixed
-- **Profile isolation: switching profiles in one browser client no longer affects concurrent clients** — `api/profiles.py` stored `_active_profile` as a process-level global; `switch_profile()` mutated it for the whole server, so a second user switching profiles would clobber new-session creation for all other active tabs. The fix: (1) `get_hermes_home_for_profile(name)` — a pure path resolver that reads only the filesystem, validates the profile name against the existing `_PROFILE_ID_RE` pattern (rejects path traversal), and never mutates `os.environ` or module state; (2) `new_session()` now accepts an explicit `profile` param passed from the client's `S.activeProfile` in the POST body, short-circuiting the process global; (3) the streaming handler resolves `HERMES_HOME` from the per-session `s.profile` instead of the shared global. Reported in #798. (#800)
+- **Profile isolation: switching profiles in one browser client no longer affects concurrent clients** — `api/profiles.py` stored `_active_profile` as a process-level global; `switch_profile()` mutated it for the whole server, so a second user switching profiles would clobber new-session creation for all other active tabs. The fix: (1) `get_ym_home_for_profile(name)` — a pure path resolver that reads only the filesystem, validates the profile name against the existing `_PROFILE_ID_RE` pattern (rejects path traversal), and never mutates `os.environ` or module state; (2) `new_session()` now accepts an explicit `profile` param passed from the client's `S.activeProfile` in the POST body, short-circuiting the process global; (3) the streaming handler resolves `YM_HOME` from the per-session `s.profile` instead of the shared global. Reported in #798. (#800)
 
 ## [v0.50.126] — 2026-04-21
 
@@ -1011,17 +1011,17 @@ Co-authored by @bergeouss.
 ## [v0.50.125] — 2026-04-21
 
 ### Fixed
-- **`python3 bootstrap.py` now honours `.env` settings** — running bootstrap.py directly (the primary documented entry point) previously ignored `HERMES_WEBUI_HOST`, `HERMES_WEBUI_PORT`, and other repo `.env` settings because `start.sh`'s `source .env` step was skipped. bootstrap.py now loads `REPO_ROOT/.env` itself before reading any env-var defaults, making the two launch paths identical. Reported in #730 by @leap233. (#791)
+- **`python3 bootstrap.py` now honours `.env` settings** — running bootstrap.py directly (the primary documented entry point) previously ignored `YM_WEBUI_HOST`, `YM_WEBUI_PORT`, and other repo `.env` settings because `start.sh`'s `source .env` step was skipped. bootstrap.py now loads `REPO_ROOT/.env` itself before reading any env-var defaults, making the two launch paths identical. Reported in #730 by @leap233. (#791)
 
 ## [v0.50.124] — 2026-04-21
 
 ### Fixed
-- **Settings version badge now shows the real running version** — the badge in the Settings → System panel was hardcoded to `v0.50.87` (36 releases behind) and the HTTP `Server:` header said `HermesWebUI/0.50.38` (85 behind). Both are now resolved dynamically at server startup from `git describe --tags --always --dirty`. Docker images (where `.git` is excluded) receive the correct tag via a build-time `ARG HERMES_VERSION` written to `api/_version.py`. `COPY` now uses `--chown=hermeswebuitoo:hermeswebuitoo` so the write succeeds under the unprivileged container user. No manual "update the badge" step is needed going forward — tagging is sufficient. Version file parsing uses regex instead of `exec()` for supply-chain safety. (#790, #793)
+- **Settings version badge now shows the real running version** — the badge in the Settings → System panel was hardcoded to `v0.50.87` (36 releases behind) and the HTTP `Server:` header said `HermesWebUI/0.50.38` (85 behind). Both are now resolved dynamically at server startup from `git describe --tags --always --dirty`. Docker images (where `.git` is excluded) receive the correct tag via a build-time `ARG YM_VERSION` written to `api/_version.py`. `COPY` now uses `--chown=yusufmussatoo:yusufmussatoo` so the write succeeds under the unprivileged container user. No manual "update the badge" step is needed going forward — tagging is sufficient. Version file parsing uses regex instead of `exec()` for supply-chain safety. (#790, #793)
 
 ## [v0.50.123] — 2026-04-21
 
 ### Fixed
-- **Default model change surfaced stale value after model-list TTL cache landed** — `set_hermes_default_model()` now explicitly invalidates `_available_models_cache` after `reload_config()`. The 60s TTL cache introduced in v0.50.121 (#780) only invalidates on config-file mtime change, but `reload_config()` resyncs `_cfg_mtime` before `get_available_models()` runs — so the mtime check never fires and the POST response (plus downstream reads within the TTL window) returned the previous model until the cache expired. Root cause of the `test_default_model_updates_hermes_config` CI flake as well. (#788)
+- **Default model change surfaced stale value after model-list TTL cache landed** — `set_ym_default_model()` now explicitly invalidates `_available_models_cache` after `reload_config()`. The 60s TTL cache introduced in v0.50.121 (#780) only invalidates on config-file mtime change, but `reload_config()` resyncs `_cfg_mtime` before `get_available_models()` runs — so the mtime check never fires and the POST response (plus downstream reads within the TTL window) returned the previous model until the cache expired. Root cause of the `test_default_model_updates_hermes_config` CI flake as well. (#788)
 - **Test teardown restores conftest default deterministically** — `test_default_model_updates_hermes_config` now restores to the conftest-injected `TEST_DEFAULT_MODEL` (via `tests/_pytest_port.py`) instead of reading the pre-test value from `/api/models`, so teardown is stable regardless of ordering. Also updates `TESTING.md` automated-test count to 1578. (#788)
 
 ## [v0.50.122] — 2026-04-21
@@ -1043,12 +1043,12 @@ Co-authored by @bergeouss.
 ## [v0.50.119] — 2026-04-20
 
 ### Fixed
-- **Older hermes-agent builds no longer crash on startup** — the WebUI now checks which params `AIAgent.__init__` actually accepts (via `inspect.signature`) before constructing the agent. The four params added in newer builds (`api_mode`, `acp_command`, `acp_args`, `credential_pool`) are passed only when present, so older installs degrade gracefully instead of throwing `TypeError`. (#772)
+- **Older agent builds no longer crash on startup** — the WebUI now checks which params `AIAgent.__init__` actually accepts (via `inspect.signature`) before constructing the agent. The four params added in newer builds (`api_mode`, `acp_command`, `acp_args`, `credential_pool`) are passed only when present, so older installs degrade gracefully instead of throwing `TypeError`. (#772)
 
 ## [v0.50.118] — 2026-04-20
 
 ### Fixed
-- **CLI sessions: silent failure now logged** — `get_cli_sessions()` no longer swallows DB errors silently. If `state.db` is missing the `source` column (older hermes-agent) or has any other schema/lock issue, a warning is now logged with the DB path and a hint to upgrade hermes-agent. This makes "Show CLI sessions in sidebar has no effect" diagnosable from the server log instead of requiring code archaeology. (#634)
+- **CLI sessions: silent failure now logged** — `get_cli_sessions()` no longer swallows DB errors silently. If `state.db` is missing the `source` column (older agent) or has any other schema/lock issue, a warning is now logged with the DB path and a hint to upgrade agent. This makes "Show CLI sessions in sidebar has no effect" diagnosable from the server log instead of requiring code archaeology. (#634)
 
 ## [v0.50.117] — 2026-04-20
 
@@ -1109,7 +1109,7 @@ Co-authored by @bergeouss.
 - **Three-container UID/GID alignment guide in README** — new subsection explains why UIDs must match across containers sharing a bind-mounted volume, documents the variable name asymmetry (`HERMES_UID`/`HERMES_GID` for the agent image vs `WANTED_UID`/`WANTED_GID` for the WebUI image), gives the recommended `.env` setup for standard Linux and NAS/Unraid deployments, provides the one-time `chown` fix for existing installs, and notes that the dashboard volume must be read-write. (Fixes #645)
 
 ### Fixed
-- **`HERMES_UID`/`HERMES_GID` forwarded to agent and dashboard containers** — `docker-compose.three-container.yml` now declares `HERMES_UID=${HERMES_UID:-10000}` and `HERMES_GID=${HERMES_GID:-10000}` in the environment blocks for `hermes-agent` and `hermes-dashboard`, making the documented `.env` recipe functional.
+- **`HERMES_UID`/`HERMES_GID` forwarded to agent and dashboard containers** — `docker-compose.three-container.yml` now declares `HERMES_UID=${HERMES_UID:-10000}` and `HERMES_GID=${HERMES_GID:-10000}` in the environment blocks for `agent` and `hermes-dashboard`, making the documented `.env` recipe functional.
 
 ## [v0.50.106] — 2026-04-20
 
@@ -1170,7 +1170,7 @@ Co-authored by @bergeouss.
 ### Fixed
 - **Two-container compose: gateway port now exposed** — `127.0.0.1:8642:8642` added so the gateway is reachable from the host for debugging. Explicit `command: gateway run` replaces entrypoint defaults.
 - **Workspace path expansion** — `${HERMES_WORKSPACE:-~/workspace}` uses tilde in the default value, which Docker Compose correctly expands. `docker-compose.yml` also fixed to use `${HERMES_WORKSPACE:-${HOME}/workspace}` instead of nesting workspace inside the hermes home dir.
-- **`HERMES_WEBUI_STATE_DIR` default corrected** — `webui-mvp` → `webui`, matching the current default in `config.py`. Prevents silent state directory split for new deployments.
+- **`YM_WEBUI_STATE_DIR` default corrected** — `webui-mvp` → `webui`, matching the current default in `config.py`. Prevents silent state directory split for new deployments.
 (PR #708)
 
 ## [v0.50.95] — 2026-04-19
@@ -1203,7 +1203,7 @@ Co-authored by @bergeouss.
 ## [v0.50.91] — 2026-04-19
 
 ### Added
-- **Slash command parity with hermes-agent** — `/retry`, `/undo`, `/stop`, `/title`, `/status`, `/voice` commands now work in the Web UI, matching gateway behaviour. New `GET /api/commands` endpoint and `api/session_ops.py` backend. (PR #618 by @renheqiang)
+- **Slash command parity with agent** — `/retry`, `/undo`, `/stop`, `/title`, `/status`, `/voice` commands now work in the Web UI, matching gateway behaviour. New `GET /api/commands` endpoint and `api/session_ops.py` backend. (PR #618 by @renheqiang)
 - **Skills appear in `/` autocomplete** — the composer slash-command dropdown now surfaces Hermes skills from `/api/skills`. Skill entries show a `Skill` badge and are ranked below built-ins on collisions. (PR #701 by @franksong2702)
 
 ## [v0.50.87] — 2026-04-18
@@ -1211,8 +1211,8 @@ Co-authored by @bergeouss.
 ### Fixed
 - **Streaming scroll override (#677)** — auto-scroll no longer hijacks your position while the AI is responding. `renderMessages()` and `appendThinking()` now call `scrollIfPinned()` during an active stream instead of `scrollToBottom()`, so scrolling up to read earlier content works correctly. Scroll re-pin threshold widened from 80px to 150px to avoid hair-trigger re-pinning on fast mouse wheels. A floating **↓ button** appears at the bottom-right of the message area when you scroll up, giving a one-click way to jump back to live output.
 - **Gemini 3.x model IDs updated (#669)** — all provider model lists (`gemini`, `google`, OpenRouter fallback, GitHub Copilot, OpenCode Zen, Nous) now include the correct Gemini 3.1 Pro Preview, Gemini 3 Flash Preview, and Gemini 3.1 Flash Lite Preview model IDs alongside stable Gemini 2.5 models. The missing `gemini-3.1-flash-lite-preview` (which caused `API_KEY_INVALID` errors) is now present. `GEMINI_API_KEY` env var now also triggers native gemini provider detection.
-- **Read-only workspace mount no longer crashes Docker startup (#670)** — `docker_init.bash` now checks `[ -w "$HERMES_WEBUI_DEFAULT_WORKSPACE" ]` before attempting `chown` or write-test on the workspace directory. `:ro` bind-mounts are silently accepted with a log message instead of calling `error_exit`.
-- **UID/GID auto-detection now works in two-container setups (#668)** — `docker_init.bash` now probes `/home/hermeswebui/.hermes` and `$HERMES_HOME` (shared hermes-home volume) before falling back to `/workspace`. In Zeabur and Docker Compose two-container deployments where the hermes-agent container initializes the shared volume first, the WebUI now correctly inherits its UID/GID without manual `WANTED_UID` configuration.
+- **Read-only workspace mount no longer crashes Docker startup (#670)** — `docker_init.bash` now checks `[ -w "$YM_WEBUI_DEFAULT_WORKSPACE" ]` before attempting `chown` or write-test on the workspace directory. `:ro` bind-mounts are silently accepted with a log message instead of calling `error_exit`.
+- **UID/GID auto-detection now works in two-container setups (#668)** — `docker_init.bash` now probes `/home/yusufmussa/.hermes` and `$YM_HOME` (shared hermes-home volume) before falling back to `/workspace`. In Zeabur and Docker Compose two-container deployments where the agent container initializes the shared volume first, the WebUI now correctly inherits its UID/GID without manual `WANTED_UID` configuration.
 
 ## [v0.50.86] — 2026-04-18
 
@@ -1243,7 +1243,7 @@ Co-authored by @bergeouss.
 
 ### Fixed
 - **MiniMax M2.7 now appears in the model dropdown for OpenRouter users** — `MiniMax-M2.7` and `MiniMax-M2.7-highspeed` were present in `_PROVIDER_MODELS['minimax']` but absent from `_FALLBACK_MODELS`, so OpenRouter users (who see the fallback list) never saw them. Both models added to the fallback list under the `MiniMax` provider label.
-- **`MINIMAX_API_KEY` env var now triggers MiniMax detection** — the env scan tuple in `get_available_models()` was missing `MINIMAX_API_KEY` and `MINIMAX_CN_API_KEY`, so users who set those vars directly in `os.environ` (rather than in `~/.hermes/.env`) did not see the MiniMax provider in the dropdown. Both keys now scanned. (PR #650 by @octo-patch)
+- **`MINIMAX_API_KEY` env var now triggers MiniMax detection** — the env scan tuple in `get_available_models()` was missing `MINIMAX_API_KEY` and `MINIMAX_CN_API_KEY`, so users who set those vars directly in `os.environ` (rather than in `~/.yusuf-mussa/.env`) did not see the MiniMax provider in the dropdown. Both keys now scanned. (PR #650 by @octo-patch)
 
 ## [v0.50.83] — 2026-04-18
 
@@ -1272,7 +1272,7 @@ Co-authored by @bergeouss.
 ## [v0.50.79] — 2026-04-17
 
 ### Fixed
-- **Default model no longer shows as "(unavailable)" for non-OpenAI users** — changed the hardcoded fallback `DEFAULT_MODEL` from `openai/gpt-5.4-mini` to `""` (empty). When no default model is configured, the WebUI now defers to the active provider's own default instead of pre-selecting an OpenAI model that most providers don't have. Users who want a specific default can still set `HERMES_WEBUI_DEFAULT_MODEL` env var or pick a model in Preferences. (Closes #646)
+- **Default model no longer shows as "(unavailable)" for non-OpenAI users** — changed the hardcoded fallback `DEFAULT_MODEL` from `openai/gpt-5.4-mini` to `""` (empty). When no default model is configured, the WebUI now defers to the active provider's own default instead of pre-selecting an OpenAI model that most providers don't have. Users who want a specific default can still set `YM_WEBUI_DEFAULT_MODEL` env var or pick a model in Preferences. (Closes #646)
 
 ## [v0.50.78] — 2026-04-17
 
@@ -1301,12 +1301,12 @@ Co-authored by @bergeouss.
 ## [v0.50.75] — 2026-04-17
 
 ### Fixed
-- **Test isolation: `pytest tests/` was overwriting `~/.hermes/.env` with test placeholder keys** — two unit tests in `test_onboarding_existing_config.py` called `apply_onboarding_setup()` in-process without mocking `_get_active_hermes_home`, so every test run wrote `OPENROUTER_API_KEY=test-key-fresh` (or `test-key-confirm`) to the production `.env`. Also added `HERMES_BASE_HOME` to the test server subprocess env (hard-locks profile resolution inside the server to the isolated temp state dir) and stripped real provider keys from the inherited subprocess environment. (PR #620)
+- **Test isolation: `pytest tests/` was overwriting `~/.yusuf-mussa/.env` with test placeholder keys** — two unit tests in `test_onboarding_existing_config.py` called `apply_onboarding_setup()` in-process without mocking `_get_active_ym_home`, so every test run wrote `OPENROUTER_API_KEY=test-key-fresh` (or `test-key-confirm`) to the production `.env`. Also added `HERMES_BASE_HOME` to the test server subprocess env (hard-locks profile resolution inside the server to the isolated temp state dir) and stripped real provider keys from the inherited subprocess environment. (PR #620)
 
 ## [v0.50.71] — 2026-04-16
 
 ### Fixed
-- **Docker: `HERMES_WEBUI_DEFAULT_WORKSPACE` was silently overridden by `settings.json`** — the startup block in `api/config.py` unconditionally restored the persisted `default_workspace`, so any container that had previously written `settings.json` would shadow the env var on the next start. The env var now wins when explicitly set, matching the documented priority order. (Closes #609, PR #610)
+- **Docker: `YM_WEBUI_DEFAULT_WORKSPACE` was silently overridden by `settings.json`** — the startup block in `api/config.py` unconditionally restored the persisted `default_workspace`, so any container that had previously written `settings.json` would shadow the env var on the next start. The env var now wins when explicitly set, matching the documented priority order. (Closes #609, PR #610)
 - **Docker: workspace trust validation rejected subdirectories of `DEFAULT_WORKSPACE`** — `resolve_trusted_workspace()` only trusted paths under `Path.home()` or in the saved list; subpaths of a Docker volume mount like `/data/workspace/myproject` failed with "outside the user home directory". Added a third trust condition for paths under the boot-time `DEFAULT_WORKSPACE`, which was already validated at startup. (Closes #609, PR #610)
 
 ## [v0.50.70] — 2026-04-16
@@ -1365,12 +1365,12 @@ Co-authored by @bergeouss.
 
 ### Fixed
 - **Onboarding wizard no longer fires for non-standard providers** — providers outside the quick-setup list (`minimax-cn`, `deepseek`, `xai`, `gemini`, etc.) were always evaluated as `chat_ready=False` because `_provider_api_key_present()` only knew the four built-in env-var names. Those users saw the wizard on every page load and risked `config.yaml` being silently overwritten if the provider dropdown defaulted. The fix adds a `hermes_cli.auth.get_auth_status()` fallback covering every API-key provider in the full registry, and tightens the frontend guard so an unchanged unsupported-provider form never POSTs. (Fixes #572, PR #575)
-- **MCP server toolsets now included in WebUI agent sessions** — previously the WebUI read `platform_toolsets.cli` directly from `config.yaml`, which only carries built-in toolset names. MCP server names (`tidb`, `kyuubi`, etc.) were silently dropped, so MCP tools configured via `~/.hermes/config.yaml` were unavailable in chat. The fix delegates to `hermes_cli.tools_config._get_platform_tools()` — the same code the CLI uses — which merges all enabled MCP servers automatically. Falls back gracefully when `hermes_cli` is unavailable. (PR #574 by @renheqiang)
+- **MCP server toolsets now included in WebUI agent sessions** — previously the WebUI read `platform_toolsets.cli` directly from `config.yaml`, which only carries built-in toolset names. MCP server names (`tidb`, `kyuubi`, etc.) were silently dropped, so MCP tools configured via `~/.yusuf-mussa/config.yaml` were unavailable in chat. The fix delegates to `hermes_cli.tools_config._get_platform_tools()` — the same code the CLI uses — which merges all enabled MCP servers automatically. Falls back gracefully when `hermes_cli` is unavailable. (PR #574 by @renheqiang)
 
 ## [v0.50.62] — 2026-04-16
 
 ### Fixed
-- **Docker startup no longer hard-exits when hermes-agent source is not mounted** — previously `docker_init.bash` would call `error_exit` if the agent source directory was missing, preventing the container from starting at all. Users running a minimal `docker run` without the two-container compose setup hit this immediately. Now the script checks for the directory and `pyproject.toml` first, prints a clear warning explaining reduced functionality, and continues startup. The WebUI already has `try/except` fallbacks throughout for when hermes-agent is unavailable. (Fixes #570, PR #573)
+- **Docker startup no longer hard-exits when agent source is not mounted** — previously `docker_init.bash` would call `error_exit` if the agent source directory was missing, preventing the container from starting at all. Users running a minimal `docker run` without the two-container compose setup hit this immediately. Now the script checks for the directory and `pyproject.toml` first, prints a clear warning explaining reduced functionality, and continues startup. The WebUI already has `try/except` fallbacks throughout for when agent is unavailable. (Fixes #570, PR #573)
 
 ## [v0.50.61] — 2026-04-16
 
@@ -1403,7 +1403,7 @@ Co-authored by @bergeouss.
 ## [v0.50.55] — 2026-04-15
 
 ### Fixed
-- **Docker honcho extra** — `docker_init.bash` now installs `hermes-agent[honcho]` so `honcho-ai` is included in the venv on every fresh Docker build. Fixes `"Honcho session could not be initialized."` errors on rebuilt containers. (Fixes #553)
+- **Docker honcho extra** — `docker_init.bash` now installs `agent[honcho]` so `honcho-ai` is included in the venv on every fresh Docker build. Fixes `"Honcho session could not be initialized."` errors on rebuilt containers. (Fixes #553)
 - **Version badge** — `index.html` version badge corrected to v0.50.55 (was missing the bump for this release).
 
 ## [v0.50.54] — 2026-04-15
@@ -1569,7 +1569,7 @@ Co-authored-by: franksong2702
 ## [v0.50.45] fix: suppress N/A source_tag in session list (#429)
 
 Feishu and WeChat sessions (and any session with an unrecognised or legacy
-`source` value in hermes-agent's state.db) were showing "N/A" or raw tag
+`source` value in agent's state.db) were showing "N/A" or raw tag
 strings in the session list sidebar.
 
 Three fixes in `static/sessions.js`:
@@ -1587,7 +1587,7 @@ Three fixes in `static/sessions.js`:
    'Gateway'` — the raw `s.source_tag` middle term is removed so a session
    whose source is "N/A" does not use that as its visible title.
 
-No backend changes. The upstream issue (hermes-agent not reliably setting
+No backend changes. The upstream issue (agent not reliably setting
 `source` for older Feishu/WeChat sessions) is tracked separately.
 
 7 new tests in `tests/test_issue429.py`. Updated 1 existing test in
@@ -1713,7 +1713,7 @@ the same way Claude.ai handles images. No more relaying screenshots through Tele
 - Click any inline image to toggle full-size zoom
 
 **New endpoint — `GET /api/media?path=<encoded-path>`:**
-- Path allowlist: `~/.hermes/`, `/tmp/`, active workspace — covers all agent output locations
+- Path allowlist: `~/.yusuf-mussa/`, `/tmp/`, active workspace — covers all agent output locations
 - Auth-gated: requires valid session cookie when auth is enabled
 - Inline image MIME types: PNG, JPEG, GIF, WebP, BMP
 - SVG always served as download attachment (XSS prevention)
@@ -1722,7 +1722,7 @@ the same way Claude.ai handles images. No more relaying screenshots through Tele
 
 **Security:**
 - Original version had `~` (entire home dir) as an allowed root — **fixed** by independent reviewer
-- Restricted to `~/.hermes/`, `/tmp/`, and active workspace only
+- Restricted to `~/.yusuf-mussa/`, `/tmp/`, and active workspace only
 - `Path.resolve()` + `commonpath` checks prevent symlink traversal
 
 **Changes:**
@@ -1835,9 +1835,9 @@ and could silently overwrite their working config.
 
 Two bugs in `_clean_workspace_list()` caused workspace additions to silently disappear on the next `load_workspaces()` call, breaking `test_workspace_add_no_duplicate` and `test_workspace_rename` (and potentially causing real-world workspace list corruption):
 
-**Bug 1 — Brittle string filter removed:** `if 'test-workspace' in path or 'webui-mvp-test' in path: continue` dropped any workspace path containing those substrings. In the test server, `TEST_WORKSPACE` is `~/.hermes/profiles/webui/webui-mvp-test/test-workspace`, so every workspace added during tests was silently discarded on the next `load_workspaces()` call. The `p.is_dir()` check already handles genuinely non-existent paths — the string filter was redundant and harmful.
+**Bug 1 — Brittle string filter removed:** `if 'test-workspace' in path or 'webui-mvp-test' in path: continue` dropped any workspace path containing those substrings. In the test server, `TEST_WORKSPACE` is `~/.yusuf-mussa/profiles/webui/webui-mvp-test/test-workspace`, so every workspace added during tests was silently discarded on the next `load_workspaces()` call. The `p.is_dir()` check already handles genuinely non-existent paths — the string filter was redundant and harmful.
 
-**Bug 2 — Cross-profile filter was too broad:** `if p is under ~/.hermes/profiles/: skip` was designed to block cross-profile workspace leakage, but it also removed paths under the *current* profile's own directory (e.g. `~/.hermes/profiles/webui/...`). Fixed: now only skips paths under `profiles/` that are NOT under the current profile's own `hermes_home`.
+**Bug 2 — Cross-profile filter was too broad:** `if p is under ~/.yusuf-mussa/profiles/: skip` was designed to block cross-profile workspace leakage, but it also removed paths under the *current* profile's own directory (e.g. `~/.yusuf-mussa/profiles/webui/...`). Fixed: now only skips paths under `profiles/` that are NOT under the current profile's own `hermes_home`.
 
 - `api/workspace.py`: remove string-match filter; fix cross-profile check to allow own-profile paths
 - All 1055 tests now pass (was 1053 pass + 2 fail)
@@ -1864,7 +1864,7 @@ Session creation, update, chat-start, and workspace-add endpoints accepted arbit
 - `api/routes.py`: apply `resolve_trusted_workspace()` to all four entry points — `POST /api/session/new`, `POST /api/session/update`, `POST /api/chat/start` (workspace override), `POST /api/workspaces/add`
 - `tests/test_sprint3.py`, `tests/test_sprint5.py`: regression tests for rejected outside-root paths on all four entry points; existing workspace tests updated to use trusted child directories
 - `tests/test_sprint1.py`, `tests/test_sprint4.py`, `tests/test_sprint13.py`: aligned to new trusted-root contract
-- Fix: use `_BOOT_DEFAULT_WORKSPACE` (respects `HERMES_WEBUI_DEFAULT_WORKSPACE` env for test isolation) rather than `_profile_default_workspace()` (reads agent terminal.cwd which may differ)
+- Fix: use `_BOOT_DEFAULT_WORKSPACE` (respects `YM_WEBUI_DEFAULT_WORKSPACE` env for test isolation) rather than `_profile_default_workspace()` (reads agent terminal.cwd which may differ)
 - Original PR by @Hinotoi-agent (cherry-picked; branch was 6 commits behind master)
 - 1053 tests total (up from 1051; 2 pre-existing test_sprint5 isolation failures on master, not introduced by this PR)
 
@@ -2050,7 +2050,7 @@ The hardcoded lists in `_PROVIDER_MODELS` remain as credential-missing / network
 
 ## [v0.50.18] Recover from invalid default workspace paths (PR #366)
 
-- **WebUI no longer breaks when the configured default workspace is unavailable** (`api/config.py`): The workspace resolution path was refactored into three composable functions — `_workspace_candidates()`, `_ensure_workspace_dir()`, and `resolve_default_workspace()`. When the configured workspace (from env var, settings file, or passed path) cannot be created or accessed, the server falls back through an ordered priority list: `HERMES_WEBUI_DEFAULT_WORKSPACE` env var → `~/workspace` (if exists) → `~/work` (if exists) → `~/workspace` (create it) → `STATE_DIR/workspace`.
+- **WebUI no longer breaks when the configured default workspace is unavailable** (`api/config.py`): The workspace resolution path was refactored into three composable functions — `_workspace_candidates()`, `_ensure_workspace_dir()`, and `resolve_default_workspace()`. When the configured workspace (from env var, settings file, or passed path) cannot be created or accessed, the server falls back through an ordered priority list: `YM_WEBUI_DEFAULT_WORKSPACE` env var → `~/workspace` (if exists) → `~/work` (if exists) → `~/workspace` (create it) → `STATE_DIR/workspace`.
 - **`save_settings()` now validates and corrects the workspace path** (`api/config.py`): If a client posts an invalid or inaccessible `default_workspace`, the saved value is corrected to the nearest valid fallback rather than persisting an unusable path.
 - **Startup normalizes stale workspace paths** (`api/config.py`): If the settings file stores a workspace that no longer exists, the server rewrites it with the resolved fallback on startup so the problem self-heals.
   - 7 tests in `tests/test_default_workspace_fallback.py` (2 from PR + 5 added during review: fallback creation, RuntimeError on all-fail, deduplication, env var priority, unwritable path returns False); 922 tests total (up from 915)
@@ -2058,8 +2058,8 @@ The hardcoded lists in `_PROVIDER_MODELS` remain as credential-missing / network
 ## [v0.50.17] Docker: pre-install uv at build time + fix workspace permissions (fixes #357)
 
 - **Docker containers no longer need internet access at startup** (`Dockerfile`): `uv` is now installed at image build time via `RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin sh` (run as root, so `uv` lands in `/usr/local/bin` — accessible to all users). The init script skips the download if `uv` is already on PATH (`command -v uv`), and falls back to downloading with a proper `error_exit` if it isn't. This fixes startup failures in air-gapped, firewalled, or isolated Docker networks where `github.com` is unreachable at runtime.
-  - **Fix applied during review**: the original PR installed `uv` as the `hermeswebuitoo` user (to `~hermeswebuitoo/.local/bin`), which is not on the `hermeswebui` runtime user's `PATH`. Changed to install as `root` with `UV_INSTALL_DIR=/usr/local/bin` so `uv` is in the system PATH for all users.
-- **Workspace directory now writable by the hermeswebui user** (`docker_init.bash`): The init script now uses `sudo mkdir -p` and `sudo chown hermeswebui:hermeswebui` for `HERMES_WEBUI_DEFAULT_WORKSPACE`. Docker auto-creates bind-mount directories as `root` if they don't exist on the host, making them unwritable by the app user. The `sudo chown` corrects ownership after creation.
+  - **Fix applied during review**: the original PR installed `uv` as the `yusufmussatoo` user (to `~yusufmussatoo/.local/bin`), which is not on the `yusufmussa` runtime user's `PATH`. Changed to install as `root` with `UV_INSTALL_DIR=/usr/local/bin` so `uv` is in the system PATH for all users.
+- **Workspace directory now writable by the yusufmussa user** (`docker_init.bash`): The init script now uses `sudo mkdir -p` and `sudo chown yusufmussa:yusufmussa` for `YM_WEBUI_DEFAULT_WORKSPACE`. Docker auto-creates bind-mount directories as `root` if they don't exist on the host, making them unwritable by the app user. The `sudo chown` corrects ownership after creation.
   - 15 new structural tests in `tests/test_issue357.py`; 915 tests total (up from 900)
 
 ## [v0.50.16] Fix CSRF check failing behind reverse proxy on non-standard ports (PR #360)
@@ -2124,7 +2124,7 @@ The hardcoded lists in `_PROVIDER_MODELS` remain as credential-missing / network
 
 ## [v0.50.8] Model dropdown deduplication — hyphen vs dot separator fix (PR #332)
 
-- **Model dropdown no longer shows duplicates for hyphen-format configs** (e.g. `claude-sonnet-4-6` from hermes-agent config): The server-side normalization in `api/config.py` now unifies hyphens and dots when checking whether the default model is already in the dropdown. Previously, `claude-sonnet-4-6` (hermes-agent format) and `claude-sonnet-4.6` (WebUI list format) were treated as different models, causing the same model to appear twice — once as a raw unlabelled entry and once with the correct display name. The raw entry is now suppressed and the labelled one is selected as default.
+- **Model dropdown no longer shows duplicates for hyphen-format configs** (e.g. `claude-sonnet-4-6` from agent config): The server-side normalization in `api/config.py` now unifies hyphens and dots when checking whether the default model is already in the dropdown. Previously, `claude-sonnet-4-6` (agent format) and `claude-sonnet-4.6` (WebUI list format) were treated as different models, causing the same model to appear twice — once as a raw unlabelled entry and once with the correct display name. The raw entry is now suppressed and the labelled one is selected as default.
 - **README updated**: test count corrected to 791 / 51 files; all module line counts updated to current values; `onboarding.py`, `state_sync.py`, `updates.py` added to the architecture listing.
 
 ## [v0.50.7] OAuth provider onboarding path — Codex/Copilot no longer blocks setup (PR #331, fixes #329 bug 2)
@@ -2200,7 +2200,7 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
 ## [v0.49.2] OAuth provider support in onboarding (issues #303, #304)
 
 - **OAuth provider bypass** (closes #303, #304): The first-run onboarding wizard now correctly recognizes OAuth-authenticated providers (GitHub Copilot, OpenAI Codex, Nous Portal, Qwen OAuth) as ready, instead of always demanding an API key.
-  - New `_provider_oauth_authenticated()` helper in `api/onboarding.py` checks `hermes_cli.auth.get_auth_status()` first (authoritative), then falls back to parsing `~/.hermes/auth.json` directly for the known OAuth provider IDs (`openai-codex`, `copilot`, `copilot-acp`, `qwen-oauth`, `nous`).
+  - New `_provider_oauth_authenticated()` helper in `api/onboarding.py` checks `hermes_cli.auth.get_auth_status()` first (authoritative), then falls back to parsing `~/.yusuf-mussa/auth.json` directly for the known OAuth provider IDs (`openai-codex`, `copilot`, `copilot-acp`, `qwen-oauth`, `nous`).
   - `_status_from_runtime()` now has an `else` branch for providers not in `_SUPPORTED_PROVIDER_SETUPS`; OAuth-authenticated providers return `provider_ready=True` and `setup_state="ready"`.
   - The `provider_incomplete` status note no longer says "API key" for OAuth providers — it now says "Run 'hermes auth' or 'hermes model' in a terminal to complete setup."
   - 21 new tests in `tests/test_sprint34.py`; 721 tests total (up from 700)
@@ -2214,7 +2214,7 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
 ## [v0.49.0] First-run onboarding wizard + self-update hardening (PRs #285, #287, #289)
 
 - **One-shot bootstrap and first-run setup wizard** (PR #285 — first-run onboarding flow): New users are greeted with a guided onboarding overlay on first load. The wizard checks system status, configures a provider (OpenRouter, Anthropic, OpenAI, or custom OpenAI-compatible endpoint), sets a workspace and optional password, and marks setup as complete — all without leaving the browser.
-  - `bootstrap.py`: one-shot CLI bootstrap that writes `~/.hermes/config.yaml` and `~/.hermes/.env` from flags; idempotent and safe to re-run
+  - `bootstrap.py`: one-shot CLI bootstrap that writes `~/.yusuf-mussa/config.yaml` and `~/.yusuf-mussa/.env` from flags; idempotent and safe to re-run
   - `api/routes.py`: `/api/onboarding/status` (GET) and `/api/onboarding/complete` (POST) endpoints; real provider config persistence to `config.yaml` + `.env`
   - `static/onboarding.js`: full wizard JS module — step navigation, provider dropdown, model selector, API key input, Back/Continue flow, i18n support
   - `static/index.html`: onboarding overlay HTML shell + `<script src="/static/onboarding.js">` load
@@ -2230,7 +2230,7 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
   - Early merge-conflict detection via porcelain status codes before attempting pull
   - 4 new unit tests in `tests/test_updates.py`
 
-- **Skip flaky redaction test in agent-less environments** (PR #289): `test_api_sessions_list_redacts_titles` added to the CI skip list for environments without hermes-agent installed. Test still runs with the full agent; security coverage preserved by 6 pure-unit tests and 2 other API-level redaction tests.
+- **Skip flaky redaction test in agent-less environments** (PR #289): `test_api_sessions_list_redacts_titles` added to the CI skip list for environments without agent installed. Test still runs with the full agent; security coverage preserved by 6 pure-unit tests and 2 other API-level redaction tests.
   - 697 tests total (up from 693)
 
 ## [v0.48.2] Provider/model mismatch warning (PR #283, fixes #266)
@@ -2252,7 +2252,7 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
   - `api/gateway_watcher.py`: background daemon thread polling `state.db` every 5s using MD5 hash-based change detection
   - New SSE endpoint `/api/sessions/gateway/stream` for real-time push to browser
   - Dynamic source badges: telegram (blue), discord (purple), slack (dark purple), cli (green)
-  - Zero changes to hermes-agent — WebUI reads the shared `state.db` that both components access
+  - Zero changes to agent — WebUI reads the shared `state.db` that both components access
   - 10 new tests in `test_gateway_sync.py` covering metadata, filtering, SSE, and watcher lifecycle
   - 658 tests (up from 648)
 ## [v0.47.1] Spanish locale (PR #275)
@@ -2282,9 +2282,9 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
 ## [v0.46.0] — 2026-04-11
 
 ### Features
-- **Docker UID/GID matching** (PR #237 by @mmartial): New `docker_init.bash` entrypoint adds `hermeswebui`/`hermeswebuitoo` user pattern so container-created files match the host user UID/GID. Prevents `.hermes` volume mounts from being owned by root. Configure via `WANTED_UID` and `WANTED_GID` env vars (default 1000/1000). README updated with setup instructions.
-  - `Dockerfile` — two-user pattern with passwordless sudo; `/.within_container` marker for in-container detection; starts as `hermeswebuitoo`, switches to correct UID/GID
-  - `docker-compose.yml` — mounts `.hermes` at `/home/hermeswebui/.hermes`; uses `${UID:-1000}/${GID:-1000}` for UID/GID passthrough
+- **Docker UID/GID matching** (PR #237 by @mmartial): New `docker_init.bash` entrypoint adds `yusufmussa`/`yusufmussatoo` user pattern so container-created files match the host user UID/GID. Prevents `.hermes` volume mounts from being owned by root. Configure via `WANTED_UID` and `WANTED_GID` env vars (default 1000/1000). README updated with setup instructions.
+  - `Dockerfile` — two-user pattern with passwordless sudo; `/.within_container` marker for in-container detection; starts as `yusufmussatoo`, switches to correct UID/GID
+  - `docker-compose.yml` — mounts `.hermes` at `/home/yusufmussa/.hermes`; uses `${UID:-1000}/${GID:-1000}` for UID/GID passthrough
   - `server.py` — detects `/.within_container` and prints a note when binding to 0.0.0.0
 
 ### Security
@@ -2342,10 +2342,10 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
 ## [v0.43.0] — 2026-04-10
 
 ### Features
-- **Auto-install agent dependencies on startup** (PRs #215 + #216): When `hermes-agent` is found on disk but its Python dependencies are missing (common in Docker deployments where the agent is volume-mounted post-build), `server.py` now calls `api/startup.auto_install_agent_deps()` to install from `requirements.txt` or `pyproject.toml`. Falls back gracefully — failures are logged and never fatal.
+- **Auto-install agent dependencies on startup** (PRs #215 + #216): When `agent` is found on disk but its Python dependencies are missing (common in Docker deployments where the agent is volume-mounted post-build), `server.py` now calls `api/startup.auto_install_agent_deps()` to install from `requirements.txt` or `pyproject.toml`. Falls back gracefully — failures are logged and never fatal.
 
 ### Bug Fixes
-- **Session ID validator broadened** (PR #212): `Session.load()` rejected any session ID containing non-hex characters, breaking sessions created by the new hermes-agent format (`YYYYMMDD_HHMMSS_xxxxxx`). Validator now accepts `[0-9a-z_]` while rejecting path traversal patterns (null bytes, slashes, backslashes, dot-extensions).
+- **Session ID validator broadened** (PR #212): `Session.load()` rejected any session ID containing non-hex characters, breaking sessions created by the new agent format (`YYYYMMDD_HHMMSS_xxxxxx`). Validator now accepts `[0-9a-z_]` while rejecting path traversal patterns (null bytes, slashes, backslashes, dot-extensions).
 - **Test suite isolation** (PR #216): `conftest.py` now kills any stale process on the test port (8788) before starting the fixture server. Stale QA harness servers (8792/8793) could occupy 8788 and cause non-deterministic test failures across the full suite.
 
 ## [v0.42.2] — 2026-04-10
@@ -2372,8 +2372,8 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
 ## [v0.41.0] — 2026-04-10
 
 ### Features
-- **Optional HTTPS/TLS support** (PR #199): Set `HERMES_WEBUI_TLS_CERT` and
-  `HERMES_WEBUI_TLS_KEY` env vars to enable HTTPS natively. Uses
+- **Optional HTTPS/TLS support** (PR #199): Set `YM_WEBUI_TLS_CERT` and
+  `YM_WEBUI_TLS_KEY` env vars to enable HTTPS natively. Uses
   `ssl.PROTOCOL_TLS_SERVER` with TLS 1.2 minimum. Gracefully falls back to HTTP
   if cert loading fails. No reverse proxy required for LAN/VPN deployments.
 
@@ -2515,7 +2515,7 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
 ### Fixed
 - **Custom endpoint URL construction** (#138, #160): `base_url` ending in `/v1` was incorrectly stripped before appending `/models`, producing `http://host/models` instead of `http://host/v1/models`. Fixed to append directly.
 - **`custom_providers` config entries now appear in dropdown** (#138, #160): Models defined under `config.yaml` `custom_providers` (e.g. Ollama aliases, Azure model overrides) are now always included in the dropdown, even when the `/v1/models` endpoint is unreachable.
-- **Custom endpoint API key reads profile `.env`** (#138, #160): Custom endpoint auth now checks `~/.hermes/.env` keys in addition to `os.environ`.
+- **Custom endpoint API key reads profile `.env`** (#138, #160): Custom endpoint auth now checks `~/.yusuf-mussa/.env` keys in addition to `os.environ`.
 
 ---
 
@@ -2529,7 +2529,7 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
 ## [v0.38.3] — 2026-04-06
 
 ### Fixed
-- **Model dropdown shows only configured providers** (#155): Provider detection now uses `hermes_cli.models.list_available_providers()` — the same auth check the Hermes agent uses at runtime — instead of scanning raw API key env vars. The dropdown now reflects exactly what the user has configured (auth.json, credential pools, OAuth flows like Copilot). When no providers are detected, shows only the configured default model rather than a full generic list. Added `copilot` and `gemini` to the curated model lists. Falls back to env var scanning for standalone installs without hermes-agent.
+- **Model dropdown shows only configured providers** (#155): Provider detection now uses `hermes_cli.models.list_available_providers()` — the same auth check the Hermes agent uses at runtime — instead of scanning raw API key env vars. The dropdown now reflects exactly what the user has configured (auth.json, credential pools, OAuth flows like Copilot). When no providers are detected, shows only the configured default model rather than a full generic list. Added `copilot` and `gemini` to the curated model lists. Falls back to env var scanning for standalone installs without agent.
 
 ---
 
@@ -2561,7 +2561,7 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
 *April 6, 2026 | 465 tests*
 
 ### Features
-- **`/personality` slash command.** Set a per-session agent personality from `~/.hermes/personalities/<name>/SOUL.md`. The personality prompt is prepended to the system message for every turn. Use `/personality <name>` to activate, `/personality none` to clear, `/personality` (no args) to list available personalities. Backend: `GET /api/personalities`, `POST /api/personality/set`. (PR #143)
+- **`/personality` slash command.** Set a per-session agent personality from `~/.yusuf-mussa/personalities/<name>/SOUL.md`. The personality prompt is prepended to the system message for every turn. Use `/personality <name>` to activate, `/personality none` to clear, `/personality` (no args) to list available personalities. Backend: `GET /api/personalities`, `POST /api/personality/set`. (PR #143)
 
 ### Bug Fixes
 - **Model dropdown routes non-default provider models correctly (#138).** When the active provider is `anthropic` and you pick a `minimax` model, its ID is now prefixed `minimax/MiniMax-M2.7` so `resolve_model_provider()` can route it through OpenRouter. Guards added: `active_provider=None` prevents all-providers-prefixed, case is normalised, shared `_PROVIDER_MODELS` list is no longer mutated by the default_model injector. (PR #142)
@@ -2658,9 +2658,9 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
   sidebar click handler didn't trigger import, and the "cli" badge CSS selector
   wasn't matching the rendered DOM structure. (#58)
 - **CLI bridge read wrong profile's state.db.** `get_cli_sessions()` resolved
-  `HERMES_HOME` at server launch time, not at call time. After a profile switch,
+  `YM_HOME` at server launch time, not at call time. After a profile switch,
   it kept reading the original profile's database. Now resolves dynamically via
-  `get_active_hermes_home()`. (#59)
+  `get_active_ym_home()`. (#59)
 - **Silent SQL error swallowed all CLI sessions.** The `sessions` table in
   `state.db` has no `profile` column — the query referenced `s.profile` which
   caused a silent `OperationalError`. The `except Exception: return []` handler
@@ -2745,12 +2745,12 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
 ### Security
 - **Path traversal in static file server.** `_serve_static()` now sandboxes
   resolved paths inside `static/` via `.relative_to()`. Previously
-  `GET /static/../../.hermes/config.yaml` could expose API keys.
+  `GET /static/../../.yusuf-mussa/config.yaml` could expose API keys.
 - **XSS in markdown renderer.** All captured groups in bold, italic, headings,
   blockquotes, list items, table cells, and link labels now run through `esc()`
   before `innerHTML` insertion.
 - **Skill category path traversal.** Category param validated to reject `/`
-  and `..` to prevent writing outside `~/.hermes/skills/`.
+  and `..` to prevent writing outside `~/.yusuf-mussa/skills/`.
 - **Debug endpoint locked to localhost.** `/api/approval/inject_test` returns
   404 to any non-loopback client.
 - **CDN resources pinned with SRI hashes.** PrismJS and Mermaid tags now have
@@ -2786,7 +2786,7 @@ Major UI overhaul by **[@aronprins](https://github.com/aronprins)** — the bigg
 ### Bug Fixes
 - **MiniMax model list updated.** Replaced stale ABAB 6.5 models with current
   MiniMax-M2.7, M2.7-highspeed, M2.5, M2.5-highspeed, M2.1 lineup matching
-  hermes-agent upstream. (Fixes #6)
+  agent upstream. (Fixes #6)
 - **Z.AI/GLM model list updated.** Replaced GLM-4 series with current GLM-5,
   GLM-5 Turbo, GLM-4.7, GLM-4.5, GLM-4.5 Flash lineup.
 - **base_url passthrough to AIAgent.** `resolve_model_provider()` now reads

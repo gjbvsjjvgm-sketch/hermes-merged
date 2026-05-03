@@ -190,7 +190,7 @@ async function send(){
     })});
     if(startData.effective_model && S.session){
       S.session.model=startData.effective_model;
-      localStorage.setItem('hermes-webui-model', startData.effective_model);
+      localStorage.setItem('ym-model', startData.effective_model);
       if($('modelSelect')) _applyModelToDropdown(startData.effective_model, $('modelSelect'));
       if(typeof syncTopbar==='function') syncTopbar();
     }
@@ -1430,7 +1430,7 @@ function _stashClarifyDraft(reason) {
   const draft = String((input && input.value) || "").trim();
   if (!draft) return false;
   const sid = _clarifySessionId || (S.session && S.session.session_id) || "unknown";
-  const key = `hermes-clarify-draft-${sid}-${_clarifySignature || "unknown"}`;
+  const key = `ym-clarify-draft-${sid}-${_clarifySignature || "unknown"}`;
   try {
     sessionStorage.setItem(key, JSON.stringify({
       draft,

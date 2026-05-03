@@ -8,7 +8,7 @@ Two problems fixed:
 1. uv was downloaded at container startup; fails in air-gapped / firewalled environments.
    Fix: pre-install uv in the Docker image at build time (system-wide in /usr/local/bin).
 2. workspace directory created with plain mkdir (as root); bind-mount dirs created by
-   Docker as root are unwritable by the hermeswebui user.
+   Docker as root are unwritable by the yusufmussa user.
    Fix: sudo mkdir + sudo chown for workspace directory.
 """
 import pathlib
@@ -39,12 +39,12 @@ class TestDockerfileUvPreinstall:
         )
         assert uv_install_line is not None, "Could not find uv install line in Dockerfile"
         # Must either use UV_INSTALL_DIR pointing to /usr/local/bin, or run as root
-        # (so the default install location is accessible to hermeswebui user)
+        # (so the default install location is accessible to yusufmussa user)
         has_system_dir = "/usr/local/bin" in uv_install_line or "UV_INSTALL_DIR=/usr/local/bin" in DOCKERFILE
         assert has_system_dir, (
-            "uv must be installed to /usr/local/bin (system-wide) so hermeswebui user "
-            "can find it. Installing as hermeswebuitoo puts it in /home/hermeswebuitoo/.local/bin "
-            "which is NOT on hermeswebui's PATH."
+            "uv must be installed to /usr/local/bin (system-wide) so yusufmussa user "
+            "can find it. Installing as yusufmussatoo puts it in /home/yusufmussatoo/.local/bin "
+            "which is NOT on yusufmussa's PATH."
         )
 
     def test_dockerfile_uv_installed_before_copy(self):
@@ -60,8 +60,8 @@ class TestDockerfileUvPreinstall:
 
     def test_dockerfile_uv_installed_as_root_or_before_user_switch(self):
         """uv must be installed as root (USER root) to reach /usr/local/bin.
-        If installed as hermeswebuitoo, it lands in ~hermeswebuitoo/.local/bin,
-        which the hermeswebui user at runtime can't see.
+        If installed as yusufmussatoo, it lands in ~yusufmussatoo/.local/bin,
+        which the yusufmussa user at runtime can't see.
         """
         lines = DOCKERFILE.splitlines()
         uv_line_idx = next(i for i, l in enumerate(lines) if "uv/install.sh" in l)
@@ -73,8 +73,8 @@ class TestDockerfileUvPreinstall:
                 break
         assert user_before == "root", (
             f"uv install must run as USER root (found USER {user_before!r}). "
-            "Installing as hermeswebuitoo puts uv in /home/hermeswebuitoo/.local/bin "
-            "which is not accessible to the hermeswebui runtime user."
+            "Installing as yusufmussatoo puts uv in /home/yusufmussatoo/.local/bin "
+            "which is not accessible to the yusufmussa runtime user."
         )
 
 
@@ -121,10 +121,10 @@ class TestInitScriptUvSkip:
             "so the container exits with a clear message instead of failing silently"
         )
 
-    def test_init_script_path_includes_hermeswebui_local_bin(self):
-        """PATH must include /home/hermeswebui/.local/bin for fallback runtime install."""
-        assert "/home/hermeswebui/.local/bin" in INIT_SCRIPT, (
-            "docker_init.bash must include /home/hermeswebui/.local/bin in PATH "
+    def test_init_script_path_includes_yusufmussa_local_bin(self):
+        """PATH must include /home/yusufmussa/.local/bin for fallback runtime install."""
+        assert "/home/yusufmussa/.local/bin" in INIT_SCRIPT, (
+            "docker_init.bash must include /home/yusufmussa/.local/bin in PATH "
             "for the case where uv is installed at runtime via curl"
         )
 
@@ -137,12 +137,12 @@ class TestWorkspacePermissions:
         """docker_init.bash must use 'sudo mkdir' for the workspace directory.
 
         Docker auto-creates bind-mount directories as root if they don't exist,
-        leaving them unwritable by hermeswebui. sudo mkdir + chown fixes this.
+        leaving them unwritable by yusufmussa. sudo mkdir + chown fixes this.
         """
         # Find the workspace section
         ws_section = INIT_SCRIPT[
-            INIT_SCRIPT.find("HERMES_WEBUI_DEFAULT_WORKSPACE"):
-            INIT_SCRIPT.find("HERMES_WEBUI_DEFAULT_WORKSPACE") + 800
+            INIT_SCRIPT.find("YM_WEBUI_DEFAULT_WORKSPACE"):
+            INIT_SCRIPT.find("YM_WEBUI_DEFAULT_WORKSPACE") + 800
         ]
         assert "sudo mkdir" in ws_section, (
             "docker_init.bash must use 'sudo mkdir -p' for the workspace directory "
@@ -150,38 +150,38 @@ class TestWorkspacePermissions:
         )
 
     def test_workspace_uses_sudo_chown(self):
-        """docker_init.bash must chown the workspace to hermeswebui when writable.
+        """docker_init.bash must chown the workspace to yusufmussa when writable.
 
         The chown is now conditional on the workspace being writable, to allow
         read-only (:ro) workspace mounts without crashing (#670). The sudo chown
         must still be present in the script (just guarded by [ -w ]).
         """
-        assert 'sudo chown hermeswebui:hermeswebui "$HERMES_WEBUI_DEFAULT_WORKSPACE"' in INIT_SCRIPT, (
-            "docker_init.bash must 'sudo chown hermeswebui:hermeswebui' the workspace "
+        assert 'sudo chown yusufmussa:yusufmussa "$YM_WEBUI_DEFAULT_WORKSPACE"' in INIT_SCRIPT, (
+            "docker_init.bash must 'sudo chown yusufmussa:yusufmussa' the workspace "
             "when it is writable, so the app user can write to it (#357)"
         )
 
     def test_workspace_mkdir_before_chown(self):
         """sudo mkdir must come before sudo chown in docker_init.bash."""
-        mkdir_pos = INIT_SCRIPT.find('sudo mkdir -p "$HERMES_WEBUI_DEFAULT_WORKSPACE"')
-        chown_pos = INIT_SCRIPT.find('sudo chown hermeswebui:hermeswebui "$HERMES_WEBUI_DEFAULT_WORKSPACE"')
+        mkdir_pos = INIT_SCRIPT.find('sudo mkdir -p "$YM_WEBUI_DEFAULT_WORKSPACE"')
+        chown_pos = INIT_SCRIPT.find('sudo chown yusufmussa:yusufmussa "$YM_WEBUI_DEFAULT_WORKSPACE"')
         assert mkdir_pos != -1, "sudo mkdir for workspace not found"
         assert chown_pos != -1, "sudo chown for workspace not found"
         assert mkdir_pos < chown_pos, "sudo mkdir must come before sudo chown"
 
     def test_workspace_error_exit_on_mkdir_failure(self):
         """sudo mkdir must call error_exit on failure."""
-        assert 'sudo mkdir -p "$HERMES_WEBUI_DEFAULT_WORKSPACE" || error_exit' in INIT_SCRIPT, (
+        assert 'sudo mkdir -p "$YM_WEBUI_DEFAULT_WORKSPACE" || error_exit' in INIT_SCRIPT, (
             "sudo mkdir for workspace must call error_exit on failure"
         )
 
     def test_workspace_chown_is_conditional_on_writable(self):
         """chown and write-test must be skipped for read-only workspace mounts (#670).
 
-        The script must check [ -w "$HERMES_WEBUI_DEFAULT_WORKSPACE" ] before
+        The script must check [ -w "$YM_WEBUI_DEFAULT_WORKSPACE" ] before
         attempting chown or a write test, so :ro bind-mounts don't crash startup.
         """
-        assert '[ -w "$HERMES_WEBUI_DEFAULT_WORKSPACE" ]' in INIT_SCRIPT, (
+        assert '[ -w "$YM_WEBUI_DEFAULT_WORKSPACE" ]' in INIT_SCRIPT, (
             "docker_init.bash must guard chown with [ -w ] to support read-only "
             "workspace mounts (:ro) without crashing (#670)"
         )

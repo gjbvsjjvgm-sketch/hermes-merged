@@ -1,6 +1,6 @@
 """
 Yusuf Mussa Web UI -- Optional password authentication.
-Off by default. Enable by setting HERMES_WEBUI_PASSWORD env var
+Off by default. Enable by setting YM_WEBUI_PASSWORD env var
 or configuring a password in the Settings panel.
 """
 import hashlib
@@ -132,7 +132,7 @@ def _hash_password(password):
 def get_password_hash() -> str | None:
     """Return the active password hash, or None if auth is disabled.
     Priority: env var > settings.json."""
-    env_pw = os.getenv('HERMES_WEBUI_PASSWORD', '').strip()
+    env_pw = os.getenv('YM_WEBUI_PASSWORD', '').strip()
     if env_pw:
         return _hash_password(env_pw)
     settings = load_settings()

@@ -12,8 +12,8 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 # Stub agent.auxiliary_client so it is importable in the test environment
-# (the real package lives in hermes-agent, which is not installed here).
-_agent_stub = types.ModuleType('agent')
+# (the real package lives in agent, which is not installed here).
+_agent_stub = types.ModuleType('ym-agent')
 _aux_stub = types.ModuleType('agent.auxiliary_client')
 sys.modules.setdefault('agent', _agent_stub)
 sys.modules.setdefault('agent.auxiliary_client', _aux_stub)

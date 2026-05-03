@@ -18,7 +18,7 @@ class TestQueuePersistence:
 
     def test_queue_writes_to_session_storage(self):
         """queueSessionMessage must write to sessionStorage after enqueueing."""
-        assert "sessionStorage.setItem('hermes-queue-'+sid" in ui_src
+        assert "sessionStorage.setItem('ym-queue-'+sid" in ui_src
 
     def test_queue_stamps_queued_at_timestamp(self):
         """Each queue entry must have a _queued_at timestamp for stale-entry detection."""
@@ -26,14 +26,14 @@ class TestQueuePersistence:
 
     def test_shift_removes_from_session_storage(self):
         """shiftQueuedSessionMessage must remove/update sessionStorage on dequeue."""
-        assert "sessionStorage.removeItem('hermes-queue-'+sid)" in ui_src
+        assert "sessionStorage.removeItem('ym-queue-'+sid)" in ui_src
 
     def test_shift_updates_session_storage_when_items_remain(self):
         """When queue still has items after shift, sessionStorage is updated (not removed)."""
         # After shift: if queue still has items, update storage with remaining
-        assert "sessionStorage.setItem('hermes-queue-'+sid, JSON.stringify(q))" in ui_src
+        assert "sessionStorage.setItem('ym-queue-'+sid, JSON.stringify(q))" in ui_src
         # Counts: should appear in both add and update paths (2 occurrences minimum)
-        count = ui_src.count("sessionStorage.setItem('hermes-queue-'+sid")
+        count = ui_src.count("sessionStorage.setItem('ym-queue-'+sid")
         assert count >= 2, f"Expected >=2 sessionStorage.setItem calls, found {count}"
 
 
@@ -42,7 +42,7 @@ class TestQueueRestore:
 
     def test_restore_reads_session_storage(self):
         """sessions.js must read from sessionStorage in the idle-session load path."""
-        assert "sessionStorage.getItem('hermes-queue-'+sid)" in sess_src
+        assert "sessionStorage.getItem('ym-queue-'+sid)" in sess_src
 
     def test_restore_uses_timestamp_guard(self):
         """Stale entries (created before last assistant response) must be dropped."""
@@ -59,7 +59,7 @@ class TestQueueRestore:
 
     def test_restore_clears_stale_storage(self):
         """On timestamp mismatch, stale sessionStorage entry is removed."""
-        assert "sessionStorage.removeItem('hermes-queue-'+sid)" in sess_src
+        assert "sessionStorage.removeItem('ym-queue-'+sid)" in sess_src
 
     def test_restore_wrapped_in_try_catch(self):
         """sessionStorage access must be wrapped in try/catch (private browsing may block it)."""
@@ -70,7 +70,7 @@ class TestQueueRestore:
         """When agent is active (INFLIGHT), queue restore must NOT run."""
         # The restore block must be inside the else branch (idle path), not the INFLIGHT branch
         inflight_pos = sess_src.find("if(INFLIGHT[sid]){")
-        restore_pos = sess_src.find("sessionStorage.getItem('hermes-queue-'")
+        restore_pos = sess_src.find("sessionStorage.getItem('ym-queue-'")
         else_pos = sess_src.find("}else{", inflight_pos)
         assert restore_pos > else_pos, \
             "Queue restore must be inside the else (idle) branch, not the INFLIGHT branch"

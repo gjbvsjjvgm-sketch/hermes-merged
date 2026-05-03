@@ -21,7 +21,7 @@ import pytest
 
 REPO = pathlib.Path(__file__).parent.parent
 sys.path.insert(0, str(REPO))
-sys.path.insert(0, str(REPO.parent / ".hermes" / "hermes-agent"))
+sys.path.insert(0, str(REPO.parent / ".yusuf-mussa" / "ym-agent"))
 
 
 def read(rel):
@@ -264,7 +264,7 @@ class TestKnownProvidersUnaffected:
                 "'custom' must not be aliased to anything — it's a special sentinel"
             )
         except ImportError:
-            pass  # hermes-agent not available in this env — skip
+            pass  # agent not available in this env — skip
 
 
 # ── Source-level: active_provider returned to browser is canonical ─────────────
@@ -348,7 +348,7 @@ class TestOllamaAliasEdgeCase:
                 f"Unexpected ollama alias: {ollama_target}"
             )
         except ImportError:
-            pass  # hermes-agent not available
+            pass  # agent not available
 
 
 class TestGetAvailableModelsReturnsCanonicalProvider:

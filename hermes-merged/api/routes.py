@@ -155,7 +155,7 @@ from api.config import (
     SESSION_AGENT_LOCKS_LOCK,
     load_settings,
     save_settings,
-    set_hermes_default_model,
+    set_ym_default_model,
     get_reasoning_status,
     set_reasoning_display,
     set_reasoning_effort,
@@ -1119,7 +1119,7 @@ def handle_get(handler, parsed) -> bool:
 
     if parsed.path == "/api/personalities":
         # Read personalities from config.yaml agent.personalities section
-        # (matches hermes-agent CLI behavior, not filesystem SOUL.md approach)
+        # (matches agent CLI behavior, not filesystem SOUL.md approach)
         from api.config import reload_config as _reload_cfg
 
         _reload_cfg()  # pick up config.yaml changes without server restart
@@ -1318,11 +1318,11 @@ def handle_get(handler, parsed) -> bool:
         )
 
     if parsed.path == "/api/profile/active":
-        from api.profiles import get_active_profile_name, get_active_hermes_home
+        from api.profiles import get_active_profile_name, get_active_ym_home
 
         return j(
             handler,
-            {"name": get_active_profile_name(), "path": str(get_active_hermes_home())},
+            {"name": get_active_profile_name(), "path": str(get_active_ym_home())},
         )
 
     # ── MCP Servers (GET) ──
@@ -1529,7 +1529,7 @@ def handle_post(handler, parsed) -> bool:
 
     if parsed.path == "/api/default-model":
         try:
-            return j(handler, set_hermes_default_model(body.get("model")))
+            return j(handler, set_ym_default_model(body.get("model")))
         except ValueError as e:
             return bad(handler, str(e))
         except RuntimeError as e:
@@ -1630,7 +1630,7 @@ def handle_post(handler, parsed) -> bool:
         except KeyError:
             return bad(handler, "Session not found", 404)
         # Resolve personality from config.yaml agent.personalities section
-        # (matches hermes-agent CLI behavior)
+        # (matches agent CLI behavior)
         prompt = ""
         if name:
             from api.config import reload_config as _reload_cfg2
@@ -1646,7 +1646,7 @@ def handle_post(handler, parsed) -> bool:
                     handler, f'Personality "{name}" not found in config.yaml', 404
                 )
             value = raw_personalities[name]
-            # Resolve prompt using the same logic as hermes-agent cli.py
+            # Resolve prompt using the same logic as agent cli.py
             if isinstance(value, dict):
                 parts = [value.get("system_prompt", "") or value.get("prompt", "")]
                 if value.get("tone"):
@@ -2215,7 +2215,7 @@ def handle_post(handler, parsed) -> bool:
     # ── Self-update (POST) ──
     if parsed.path == "/api/updates/apply":
         target = body.get("target", "")
-        if target not in ("webui", "agent"):
+        if target not in ("webui", "ym-agent"):
             return bad(handler, 'target must be "webui" or "agent"')
         from api.updates import apply_update
 
@@ -2223,7 +2223,7 @@ def handle_post(handler, parsed) -> bool:
 
     if parsed.path == "/api/updates/force":
         target = body.get("target", "")
-        if target not in ("webui", "agent"):
+        if target not in ("webui", "ym-agent"):
             return bad(handler, 'target must be "webui" or "agent"')
         from api.updates import apply_force_update
 
@@ -2380,7 +2380,7 @@ def _handle_session_export(handler, parsed):
     handler.send_response(200)
     handler.send_header("Content-Type", "application/json; charset=utf-8")
     handler.send_header(
-        "Content-Disposition", f'attachment; filename="hermes-{sid}.json"'
+        "Content-Disposition", f'attachment; filename="ym-{sid}.json"'
     )
     handler.send_header("Content-Length", str(len(payload.encode("utf-8"))))
     handler.send_header("Cache-Control", "no-store")
@@ -2812,7 +2812,7 @@ def _handle_media(handler, parsed):
     import os as _os
     from api.auth import is_auth_enabled, parse_cookie, verify_session
     _HOME = Path(_os.path.expanduser("~"))
-    _HERMES_HOME = Path(_os.getenv("HERMES_HOME", str(_HOME / ".hermes"))).expanduser()
+    _YM_HOME = Path(_os.getenv("YM_HOME", str(_HOME / ".yusuf-mussa"))).expanduser()
 
     # Auth check
     if is_auth_enabled():
@@ -2839,9 +2839,9 @@ def _handle_media(handler, parsed):
     # Intentionally NOT the entire home dir — that would expose ~/.ssh,
     # ~/.aws, browser profiles, etc. to any authenticated user.
     allowed_roots = [
-        _HERMES_HOME.resolve(),
+        _YM_HOME.resolve(),
         Path("/tmp").resolve(),
-        (_HOME / ".hermes").resolve(),
+        (_HOME / ".yusuf-mussa").resolve(),
     ]
     # Also allow the active workspace directory (where screenshots land)
     try:
@@ -3054,7 +3054,7 @@ def _handle_live_models(handler, parsed):
             import sys as _sys
             import os as _os
             _agent_dir = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))),
-                                       "..", "..", ".hermes", "hermes-agent")
+                                       "..", "..", ".yusuf-mussa", "ym-agent")
             _agent_dir = _os.path.normpath(_agent_dir)
             if _agent_dir not in _sys.path:
                 _sys.path.insert(0, _agent_dir)
@@ -3279,11 +3279,11 @@ def _handle_cron_recent(handler, parsed):
 
 def _handle_memory_read(handler):
     try:
-        from api.profiles import get_active_hermes_home
+        from api.profiles import get_active_ym_home
 
-        mem_dir = get_active_hermes_home() / "memories"
+        mem_dir = get_active_ym_home() / "memories"
     except ImportError:
-        mem_dir = Path.home() / ".hermes" / "memories"
+        mem_dir = Path.home() / ".yusuf-mussa" / "memories"
     mem_file = mem_dir / "MEMORY.md"
     user_file = mem_dir / "USER.md"
     memory = (
@@ -4378,11 +4378,11 @@ def _handle_memory_write(handler, body):
     except ValueError as e:
         return bad(handler, str(e))
     try:
-        from api.profiles import get_active_hermes_home
+        from api.profiles import get_active_ym_home
 
-        mem_dir = get_active_hermes_home() / "memories"
+        mem_dir = get_active_ym_home() / "memories"
     except ImportError:
-        mem_dir = Path.home() / ".hermes" / "memories"
+        mem_dir = Path.home() / ".yusuf-mussa" / "memories"
     mem_dir.mkdir(parents=True, exist_ok=True)
     section = body["section"]
     if section == "memory":

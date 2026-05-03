@@ -10,7 +10,7 @@ import os
 
 # Isolate state dir so we don't touch real sessions
 _TEST_STATE = Path(tempfile.mkdtemp())
-os.environ["HERMES_WEBUI_STATE_DIR"] = str(_TEST_STATE)
+os.environ["YM_WEBUI_STATE_DIR"] = str(_TEST_STATE)
 
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))

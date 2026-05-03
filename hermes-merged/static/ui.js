@@ -25,7 +25,7 @@ function queueSessionMessage(sid, payload){
   const entry={...payload, _queued_at: Date.now()};
   q.push(entry);
   // Persist to sessionStorage so the queue survives page refresh
-  try{ sessionStorage.setItem('hermes-queue-'+sid, JSON.stringify(q)); }catch(_){}
+  try{ sessionStorage.setItem('ym-queue-'+sid, JSON.stringify(q)); }catch(_){}
   return q.length;
 }
 function shiftQueuedSessionMessage(sid){
@@ -34,9 +34,9 @@ function shiftQueuedSessionMessage(sid){
   const next=q.shift();
   if(!q.length){
     delete SESSION_QUEUES[sid];
-    try{ sessionStorage.removeItem('hermes-queue-'+sid); }catch(_){}
+    try{ sessionStorage.removeItem('ym-queue-'+sid); }catch(_){}
   } else {
-    try{ sessionStorage.setItem('hermes-queue-'+sid, JSON.stringify(q)); }catch(_){}
+    try{ sessionStorage.setItem('ym-queue-'+sid, JSON.stringify(q)); }catch(_){}
   }
   return next;
 }
@@ -98,7 +98,7 @@ const _CSV_EXTS=/\.csv$/i;
 const _EXCALIDRAW_EXTS=/\.excalidraw$/i;
 // ── Media playback speed controls ─────────────────────────────────────────
 const MEDIA_PLAYBACK_RATES=[0.5,0.75,1,1.25,1.5,2];
-const MEDIA_PLAYBACK_STORAGE_KEY='hermes-media-playback-rate';
+const MEDIA_PLAYBACK_STORAGE_KEY='ym-media-playback-rate';
 function _getStoredMediaPlaybackRate(){
   try{
     const raw=localStorage.getItem(MEDIA_PLAYBACK_STORAGE_KEY);
@@ -277,7 +277,7 @@ async function populateModelDropdown(){
       sel.appendChild(og);
     }
     // Set default model from server if no localStorage preference
-    if(data.default_model && !localStorage.getItem('hermes-webui-model')){
+    if(data.default_model && !localStorage.getItem('ym-model')){
       _applyModelToDropdown(data.default_model, sel, data.active_provider||null);
     }
     if(typeof syncModelChip==='function') syncModelChip();
@@ -1714,8 +1714,8 @@ function _renderQueueChips(sid){
 
   function _saveAndRefresh(){
     const liveQ=_getSessionQueue(sid,false);
-    if(!liveQ.length){delete SESSION_QUEUES[sid];try{sessionStorage.removeItem('hermes-queue-'+sid);}catch(_){}}
-    else{SESSION_QUEUES[sid]=[...liveQ];try{sessionStorage.setItem('hermes-queue-'+sid,JSON.stringify(liveQ));}catch(_){}}
+    if(!liveQ.length){delete SESSION_QUEUES[sid];try{sessionStorage.removeItem('ym-queue-'+sid);}catch(_){}}
+    else{SESSION_QUEUES[sid]=[...liveQ];try{sessionStorage.setItem('ym-queue-'+sid,JSON.stringify(liveQ));}catch(_){}}
     delete _queueRenderKeys[sid];
     updateQueueBadge(sid);
   }
@@ -1741,7 +1741,7 @@ function _renderQueueChips(sid){
         const firstFiles=(snapshot.find(e=>e&&Array.isArray(e.files)&&e.files.length)||{files:[]}).files;
         liveQ.length=0;liveQ.push({text:combined,files:firstFiles,_queued_at:Date.now()});
         SESSION_QUEUES[sid]=liveQ;
-        try{sessionStorage.setItem('hermes-queue-'+sid,JSON.stringify(liveQ));}catch(_){}
+        try{sessionStorage.setItem('ym-queue-'+sid,JSON.stringify(liveQ));}catch(_){}
         delete _queueRenderKeys[sid];
         updateQueueBadge(sid);
       };
@@ -1821,7 +1821,7 @@ function _renderQueueChips(sid){
         const idx=_entryTs!=null?liveQ.findIndex(e=>e&&e._queued_at===_entryTs):i;
         if(idx!==-1){
           liveQ[idx]={...liveQ[idx],text:newText};
-          try{sessionStorage.setItem('hermes-queue-'+sid,JSON.stringify(liveQ));}catch(_){}
+          try{sessionStorage.setItem('ym-queue-'+sid,JSON.stringify(liveQ));}catch(_){}
           delete _queueRenderKeys[sid];
           updateQueueBadge(sid);
         }
@@ -1860,8 +1860,8 @@ function _renderQueueChips(sid){
       const liveQ=_getSessionQueue(sid,false);
       const idx=_entryTs!=null?liveQ.findIndex(e=>e&&e._queued_at===_entryTs):i;
       if(idx!==-1) liveQ.splice(idx,1);
-      if(!liveQ.length){delete SESSION_QUEUES[sid];try{sessionStorage.removeItem('hermes-queue-'+sid);}catch(_){}}
-      else{SESSION_QUEUES[sid]=[...liveQ];try{sessionStorage.setItem('hermes-queue-'+sid,JSON.stringify(liveQ));}catch(_){}}
+      if(!liveQ.length){delete SESSION_QUEUES[sid];try{sessionStorage.removeItem('ym-queue-'+sid);}catch(_){}}
+      else{SESSION_QUEUES[sid]=[...liveQ];try{sessionStorage.setItem('ym-queue-'+sid,JSON.stringify(liveQ));}catch(_){}}
       delete _queueRenderKeys[sid];
       updateQueueBadge(sid);
     };
@@ -2156,7 +2156,7 @@ function speakMessage(btn){
   const utter=new SpeechSynthesisUtterance(clean);
 
   // Apply saved voice preference
-  const savedVoice=localStorage.getItem('hermes-tts-voice');
+  const savedVoice=localStorage.getItem('ym-tts-voice');
   const voices=speechSynthesis.getVoices();
   if(savedVoice&&voices.length){
     const match=voices.find(v=>v.name===savedVoice);
@@ -2164,9 +2164,9 @@ function speakMessage(btn){
   }
 
   // Apply saved rate/pitch
-  const savedRate=parseFloat(localStorage.getItem('hermes-tts-rate'));
+  const savedRate=parseFloat(localStorage.getItem('ym-tts-rate'));
   if(!isNaN(savedRate)) utter.rate= Math.min(2,Math.max(0.5,savedRate));
-  const savedPitch=parseFloat(localStorage.getItem('hermes-tts-pitch'));
+  const savedPitch=parseFloat(localStorage.getItem('ym-tts-pitch'));
   if(!isNaN(savedPitch)) utter.pitch=Math.min(2,Math.max(0,savedPitch));
 
   _ttsCurrentUtterance=utter;
@@ -2191,7 +2191,7 @@ function stopTTS(){
 
 function autoReadLastAssistant(){
   if(!('speechSynthesis' in window)) return;
-  const pref=localStorage.getItem('hermes-tts-auto-read');
+  const pref=localStorage.getItem('ym-tts-auto-read');
   if(pref!=='true') return;
   // Find the last assistant message segment in the DOM
   const rows=document.querySelectorAll('.msg-row[data-role="assistant"], .assistant-segment[data-raw-text]');
@@ -2203,23 +2203,23 @@ function autoReadLastAssistant(){
   if(!clean) return;
 
   const utter=new SpeechSynthesisUtterance(clean);
-  const savedVoice=localStorage.getItem('hermes-tts-voice');
+  const savedVoice=localStorage.getItem('ym-tts-voice');
   const voices=speechSynthesis.getVoices();
   if(savedVoice&&voices.length){
     const match=voices.find(v=>v.name===savedVoice);
     if(match) utter.voice=match;
   }
-  const savedRate=parseFloat(localStorage.getItem('hermes-tts-rate'));
+  const savedRate=parseFloat(localStorage.getItem('ym-tts-rate'));
   if(!isNaN(savedRate)) utter.rate=Math.min(2,Math.max(0.5,savedRate));
-  const savedPitch=parseFloat(localStorage.getItem('hermes-tts-pitch'));
+  const savedPitch=parseFloat(localStorage.getItem('ym-tts-pitch'));
   if(!isNaN(savedPitch)) utter.pitch=Math.min(2,Math.max(0,savedPitch));
 
   speechSynthesis.speak(utter);
 }
 
 // ── Reconnect banner (B4/B5: reload resilience) ──
-const INFLIGHT_KEY = 'hermes-webui-inflight'; // localStorage key for in-flight session tracking
-const INFLIGHT_STATE_KEY = 'hermes-webui-inflight-state'; // localStorage snapshots for mid-stream reload recovery
+const INFLIGHT_KEY = 'ym-inflight'; // localStorage key for in-flight session tracking
+const INFLIGHT_STATE_KEY = 'ym-inflight-state'; // localStorage snapshots for mid-stream reload recovery
 
 function _readInflightStateMap(){
   try{
@@ -2308,7 +2308,7 @@ function _showUpdateBanner(data){
 }
 function dismissUpdate(){
   const b=$('updateBanner');if(b)b.classList.remove('visible');
-  sessionStorage.setItem('hermes-update-dismissed','1');
+  sessionStorage.setItem('ym-update-dismissed','1');
 }
 async function applyUpdates(){
   const btn=$('btnApplyUpdate');
@@ -2321,7 +2321,7 @@ async function applyUpdates(){
   if(forceBtnReset){forceBtnReset.style.display='none';forceBtnReset.dataset.target='';}
   const targets=[];
   if(window._updateData?.webui?.behind>0) targets.push('webui');
-  if(window._updateData?.agent?.behind>0) targets.push('agent');
+  if(window._updateData?.agent?.behind>0) targets.push('ym-agent');
   try{
     for(const target of targets){
       const res=await api('/api/updates/apply',{method:'POST',body:JSON.stringify({target})});
@@ -2332,8 +2332,8 @@ async function applyUpdates(){
       }
     }
     showToast('Update applied — restarting…');
-    sessionStorage.removeItem('hermes-update-checked');
-    sessionStorage.removeItem('hermes-update-dismissed');
+    sessionStorage.removeItem('ym-update-checked');
+    sessionStorage.removeItem('ym-update-dismissed');
     _waitForServerThenReload();
   }catch(e){
     if(errEl){errEl.textContent='Update failed: '+e.message;errEl.style.display='block';}
@@ -2379,8 +2379,8 @@ async function forceUpdate(btn){
       return;
     }
     showToast('Force update applied — restarting…');
-    sessionStorage.removeItem('hermes-update-checked');
-    sessionStorage.removeItem('hermes-update-dismissed');
+    sessionStorage.removeItem('ym-update-checked');
+    sessionStorage.removeItem('ym-update-dismissed');
     _waitForServerThenReload();
   }catch(e){
     if(errEl){errEl.textContent='Force update failed: '+e.message;errEl.style.display='block';}

@@ -99,7 +99,7 @@ class TestRuntimeRouteInjection(unittest.TestCase):
         """WebUI must pass the runtime route fields that CLI already uses.
 
         Since issue #772 these are passed defensively via inspect-guarded kwargs
-        so the WebUI degrades gracefully against older hermes-agent builds.
+        so the WebUI degrades gracefully against older agent builds.
         """
         for snippet in (
             "_agent_kwargs['api_mode'] = _rt.get('api_mode')",
@@ -483,7 +483,7 @@ def test_routes_restores_prior_reasoning_metadata_after_followup():
 
 class TestCredentialPoolBackwardCompat(unittest.TestCase):
     """Verify credential_pool and other newer kwargs are skipped gracefully
-    when running against an older hermes-agent that lacks them (issue #772)."""
+    when running against an older agent that lacks them (issue #772)."""
 
     def test_older_agent_without_credential_pool_does_not_crash(self):
         """WebUI must not crash with TypeError when AIAgent lacks credential_pool."""
@@ -492,7 +492,7 @@ class TestCredentialPoolBackwardCompat(unittest.TestCase):
         captured = {}
 
         class OlderAgent:
-            """Simulates a hermes-agent build that predates credential_pool."""
+            """Simulates a agent build that predates credential_pool."""
             def __init__(self, model=None, provider=None, base_url=None, api_key=None,
                          platform=None, quiet_mode=False, enabled_toolsets=None,
                          fallback_model=None, session_id=None, session_db=None,

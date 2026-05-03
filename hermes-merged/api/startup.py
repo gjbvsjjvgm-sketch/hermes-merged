@@ -14,8 +14,8 @@ _SENSITIVE_FILES = (
 
 
 def fix_credential_permissions() -> None:
-    """Ensure sensitive files in HERMES_HOME are chmod 600 (owner-only)."""
-    hermes_home = Path(os.environ.get('HERMES_HOME', str(Path.home() / '.hermes')))
+    """Ensure sensitive files in YM_HOME are chmod 600 (owner-only)."""
+    hermes_home = Path(os.environ.get('YM_HOME', str(Path.home() / '.yusuf-mussa')))
     if not hermes_home.is_dir():
         return
     for name in _SENSITIVE_FILES:
@@ -32,8 +32,8 @@ def fix_credential_permissions() -> None:
 
 
 def _agent_dir() -> Path | None:
-    hermes_home = Path(os.environ.get('HERMES_HOME', str(Path.home() / '.hermes')))
-    for raw in [os.environ.get('HERMES_WEBUI_AGENT_DIR', '').strip(), str(hermes_home / 'hermes-agent')]:
+    hermes_home = Path(os.environ.get('YM_HOME', str(Path.home() / '.yusuf-mussa')))
+    for raw in [os.environ.get('YM_WEBUI_AGENT_DIR', '').strip(), str(hermes_home / 'ym-agent')]:
         if not raw:
             continue
         p = Path(raw).expanduser()
@@ -48,7 +48,7 @@ def _trusted_agent_dir(agent_dir: Path) -> bool:
     on POSIX systems, is owned by the current process user.
 
     Intentionally does NOT enforce a canonical path (i.e. does not require
-    the dir to be ~/.hermes/hermes-agent), so custom HERMES_WEBUI_AGENT_DIR
+    the dir to be ~/.yusuf-mussa/agent), so custom YM_WEBUI_AGENT_DIR
     paths work correctly when HERMES_WEBUI_AUTO_INSTALL=1 is set.
     """
     try:

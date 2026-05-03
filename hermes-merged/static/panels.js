@@ -115,9 +115,9 @@ function syncAppTitlebar() {
 
 function _beginSettingsPanelSession() {
   _settingsDirty = false;
-  _settingsThemeOnOpen = localStorage.getItem('hermes-theme') || 'dark';
-  _settingsSkinOnOpen = localStorage.getItem('hermes-skin') || 'default';
-  _settingsFontSizeOnOpen = localStorage.getItem('hermes-font-size') || 'default';
+  _settingsThemeOnOpen = localStorage.getItem('ym-theme') || 'dark';
+  _settingsSkinOnOpen = localStorage.getItem('ym-skin') || 'default';
+  _settingsFontSizeOnOpen = localStorage.getItem('ym-font-size') || 'default';
   _pendingSettingsTargetPanel = null;
   if (_settingsAppearanceAutosaveTimer) {
     clearTimeout(_settingsAppearanceAutosaveTimer);
@@ -2236,7 +2236,7 @@ async function switchToProfile(name) {
     // ── Model + Workspace (parallelized) ───────────────────────────────────
     // populateModelDropdown hits /api/models; loadWorkspaceList hits /api/workspaces.
     // They are fully independent — run both simultaneously to cut switch time ~50%.
-    localStorage.removeItem('hermes-webui-model');
+    localStorage.removeItem('ym-model');
     _skillsData = null;
     _workspaceList = null;
     await Promise.all([populateModelDropdown(), loadWorkspaceList()]);
@@ -2518,7 +2518,7 @@ function _syncHermesPanelSessionActions(){
   const hasSession=!!S.session;
   const visibleMessages=hasSession?(S.messages||[]).filter(m=>m&&m.role&&m.role!=='tool').length:0;
   const title=hasSession?(S.session.title||t('untitled')):t('active_conversation_none');
-  const meta=$('hermesSessionMeta');
+  const meta=$('ymSessionMeta');
   if(meta){
     meta.textContent=hasSession
       ? t('active_conversation_meta', title, visibleMessages)
@@ -2612,9 +2612,9 @@ function _applyTtsEnabled(enabled){
 
 function _appearancePayloadFromUi(){
   return {
-    theme: ($('settingsTheme')||{}).value || localStorage.getItem('hermes-theme') || 'dark',
-    skin: ($('settingsSkin')||{}).value || localStorage.getItem('hermes-skin') || 'default',
-    font_size: ($('settingsFontSize')||{}).value || localStorage.getItem('hermes-font-size') || 'default',
+    theme: ($('settingsTheme')||{}).value || localStorage.getItem('ym-theme') || 'dark',
+    skin: ($('settingsSkin')||{}).value || localStorage.getItem('ym-skin') || 'default',
+    font_size: ($('settingsFontSize')||{}).value || localStorage.getItem('ym-font-size') || 'default',
   };
 }
 
@@ -2638,9 +2638,9 @@ function _setAppearanceAutosaveStatus(state){
 
 function _rememberAppearanceSaved(payload){
   if(!payload) return;
-  _settingsThemeOnOpen=payload.theme||localStorage.getItem('hermes-theme')||'dark';
-  _settingsSkinOnOpen=payload.skin||localStorage.getItem('hermes-skin')||'default';
-  _settingsFontSizeOnOpen=payload.font_size||localStorage.getItem('hermes-font-size')||'default';
+  _settingsThemeOnOpen=payload.theme||localStorage.getItem('ym-theme')||'dark';
+  _settingsSkinOnOpen=payload.skin||localStorage.getItem('ym-skin')||'default';
+  _settingsFontSizeOnOpen=payload.font_size||localStorage.getItem('ym-font-size')||'default';
 }
 
 function _scheduleAppearanceAutosave(){
@@ -2660,7 +2660,7 @@ async function _autosaveAppearanceSettings(payload){
     _settingsAppearanceAutosaveRetryPayload=null;
     _rememberAppearanceSaved(payload);
     if(saved&&saved.font_size){
-      localStorage.setItem('hermes-font-size',saved.font_size);
+      localStorage.setItem('ym-font-size',saved.font_size);
     }
     _setAppearanceAutosaveStatus('saved');
   }catch(e){
@@ -2692,8 +2692,8 @@ async function loadSettingsPanel(){
     const skinSel=$('settingsSkin');
     if(skinSel) skinSel.value=skinVal;
     if(typeof _buildSkinPicker==='function') _buildSkinPicker(skinVal);
-    const fontSizeVal=settings.font_size||localStorage.getItem('hermes-font-size')||'default';
-    localStorage.setItem('hermes-font-size',fontSizeVal);
+    const fontSizeVal=settings.font_size||localStorage.getItem('ym-font-size')||'default';
+    localStorage.setItem('ym-font-size',fontSizeVal);
     if(typeof _applyFontSize==='function') _applyFontSize(fontSizeVal);
     const fontSizeSel=$('settingsFontSize');
     if(fontSizeSel) fontSizeSel.value=fontSizeVal;
@@ -2703,20 +2703,20 @@ async function loadSettingsPanel(){
     // closing the panel via toolbar X does not clear the user's preference.
     const wsPanelCb=$('settingsWorkspacePanelOpen');
     if(wsPanelCb){
-      wsPanelCb.checked=localStorage.getItem('hermes-webui-workspace-panel-pref')==='open';
+      wsPanelCb.checked=localStorage.getItem('ym-workspace-panel-pref')==='open';
       wsPanelCb.onchange=function(){
         const open=this.checked;
-        localStorage.setItem('hermes-webui-workspace-panel-pref',open?'open':'closed');
+        localStorage.setItem('ym-workspace-panel-pref',open?'open':'closed');
         // Also sync the runtime key so the current session reflects the change
-        localStorage.setItem('hermes-webui-workspace-panel',open?'open':'closed');
+        localStorage.setItem('ym-workspace-panel',open?'open':'closed');
         document.documentElement.dataset.workspacePanel=open?'open':'closed';
         if(open&&_workspacePanelMode==='closed') openWorkspacePanel('browse');
         else if(!open&&_workspacePanelMode!=='closed') toggleWorkspacePanel(false);
       };
     }
     const resolvedLanguage=(typeof resolvePreferredLocale==='function')
-      ? resolvePreferredLocale(settings.language, localStorage.getItem('hermes-lang'))
-      : (settings.language || localStorage.getItem('hermes-lang') || 'en');
+      ? resolvePreferredLocale(settings.language, localStorage.getItem('ym-lang'))
+      : (settings.language || localStorage.getItem('ym-lang') || 'en');
     // Keep settings modal and current page strings in sync with the resolved locale.
     if(typeof setLocale==='function'){
       setLocale(resolvedLanguage);
@@ -2790,15 +2790,15 @@ async function loadSettingsPanel(){
     if(soundCb){soundCb.checked=!!settings.sound_enabled;soundCb.addEventListener('change',_markSettingsDirty,{once:false});}
     // TTS settings (localStorage-only, no server round-trip needed)
     const ttsEnabledCb=$('settingsTtsEnabled');
-    if(ttsEnabledCb){ttsEnabledCb.checked=localStorage.getItem('hermes-tts-enabled')==='true';ttsEnabledCb.onchange=function(){localStorage.setItem('hermes-tts-enabled',this.checked?'true':'false');_applyTtsEnabled(this.checked);};}
+    if(ttsEnabledCb){ttsEnabledCb.checked=localStorage.getItem('ym-tts-enabled')==='true';ttsEnabledCb.onchange=function(){localStorage.setItem('ym-tts-enabled',this.checked?'true':'false');_applyTtsEnabled(this.checked);};}
     const ttsAutoReadCb=$('settingsTtsAutoRead');
-    if(ttsAutoReadCb){ttsAutoReadCb.checked=localStorage.getItem('hermes-tts-auto-read')==='true';ttsAutoReadCb.onchange=function(){localStorage.setItem('hermes-tts-auto-read',this.checked?'true':'false');};}
+    if(ttsAutoReadCb){ttsAutoReadCb.checked=localStorage.getItem('ym-tts-auto-read')==='true';ttsAutoReadCb.onchange=function(){localStorage.setItem('ym-tts-auto-read',this.checked?'true':'false');};}
     // Populate voice selector from speechSynthesis
     const ttsVoiceSel=$('settingsTtsVoice');
     if(ttsVoiceSel&&'speechSynthesis' in window){
       const populateVoices=()=>{
         const voices=speechSynthesis.getVoices();
-        const current=localStorage.getItem('hermes-tts-voice')||'';
+        const current=localStorage.getItem('ym-tts-voice')||'';
         ttsVoiceSel.innerHTML='<option value="">Default system voice</option>';
         voices.forEach(v=>{
           const opt=document.createElement('option');
@@ -2809,24 +2809,24 @@ async function loadSettingsPanel(){
       };
       populateVoices();
       speechSynthesis.addEventListener('voiceschanged',populateVoices,{once:true});
-      ttsVoiceSel.onchange=function(){localStorage.setItem('hermes-tts-voice',this.value);};
+      ttsVoiceSel.onchange=function(){localStorage.setItem('ym-tts-voice',this.value);};
     }
     // TTS rate/pitch sliders
     const ttsRateSlider=$('settingsTtsRate');
     const ttsRateValue=$('settingsTtsRateValue');
     if(ttsRateSlider){
-      const savedRate=localStorage.getItem('hermes-tts-rate');
+      const savedRate=localStorage.getItem('ym-tts-rate');
       ttsRateSlider.value=savedRate||'1';
       if(ttsRateValue) ttsRateValue.textContent=parseFloat(ttsRateSlider.value).toFixed(1)+'x';
-      ttsRateSlider.oninput=function(){if(ttsRateValue)ttsRateValue.textContent=parseFloat(this.value).toFixed(1)+'x';localStorage.setItem('hermes-tts-rate',this.value);};
+      ttsRateSlider.oninput=function(){if(ttsRateValue)ttsRateValue.textContent=parseFloat(this.value).toFixed(1)+'x';localStorage.setItem('ym-tts-rate',this.value);};
     }
     const ttsPitchSlider=$('settingsTtsPitch');
     const ttsPitchValue=$('settingsTtsPitchValue');
     if(ttsPitchSlider){
-      const savedPitch=localStorage.getItem('hermes-tts-pitch');
+      const savedPitch=localStorage.getItem('ym-tts-pitch');
       ttsPitchSlider.value=savedPitch||'1';
       if(ttsPitchValue) ttsPitchValue.textContent=parseFloat(ttsPitchSlider.value).toFixed(1);
-      ttsPitchSlider.oninput=function(){if(ttsPitchValue)ttsPitchValue.textContent=parseFloat(this.value).toFixed(1);localStorage.setItem('hermes-tts-pitch',this.value);};
+      ttsPitchSlider.oninput=function(){if(ttsPitchValue)ttsPitchValue.textContent=parseFloat(this.value).toFixed(1);localStorage.setItem('ym-tts-pitch',this.value);};
     }
     const notifCb=$('settingsNotificationsEnabled');
     if(notifCb){notifCb.checked=!!settings.notifications_enabled;notifCb.addEventListener('change',_markSettingsDirty,{once:false});}
@@ -3137,7 +3137,7 @@ function _applySavedSettingsUi(saved, body, opts){
   _settingsDirty=false;
   _settingsThemeOnOpen=theme;
   _settingsSkinOnOpen=skin||'default';
-  _settingsFontSizeOnOpen=fontSize||localStorage.getItem('hermes-font-size')||'default';
+  _settingsFontSizeOnOpen=fontSize||localStorage.getItem('ym-font-size')||'default';
   const bar=$('settingsUnsavedBar');
   if(bar) bar.style.display='none';
   _settingsHermesDefaultModelOnOpen=body.default_model||_settingsHermesDefaultModelOnOpen||'';
@@ -3204,7 +3204,7 @@ async function saveSettings(andClose){
   const pw=($('settingsPassword')||{}).value;
   const theme=($('settingsTheme')||{}).value||'dark';
   const skin=($('settingsSkin')||{}).value||'default';
-  const fontSize=($('settingsFontSize')||{}).value||localStorage.getItem('hermes-font-size')||'default';
+  const fontSize=($('settingsFontSize')||{}).value||localStorage.getItem('ym-font-size')||'default';
   const language=($('settingsLanguage')||{}).value||'en';
   const sidebarDensity=($('settingsSidebarDensity')||{}).value==='detailed'?'detailed':'compact';
   const busyInputMode=($('settingsBusyInputMode')||{}).value||'queue';
