@@ -877,6 +877,24 @@ def handle_get(handler, parsed) -> bool:
     if parsed.path == "/api/onboarding/status":
         return j(handler, get_onboarding_status())
 
+    # ── Paymob Payment Gateway (GET) ──
+    if parsed.path == "/api/paymob/status":
+        try:
+            from api.paymob import get_paymob_status
+            return j(handler, get_paymob_status())
+        except Exception as e:
+            return j(handler, {"error": str(e)}, status=500)
+
+    if parsed.path == "/api/paymob/transactions":
+        try:
+            from api.paymob import list_transactions
+            query = parse_qs(parsed.query)
+            limit = int(query.get("limit", ["50"])[0])
+            offset = int(query.get("offset", ["0"])[0])
+            return j(handler, {"transactions": list_transactions(limit=limit, offset=offset)})
+        except Exception as e:
+            return j(handler, {"error": str(e)}, status=500)
+
     if parsed.path.startswith("/static/"):
         return _serve_static(handler, parsed)
 
@@ -1355,6 +1373,147 @@ def handle_post(handler, parsed) -> bool:
 
     if parsed.path == "/api/transcribe":
         return handle_transcribe(handler)
+
+    # ── Paymob Payment Gateway (POST) ──
+    if parsed.path == "/api/paymob/create-order":
+        body = read_body(handler)
+        try:
+            from api.paymob import create_order, PaymobError
+            result = create_order(
+                amount_cents=body.get("amount_cents", 0),
+                currency=body.get("currency", "EGP"),
+                merchant_order_id=body.get("merchant_order_id"),
+                items=body.get("items"),
+                delivery_needed=body.get("delivery_needed", False),
+                shipping_data=body.get("shipping_data"),
+                metadata=body.get("metadata"),
+            )
+            return j(handler, {"ok": True, "order": result})
+        except PaymobError as e:
+            return j(handler, {"ok": False, "error": str(e), "code": e.code}, status=e.status_code)
+        except Exception as e:
+            return j(handler, {"ok": False, "error": str(e)}, status=500)
+
+    if parsed.path == "/api/paymob/payment-key":
+        body = read_body(handler)
+        try:
+            from api.paymob import generate_payment_key, PaymobError
+            result = generate_payment_key(
+                order_id=body.get("order_id", ""),
+                amount_cents=body.get("amount_cents", 0),
+                billing_data=body.get("billing_data", {}),
+                currency=body.get("currency", "EGP"),
+                integration_id=body.get("integration_id"),
+                expiration=body.get("expiration", 3600),
+            )
+            return j(handler, {"ok": True, "payment_key": result})
+        except PaymobError as e:
+            return j(handler, {"ok": False, "error": str(e), "code": e.code}, status=e.status_code)
+        except Exception as e:
+            return j(handler, {"ok": False, "error": str(e)}, status=500)
+
+    if parsed.path == "/api/paymob/payment-intent":
+        body = read_body(handler)
+        try:
+            from api.paymob import create_payment_intent, PaymobError
+            result = create_payment_intent(
+                amount_cents=body.get("amount_cents", 0),
+                currency=body.get("currency", "EGP"),
+                payment_methods=body.get("payment_methods"),
+                items=body.get("items"),
+                billing_data=body.get("billing_data"),
+                delivery_needed=body.get("delivery_needed", False),
+                shipping_data=body.get("shipping_data"),
+                merchant_order_id=body.get("merchant_order_id"),
+                extras=body.get("extras"),
+                special_fees=body.get("special_fees"),
+            )
+            return j(handler, {"ok": True, "intent": result})
+        except PaymobError as e:
+            return j(handler, {"ok": False, "error": str(e), "code": e.code}, status=e.status_code)
+        except Exception as e:
+            return j(handler, {"ok": False, "error": str(e)}, status=500)
+
+    if parsed.path == "/api/paymob/webhook":
+        # Webhook endpoint — receives Paymob transaction notifications
+        body = read_body(handler)
+        try:
+            from api.paymob import handle_webhook, PaymobWebhookError
+            # HMAC can come in query string or headers
+            query = parse_qs(parsed.query)
+            hmac_header = (
+                handler.headers.get("X-Paymob-Hmac", "")
+                or handler.headers.get("hmac", "")
+                or query.get("hmac", [""])[0]
+            )
+            result = handle_webhook(body, hmac_header=hmac_header or None)
+            return j(handler, result)
+        except PaymobWebhookError as e:
+            logger.warning("Paymob webhook error: %s", e)
+            return j(handler, {"error": str(e), "code": e.code}, status=e.status_code)
+        except Exception as e:
+            logger.error("Paymob webhook processing failed: %s", e)
+            return j(handler, {"error": str(e)}, status=500)
+
+    if parsed.path == "/api/paymob/capture":
+        body = read_body(handler)
+        try:
+            from api.paymob import capture_transaction, PaymobError
+            result = capture_transaction(
+                transaction_id=body.get("transaction_id", ""),
+                amount_cents=body.get("amount_cents"),
+            )
+            return j(handler, {"ok": True, "result": result})
+        except PaymobError as e:
+            return j(handler, {"ok": False, "error": str(e), "code": e.code}, status=e.status_code)
+        except Exception as e:
+            return j(handler, {"ok": False, "error": str(e)}, status=500)
+
+    if parsed.path == "/api/paymob/refund":
+        body = read_body(handler)
+        try:
+            from api.paymob import refund_transaction, PaymobError
+            result = refund_transaction(
+                transaction_id=body.get("transaction_id", ""),
+                amount_cents=body.get("amount_cents"),
+            )
+            return j(handler, {"ok": True, "result": result})
+        except PaymobError as e:
+            return j(handler, {"ok": False, "error": str(e), "code": e.code}, status=e.status_code)
+        except Exception as e:
+            return j(handler, {"ok": False, "error": str(e)}, status=500)
+
+    if parsed.path == "/api/paymob/void":
+        body = read_body(handler)
+        try:
+            from api.paymob import void_transaction, PaymobError
+            result = void_transaction(
+                transaction_id=body.get("transaction_id", ""),
+            )
+            return j(handler, {"ok": True, "result": result})
+        except PaymobError as e:
+            return j(handler, {"ok": False, "error": str(e), "code": e.code}, status=e.status_code)
+        except Exception as e:
+            return j(handler, {"ok": False, "error": str(e)}, status=500)
+
+    if parsed.path == "/api/paymob/configure":
+        # Update Paymob configuration in settings
+        body = read_body(handler)
+        try:
+            settings = load_settings()
+            paymob_config = settings.get("paymob", {})
+            # Update only allowed keys
+            for key in ("test_mode", "test_api_key", "live_api_key", "iframe_id", "hmac_secret"):
+                if key in body:
+                    paymob_config[key] = body[key]
+            settings["paymob"] = paymob_config
+            save_settings(settings)
+            return j(handler, {"ok": True, "paymob": {
+                k: ("***" + v[-4:] if isinstance(v, str) and len(v) > 8 and "key" in k else v)
+                for k, v in paymob_config.items()
+            }})
+        except Exception as e:
+            return j(handler, {"ok": False, "error": str(e)}, status=500)
 
     body = read_body(handler)
 

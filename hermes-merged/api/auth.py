@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 PUBLIC_PATHS = frozenset({
     '/login', '/health', '/favicon.ico',
     '/api/auth/login', '/api/auth/status',
+    '/api/paymob/webhook',  # Paymob webhook must be publicly accessible
 })
 
 COOKIE_NAME = 'hermes_session'
@@ -211,7 +212,11 @@ def parse_cookie(handler) -> str | None:
 
 def check_auth(handler, parsed) -> bool:
     """Check if request is authorized. Returns True if OK.
-    If not authorized, sends 401 (API) or 302 redirect (page) and returns False."""
+    If not authorized, sends 401 (API) or 302 redirect (page) and returns False.
+    
+    NOTE: Authentication has been disabled — all requests are allowed without password."""
+    return True  # Auth disabled — always allow
+    # Original auth logic below (preserved for reference):
     if not is_auth_enabled():
         return True
     # Public paths don't require auth
